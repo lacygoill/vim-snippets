@@ -1,0 +1,212 @@
+# #! {{{1
+
+# cannot use /usr/bin/env because it does not support parameters (as -f)
+snippet #! "awk shebang" bm
+#!/usr/bin/awk -f
+endsnippet
+
+# \d {{{1
+
+snippet \d "digits regex" i
+[0-9]
+endsnippet
+
+# beg {{{1
+
+snippet beg "BEGIN {…}" bm
+BEGIN {
+	$0
+}
+endsnippet
+
+# end {{{1
+
+snippet end "END {…}" bm
+END {
+	$0
+}
+endsnippet
+
+# case {{{1
+
+# the `case` statement is part of the `switch` one
+snippet case "case" bm
+	case $1:
+		$0
+		break
+endsnippet
+
+# do {{{1
+
+snippet do "do … while" bm
+do {
+	$0
+} while ($1)
+endsnippet
+
+# for {{{1
+
+snippet for "for" bm
+for (${2:i} = ${3:1}; $2 <= ${1:n}; ${4:++$2}) {
+	$0
+}
+endsnippet
+
+# fori {{{1
+
+snippet fori "for in" bm
+for (${1:i} in ${2:array}) {
+	$0
+}
+endsnippet
+
+# fu {{{1
+
+snippet fu "function" bm
+function ${1:myfunc}($2) {
+	${0:${VISUAL}}
+	return
+}
+endsnippet
+
+# guard {{{1
+
+snippet guard "prevent excessive recursion" bm
+if (guard${1:1} >= 99)
+	${2:return}
+guard$1 += 1
+endsnippet
+
+# do not initialize `guard` to 1, and,
+# do not make `guard` a local variable:
+#
+#	  it would prevent the guard from working with a recursive function
+#	  (i.e. a function which calls itself)
+#
+# if you want to check whether you're trapped inside an infinite loop,
+# add a `print guard` statement, somewhere in your code
+#
+# The statement to go out of a function is `return`, but to go out of a loop
+# it's `break`.
+
+# if {{{1
+
+snippet if "if {…}" bm
+if ($1) {
+	$0${VISUAL}
+}
+endsnippet
+
+# ife {{{1
+
+snippet ife "if … else …" bm
+if ($1) {
+	${2:${VISUAL}}
+} else {
+	$0
+}
+endsnippet
+
+# elif {{{1
+
+snippet elif "else if …" bm
+else if ($1) {
+	$0
+}
+endsnippet
+
+# el {{{1
+
+snippet el "else {…}" bm
+else {
+	$0
+}
+endsnippet
+
+# isnum {{{1
+
+snippet isnum "test if n is a number" bm
+function isnum(n) {
+	${1:return n ~ /^[+-]?[0-9]+$/}
+	${2:sign     = "[-+]?"
+	decimal  = "[0-9]+[.]?[0-9]*"
+	fraction = "[.][0-9]+"
+	exponent = "[eE]" sign "[0-9]+"
+	number   = "^" sign "(" decimal "|" fraction ")(" exponent ")?$"
+
+	return n ~ number}
+}
+$0
+endsnippet
+
+# pri {{{1
+
+snippet pri "print" bm
+	print ${1:"$2"}$0
+endsnippet
+
+# Also works when we reverse the order of the tabstops:
+#
+#     print ${2:"$1"}$0
+#
+# In this case, we end up directly inside the quotes, then after pressing tab,
+# we select the whole string.
+
+# shout {{{1
+
+# shout: SHell OUTput
+snippet shout "capture output of shell command" bm
+"${1:cmd}" | getline ${2:var}
+close("$1")
+endsnippet
+
+# sort_array {{{1
+
+snippet sort_array "sort array" bm
+for (${1:i} in ${2:array})
+	print $2[$1] | "sort${5:${3: -nr}${4: >/tmp/file}}"
+close("sort$5")
+$0
+endsnippet
+
+# sw {{{1
+
+# the switch statement is a gawk extension
+snippet sw "switch" bm
+switch ($1) {
+case $2:
+	$3
+	break
+
+default:
+	$0
+	break
+}
+endsnippet
+
+# test_func {{{1
+
+snippet test_func "test custom function" bm
+{ printf("%${2:-10}s %${3:20}s\n", \$0, ${1:myfunc}(\$0)) }
+function $1(${4:x}) {
+	${0:${VISUAL}}
+	return
+}
+endsnippet
+
+# test_pattern {{{1
+
+snippet test_pattern "test pattern" bm
+match(\$0, ${1:/pattern/}, match_array) { print match_array[0]; next }
+{ print "no match" }
+$0
+endsnippet
+
+# wh {{{1
+
+snippet wh "while" bm
+while ($1) {
+	$2
+}
+endsnippet
+

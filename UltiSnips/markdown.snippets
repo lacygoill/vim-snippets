@@ -1,0 +1,74 @@
+# bug_report {{{1
+
+snippet bug_report "filing bug report for (Neo)Vim" bm
+ - \``!v
+    has('nvim') ? 'n' : ''
+`vim --version\`:      `!v
+substitute(join(split(execute('version'), '\n')[0:1]), '(.\{-})', '', '')
+`
+`!v
+    !has('nvim') ? '' : ' - Vim (version: ) behaves differently?
+'` - Operating system:     `!v
+    matchstr(system('lsb_release -d'), 'Description:\s*\zs.*')[:-2]
+`
+ - Terminal emulator:    rxvt-unicode v9.22`!v
+    !empty($TMUX) ? '
+ - Terminal multiplexer: '.systemlist('tmux -V')[0] : ''
+`
+ - \`$TERM\`:              `echo $TERM`
+ - Shell:                `!v
+    matchstr(systemlist('zsh --version')[0], '.\{-\}\ze\s*(')
+`
+$0
+endsnippet
+
+# note {{{1
+
+# Kept for educational purpose.
+# It shows how to use `snip.opt(var, default)`:
+#
+#     snip.opt(var, default)
+#
+#         Checks if the  Vim variable 'var' has been set. If  so, it returns the
+#         variable's value; otherwise, it returns the value of 'default'.
+
+# snippet note "NOTE header" m
+# `!p snip.rv = ' ' * int((int(snip.opt('&l:tw', 0))/2 - 3))`NOTE:
+
+# $0
+# endsnippet
+
+# spoiler {{{1
+
+snippet spoiler "hide long code" bm
+<details>
+<summary>${1:title}</summary>
+
+	${0:${VISUAL}}
+</details>
+endsnippet
+
+# wpm {{{1
+
+# Kept for educational purpose.
+# It shows:
+#
+#     • how to access the contents of a tabstop (`t[1]`, `t[2]`)
+#
+#     • we can use any python function (ex: `float()`)
+#
+#     • newlines inside an interpolation are ignored;
+#       allow to write the code on several lines to make it more readable
+#
+#     • creating a tabstop for an unpredictable information MAY be suboptimal
+#
+#       For example, here, we don't know in advance the average speed, so we
+#       could be tempted to create a tabstop. But the average speed is not
+#       a fundamental information. It derives from 2 other info.
+#       So, it's best to write an interpolation to compute it.
+
+# snippet wpm "average speed" bm
+# I typed ${1:750} words in ${2:30} minutes; my speed is `!p
+# snip.rv = float(t[1]) / float(t[2])
+# ` words per minute
+# endsnippet

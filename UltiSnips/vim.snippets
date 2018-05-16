@@ -1,0 +1,620 @@
+global !p
+from snippet_helpers import *
+endglobal
+
+# TODO:
+# Understand how this snippet works.
+# Once you do, use your knowledge to improve `fu` in a non-autoloaded file.
+# The cursor should automatically jump, so that we don't have to press Tab
+# twice to jump to the arguments.
+
+context "make_context(snip)"
+post_jump "clean_first_placeholder(snip)"
+snippet x "" bm
+`!p jump_to_second_when_first_is_empty(snip)
+`func (${1:blah}) $2() {
+  $3
+}
+endsnippet
+
+# ?: {{{1
+
+snippet ?: "(test ? expr1 : expr2)" im
+($1 ? $2 : $3)
+endsnippet
+
+# abr {{{1
+
+#                            ┌ if the 1st tabstop is empty, the interpolation should be too;
+#                            │ we need to handle this special case, to avoid an error
+#                            │ if we delete an inserted tabstop
+#                            │ (because in this case `t[1][0]` won't exist)
+#                            │
+#                            │          ┌ text of 1st placeholder $1
+#               ┌────────────┤       ┌──┤
+# `!p snip.rv = '' if not t[1] else (t[1][0]).upper() + t[1][1:]`
+#                                         │                  └┤
+#                                         │                   └ remaining characters
+#                                         └ first character
+
+snippet abr "uppercase abbreviation on command line" bm
+cnorea  <buffer><expr>  ${1:lhs}  getcmdtype() is# ':' && getcmdline() is# '$1'
+\\`!p snip.rv = ' '*(25 + len(t[1]))`?    '`!p snip.rv = '' if not t[1] else (t[1][0]).upper() + t[1][1:]`'
+\\`!p snip.rv = ' '*(25 + len(t[1]))`:    '`!p snip.rv = t[1]`'
+endsnippet
+
+# au {{{1
+
+# Explanation of the mirror:{{{
+#
+#                 ┌ look for a space followed by a star,
+#                 │ and capture it so that I can test whether the subpattern has been matched, via `?1`
+#                 │
+#                 │  ┌ OR, look for anything
+#             ┌───┤ ┌┤
+#		  ${2/( \*)|.*/(?1:: \*)/}
+#                       └┤└┤└─┤
+#                        │ │  └ otherwise, insert a space followed by a star
+#                        │ │	(to leave the autocmd pattern unchanged)
+#                        │ │
+#                        │ └ replace its contents with nothing
+#                        │   (SPC * SPC <buffer>  →  SPC <buffer>)
+#                        │
+#                        └ if the 1st capturing group is not empty (SPC *)
+#}}}
+# Also, from :h UltiSnips-replacement-string:{{{
+#
+#         Finally, the  replacement string can contain  conditional replacements
+#         using the syntax (?123:foo:bar). This  reads as follows:
+#
+#             if the group 123 has matched, replace it with "foo", otherwise insert "bar"
+#
+#         "bar"  is  optional  and  if   not  provided  defaults  to  the  empty
+#         string. This feature is  very powerful. It allows you  to add OPTIONAL
+#         text into snippets.
+#}}}
+
+pre_expand "capture_visual_content(snip)"
+post_expand "trim_ws(snip)"
+snippet au  "augroup ... autocmd block" bm
+augroup ${1:augroup name}
+	au!${2: * <buffer>}
+	au ${3:BufWinEnter}${2/( \*)|.*/(?1:: \*)/} ${0:${VISUAL}}
+augroup END
+endsnippet
+
+# cfu {{{1
+
+snippet cfu "Completion function for C-x C-u" bm
+fu! s:${1:complete_strings}(findstart, base) abort
+	if a:findstart
+		return searchpos('${2:"}', 'bnW', line('.'))[1] - 1
+	else
+		let candidates = []
+		${3:sil keepj keepp %s/".\\\{-1,\}"/\=add(candidates, submatch(0))/gne}
+		return filter(candidates, {i,v -> stridx(v, a:base) ==# 0 })
+	endif
+endfu
+
+${4:" make sure s:snr() is defined
+}let &l:cfu = s:snr().'$1'
+$0
+endsnippet
+
+# Why not using  v =~ '^'.a:base  ?{{{2
+#
+# To filter the candidates, we could write this condition:
+#          v =~ '^'.a:base
+#
+# But instead, we write:
+#          filter(candidates, { i,v -> stridx(v, a:base) ==# 0 })
+#
+# Because `a:base` could contain special characters.
+# If there are, we don't want them to be interpreted by the regex engine.
+
+# Is there a case-insensitive alternative?{{{2
+#
+# Yes:
+#
+#	  return empty(a:base)
+#	     \ ?     candidates
+#	     \ :     filter(candidates, { i,v -> v[:strlen(a:base)-1] is? a:base })
+#                                                                   │
+#                                                                   └ ignore case
+#
+# Why treating the case where `a:base` is an empty string separately?
+#
+# If `a:base` is empty, the test will fail for all candidates, and the completion
+# function will not return anything. I don't want that. I want all candidates.
+# MWE:
+#
+#                        ┌─ ''
+#                        │
+#          v[:strlen(a:base)-1]
+#        → v[:-1]
+#        → v
+#          != a:base ('')
+
+
+# conceal {{{1
+
+# Why setting the priority of the match to 0 is important?{{{
+#
+# If the priority is greater, for some reason, any text matching the search register
+# is concealed too.
+#
+# To reproduce the issue, start Vim with this minimal vimrc:
+#
+#	  let @/ = '\cconceal'
+#	  set hlsearch
+#	  setl cocu=nvc cole=1
+#	  call matchadd('Conceal', '^.', 1, -1, {'conceal': 'x'})
+#
+# The text `conceal` will be wrongly concealed. Only the first character
+# on every line should be.
+#
+# Here's a different, but related, issue:
+#
+#	  https://stackoverflow.com/a/24134318/8243465
+#
+# This link  explains that  the priorities  of syntax  highlighting, 'hlsearch',
+# 'cursorline', and concealed characters, are fixed and cannot be overruled.
+#}}}
+snippet conceal "conceal using `matchadd()`" bm
+setl cocu=nc cole=3
+call matchadd('Conceal', ${2:'${1:pat}'}, 0, -1, {'conceal': '${3:x}'})
+$0
+endsnippet
+
+# com {{{1
+
+# FIXME:{{{
+# We need  to add  a tabstop, iff,  the user chooses  the public  function right
+# after the 4th tabstop.
+# We have the same issue in the `fu` snippet.
+#
+# Also, why does  the cursor jump when  we insert a comma right  after the third
+# tabstop?
+# Study the issue from these examples:
+# ✔
+#	  foo $1`!p snip.rv = complete(t[1], ['a', 'b', 'c'])` bar
+# ✘
+#	  foo ${1:bar$2`!p snip.rv = complete(t[2], ['a', 'b', 'c'])` baz}
+#}}}
+snippet com "command" bm
+com! ${1:-bar }${2:-complete=custom$3`!p
+snip.rv = complete(t[3], [',', 'list,'])
+`$4`!p
+snip.rv = complete(t[4], ['s:func', vim.eval("snippets#get_autoload_funcname()")])
+` }${5:-nargs=$6`!p
+snip.rv = complete(t[6], ['0', '1', '*', '?', '+'])
+` } ${7:Cmd}  ${8:call ${9:s:func()}}
+endsnippet
+
+# doautocmd User {{{1
+
+snippet do "Create a hook to be able to register for callback" bm
+if exists('#User#${1:PluginFuncPost}')
+	doautocmd <nomodeline> User $1
+endif
+$0
+endsnippet
+
+# for {{{1
+
+post_expand "forkv_comma(snip)"
+#                                                              ┌ don't translate `\b` into `\u0008`
+#                                                              │ (literal backspace)
+#                                                              │
+snippet , "for [k,v] in …" "snip.last_placeholder and re.match(r'^\s*for\b', snip.buffer[snip.line])" Ae
+endsnippet
+
+post_jump "forkv_items(snip)"
+snippet for "for loop" bm
+for ${1:i} in ${2:a_list}
+	${0:${VISUAL}}
+endfor
+endsnippet
+
+# fu {{{1
+
+# FIXME:
+# Expand the snippet in an autoloaded file.
+# A tabstop is missing.
+# We need to add one, iff, the user chooses the public function,
+# with a `#` sign.
+# Why `post_expand`?{{{
+#
+# When the visual selection contains an  empty line, and our snippet inserts the
+# `${VISUAL}` placeholder, UltiSnips inserts 4 spaces on the line.
+# We need to trim it. The `m` option doesn't work.
+# So, we use a python function invoked via a `post_expand` statement.
+#}}}
+pre_expand "capture_visual_content(snip)"
+post_expand "trim_ws(snip)"
+snippet fu "function definition" bmA
+fu! $1`!p
+snip.rv = complete(t[1], ['s:func', 'Func', vim.eval("snippets#get_autoload_funcname()")])
+`($2) abort
+	${0:${VISUAL}}
+endfu
+endsnippet
+
+# fu_comp {{{1
+
+snippet fu_comp "Completion function for a custom command" bm
+fu! ${1:completion_function}(_a, _l, _p) abort
+	let candidates = [ ${2:''} ]
+	return join(candidates, "\n")
+endfu
+$0
+endsnippet
+
+# Is it necessary to filter the candidates?{{{2
+#
+# It depends on the attributes given to the command which invokes this function:
+#
+#	  • -complete=custom        Vim filters the candidates automatically
+#	  • -complete=customlist    Vim doesn't
+
+# gd {{{1
+
+pre_expand "plugin_guard(snip)"
+snippet gd "plugin guard" Abm
+endsnippet
+
+# if {{{1
+
+snippet if "if statement" bm
+if $1
+	${2:${VISUAL}}
+${4:${3:else}
+	$0
+}endif
+endsnippet
+
+snippet i "elseif" "snip.last_placeholder and snip.last_placeholder.current_text == 'else'" Ae
+elseif $1
+	$2
+${3:else}
+endsnippet
+
+# global !p
+# def complete(t, opts):
+# 	if t:
+# 		opts = [ m for m in opts if m.startswith(t) ]
+# 	if len(opts) == 1:
+# 		return opts[0][len(t):]
+# 	elif len(opts) == 0:
+# 		return ""
+# 	return "  (" + " | ".join(opts) + ")"
+# endglobal
+
+
+# snippet al "always/always_comb/always_ff/always_latch"
+# always$1`!p snip.rv = complete( t[1], ['_comb', '_ff', '_latch'] )`
+# endsnippet
+
+# # pre_expand "snip.buffer[snip.line] = 'always'; snip.cursor.preserve()"
+# snippet always "always @( posedge clock ) .."
+# always @(${1:posedge clock}${2: or negedge reset}) begin
+#   ${0}
+# end
+# endsnippet
+
+# map {{{1
+
+# TODO:
+# We should add `<unique>`, but maybe only for non-plug mappings?
+# And only in a plugin file (not in vimrc or temp file)?
+snippet map "prototype mapping" bm
+nno  `!v
+expand('%:p:h:t') is# 'ftplugin' ? '<buffer><nowait><silent>' : '<silent>'
+`  ${1:cd}  :<c-u>call $2`!p
+snip.rv = complete(t[2], ['<sid>func', 'Func'])
+`()<cr>
+$0
+endsnippet
+
+# map_ft {{{1
+
+snippet map_ft "mapping for ftplugin" bm
+nno  <buffer><nowait><silent>  $0
+endsnippet
+
+# map_plug {{{1
+
+# When you perform a substitution in a mirror, you use the python regex engine.
+# The latter is different than the one in VimL:
+#
+#	  • to get a non-greedy quantifier, you must suffix it with `?`
+#	  • in the replacement part, $123 matches the 123th capturing group
+
+snippet map_plug "plug mapping" bm
+nmap  <unique>  ${1:lhs}  <plug>(${2:plugin_function})
+nno  <silent>  <plug>($2)  :<c-u>call ${2/(.*?)_(.*)/$1#$2/}()<cr>
+$0
+endsnippet
+
+# map_user {{{1
+
+snippet map_user "Install user-respectful mappings" bm
+if empty(mapcheck('${1:key}', '${3:mode}')) && !hasmapto('<plug>(${2:plugin_some_func})', '$3')
+	$3map  <unique>  $1  <plug>($2)
+endif
+$3no  <silent>  <plug>($2)  :<c-u>call ${2/_/#/}()<cr>
+$0
+endsnippet
+
+# op {{{1
+
+snippet op "Custom Operator" bm
+nno  <silent>  ${1:key}     :<c-u>set opfunc=${2:function name}<cr>g@
+nno  <silent>  $1${1/.(.*)/$1/}    :<c-u>set opfunc=$2<bar>exe 'norm! '.v:count1.'g@_'<cr>
+xno  <silent>  $1     :<c-u>call $2('vis')<cr>
+
+com! -bar -range ${3:MyCom} call ${2/<(sid|SID)>/s:/}('Ex', <line1>, <line2>)
+
+fu! ${2/<(sid|SID)>/s:/}(type, ...) abort
+	let cb_save  = &cb
+	let sel_save = &sel
+	let reg_save = [ '"', getreg('"'), getregtype('"') ]
+	try
+		set cb-=unnamed cb-=unnamedplus
+		set sel=inclusive
+
+		if a:type is# 'char'
+			${4:sil norm! \`[v\`]y}
+		elseif a:type is# 'line'
+			${5:sil norm! '[V']y}
+		elseif a:type is# 'block'
+			${6:sil exe "norm! \`[\<c-v>\`]y"}
+		elseif a:type is# 'vis'
+			${7:sil norm! gvy}
+		${8:elseif a:type is# 'Ex'
+			${9:sil exe a:1.','.a:2.'y'}}
+		else
+			return
+		endif
+	catch
+		return lg#catch_error()
+	finally
+		let &cb  = cb_save
+		let &sel = sel_save
+		call call('setreg', reg_save)
+	endtry
+
+	$0
+endfu
+endsnippet
+
+# printf {{{1
+
+snippet printf "execute printf()" m
+exe printf('$1', $0)
+endsnippet
+
+# qf_title {{{1
+
+snippet qf_title "set the title of the qf window" bm
+call setqflist([], 'a', {'title': '${1:my title}'})
+$0
+endsnippet
+
+# Alternative:
+#	  let w:quickfix_title = '$1'
+#
+# Works, but only if we're inside the qf window.
+#
+# The previous syntax is a bit more complex, but also more flexible.
+# It allows us to set the title even outside the qf window, for example inside
+# a function which is building the qf list.
+
+# reg_restore {{{1
+
+snippet reg_restore "Restore the contents and type of registers" bm
+call setreg('${1:z}', $1_reg, $1_type)
+$0
+endsnippet
+
+# reg_save {{{1
+
+snippet reg_save "Temporarily save the contents and type of registers" bm
+let [ ${1:z}_reg, $1_type ] = [ getreg('$1'), getregtype('$1') ]
+$0
+endsnippet
+
+# sidebar {{{1
+
+# Why invoking `tempname()`?{{{
+#
+# 1. To get a unique buffer name.
+#
+#	 Otherwise, if we re-invoke our code twice, we could get an issue.
+#	 For example, we wouldn't be able to use the same buffer name.
+#	 Besides, if the buffer is non-modifiable, `setline()` will fail.
+#
+# 2. To avoid saving the buffer in a file in the working directory by accident.
+#    It shouldn't happen because of `bt=nofile`, but better be safe.
+#}}}
+# Why don't you execute `:setl noma ro` at the end?{{{
+#
+# Generally, you don't want to.
+# `dirvish` doesn't do it, for example.
+# It's good to be able to edit information.
+#
+# However, you DO need to make a buffer non-modifiable when:
+#
+#	  • its only purpose is to be read
+#
+#	  • it's tied to a file
+#
+#	  • it can't be reproduced
+#
+#	    if you edit a help file, by default, you can't undo the change
+#	    after restarting Vim;
+#
+# Those are sufficient conditions, but not necessary.
+# For example, `qf` buffers are not tied to  any file, and yet they are made non
+# modifiable.
+# This is probably due to the qfl data structure. You shouldn't be able to change
+# a qf buffer, because it could introduce a discrepancy with the qfl.
+#}}}
+snippet sidebar "" bm
+let tempfile = tempname().'/${1:buffer name}'
+exe '$2`!p
+snip.rv = complete(t[2], ['leftabove', 'topleft'])
+` '.(&columns/3).'vnew '.tempfile
+setl bh=delete bt=nofile nobl noswf nowrap
+
+call setline(1, ${4:put your text})
+
+nno  <buffer><nowait><silent>  q  :<c-u>close<cr>
+$0
+endsnippet
+
+# snr {{{1
+
+snippet snr "Function to get SNR number" bm
+fu! s:snr()
+	return matchstr(expand('<sfile>'), '<SNR>\d\+_')
+endfu
+$0
+endsnippet
+
+# We can call a script-local function:
+#
+#		  with `s:`     in its script
+#		  with `<sid>`  in a mapping
+#
+# But there's no built-in way to call it outside of its script/mapping.
+# `s:snr()` to the rescue.
+#
+# NOTE:
+# We can't write `expand('<sfile>')` outside the function.
+# It would give us the path to the script file, while we want the name
+# of the function.
+
+# timer {{{1
+
+snippet timer "immediate timer" m
+call timer_start(0, {-> ${1:execute('${3:${VISUAL}}'${2:, ''})}})
+$0
+endsnippet
+
+# try {{{1
+
+snippet try "try ... catch statement" bm
+try
+	${1:${VISUAL}}
+${5:catch${2: /^Vim\%((\a\+)\)\?:E${3:123}/}
+	${4:echohl ErrorMsg
+	echo v:exception
+	echohl NONE}
+}finally
+	$0
+endtry
+endsnippet
+
+# undo {{{1
+
+snippet undo_inde "undo indent settings" bm
+" teardown {{ {1
+
+let b:undo_indent =         get(b:, 'undo_indent', '')
+                  \ .(empty(get(b:, 'undo_indent', '')) ? '' : '|')
+                  \ .'setl ${1:indk}<'
+$0
+endsnippet
+
+# If there are  autocmds, do NOT delete their augroup. Even  if the autocmds for
+# the current buffer are no longer relevant, and should be removed, that doesn't
+# mean that  the augroup is empty. There  could still be other  buffers with the
+# same filetype, using autocmds in this augroup.
+snippet undo_ft "undo ftplugin settings" bm
+" teardown {{ {1
+
+let b:undo_ftplugin =         get(b:, 'undo_ftplugin', '')
+                    \ .(empty(get(b:, 'undo_ftplugin', '')) ? '' : '|')
+                    \ ."${1:
+                    \      setl ${2:option}<}${3:
+                    \    | unlet! b:${4:variable}}${5:
+                    \    | exe 'au! ${6:group_name} * <buffer>'}${7:
+                    \    | exe '${8:n}unmap <buffer> ${9:lhs}'}${10:
+                    \    | exe '${11:c}una   <buffer> ${12:lhs}'}${13:
+                    \    | delc ${14:Cmd}}
+                    \  "
+$0
+endsnippet
+
+# FIXME:
+# when you expand this snippet, if you remove the `setl` line,
+# make sure to remove the first pipe on the next line.
+# Otherwise, the value of `b:undo_ftplugin` may begin with a pipe:
+#
+#     | some commands
+#
+# The empty command before the pipe may have unexpected effect.
+# MWE:
+#		:|echo 'hello'
+#		    → prints current line, then echo 'hello'
+#
+# Update:
+# We could use this:
+#
+#	  `!p snip.rv = ' ' if t[1] == '' else '|'`
+#
+# But what if we remove `:setl …` and `:unlet! …`.
+# And what if we remove `:setl …`, and `:unlet! …`, and `:exe 'au! …'`.
+# …
+
+# vim_plug {{{1
+
+snippet vim_plug "Vim-Plug Plugin definition" bm
+Plug '$0'
+endsnippet
+
+# vimrc {{{1
+
+# Why `after/`?{{{
+#
+# Necessary  if the  plugin we  want to  test has  something inside  an `after/`
+# subdirectory. If we don't add it, none of its file will be sourced.
+#}}}
+# Why ^= instead of +=?{{{
+#
+# Necessary if  the plugin we  want to test  has something inside  a `ftplugin/`
+# subdirectory.
+#
+# If we used `+=` instead, the  default filetype plugin would be sourced before,
+# while it shouldn't be  sourced at all (thanks to a guard).   And if the custom
+# ftplugin contains a guard, it wouldn't be sourced, while it should.
+#}}}
+snippet vimrc "Minimal vimrc to test a plugin" bm
+set rtp^=~/.vim/plugged/vim-lg-lib/
+set rtp^=~/.vim/plugged/vim-readline/
+set rtp^=${1:path/to/plugin/}${2:
+set rtp+=${1/$/\/after/}}
+filetype plugin indent on
+syntax enable
+set wildmenu showcmd
+$0
+endsnippet
+
+# while {{{1
+
+snippet w "while loop" bm
+while $1
+	${0:${VISUAL}}
+endwhile
+endsnippet
+
+# window local options {{{1
+
+snippet wlo "autocmd to set window local options" Abm
+augroup my_${1:filetype}
+	au! * <buffer>
+	au BufWinEnter  <buffer>  setl ${2:fdm=marker}
+	$0
+augroup END
+endsnippet

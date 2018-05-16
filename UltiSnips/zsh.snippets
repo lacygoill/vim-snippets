@@ -1,0 +1,37 @@
+# Enable snippets from `sh` filetype
+extends sh
+
+# fuz {{{1
+
+snippet fuz "function definition" bm
+${1:my_func}() {
+	emulate -LR zsh
+	${0:${VISUAL}}
+}
+endsnippet
+
+# syn_hi {{{1
+
+snippet syn_hi "syntax highlighting" bm
+: ${ZSH_HIGHLIGHT_STYLES[${1:my_highlighter}:${2:my_style}]:=${3:fg=red,bold}}
+
+_zsh_highlight_highlighter_$1_predicate() {
+	${4:# condition for our highlighter to be active}
+}
+
+_zsh_highlight_highlighter_$1_paint() {
+	_zsh_highlight_add_highlight ${5:0} ${6:$#BUFFER} $1:$2
+}
+endsnippet
+
+# $1 = name of our highlighter (arbitrary)
+#    = prefix of the name of the current script file (ex: git-highlighter.zsh)
+#    = name of the directory of the script
+#
+# $2 = name of our style (arbitrary)
+# $3 = value of our style
+# $4 = condition for our highlighter to be active; ex:    [[ -d .git ]]
+#                                                         being in a git repo
+# $5 = beginning of the region to highlight
+# $6 = end       "
+
