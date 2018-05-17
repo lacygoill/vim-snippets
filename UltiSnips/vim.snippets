@@ -52,10 +52,10 @@ endsnippet
 #                 │
 #                 │  ┌ OR, look for anything
 #             ┌───┤ ┌┤
-#		  ${2/( \*)|.*/(?1:: \*)/}
+#         ${2/( \*)|.*/(?1:: \*)/}
 #                       └┤└┤└─┤
 #                        │ │  └ otherwise, insert a space followed by a star
-#                        │ │	(to leave the autocmd pattern unchanged)
+#                        │ │    (to leave the autocmd pattern unchanged)
 #                        │ │
 #                        │ └ replace its contents with nothing
 #                        │   (SPC * SPC <buffer>  →  SPC <buffer>)
@@ -116,9 +116,9 @@ endsnippet
 #
 # Yes:
 #
-#	  return empty(a:base)
-#	     \ ?     candidates
-#	     \ :     filter(candidates, { i,v -> v[:strlen(a:base)-1] is? a:base })
+#     return empty(a:base)
+#        \ ?     candidates
+#        \ :     filter(candidates, { i,v -> v[:strlen(a:base)-1] is? a:base })
 #                                                                   │
 #                                                                   └ ignore case
 #
@@ -145,17 +145,17 @@ endsnippet
 #
 # To reproduce the issue, start Vim with this minimal vimrc:
 #
-#	  let @/ = '\cconceal'
-#	  set hlsearch
-#	  setl cocu=nvc cole=1
-#	  call matchadd('Conceal', '^.', 1, -1, {'conceal': 'x'})
+#     let @/ = '\cconceal'
+#     set hlsearch
+#     setl cocu=nvc cole=1
+#     call matchadd('Conceal', '^.', 1, -1, {'conceal': 'x'})
 #
 # The text `conceal` will be wrongly concealed. Only the first character
 # on every line should be.
 #
 # Here's a different, but related, issue:
 #
-#	  https://stackoverflow.com/a/24134318/8243465
+#     https://stackoverflow.com/a/24134318/8243465
 #
 # This link  explains that  the priorities  of syntax  highlighting, 'hlsearch',
 # 'cursorline', and concealed characters, are fixed and cannot be overruled.
@@ -177,9 +177,9 @@ endsnippet
 # tabstop?
 # Study the issue from these examples:
 # ✔
-#	  foo $1`!p snip.rv = complete(t[1], ['a', 'b', 'c'])` bar
+#     foo $1`!p snip.rv = complete(t[1], ['a', 'b', 'c'])` bar
 # ✘
-#	  foo ${1:bar$2`!p snip.rv = complete(t[2], ['a', 'b', 'c'])` baz}
+#     foo ${1:bar$2`!p snip.rv = complete(t[2], ['a', 'b', 'c'])` baz}
 #}}}
 snippet com "command" bm
 com! ${1:-bar }${2:-complete=custom$3`!p
@@ -254,8 +254,8 @@ endsnippet
 #
 # It depends on the attributes given to the command which invokes this function:
 #
-#	  • -complete=custom        Vim filters the candidates automatically
-#	  • -complete=customlist    Vim doesn't
+#     • -complete=custom        Vim filters the candidates automatically
+#     • -complete=customlist    Vim doesn't
 
 # gd {{{1
 
@@ -316,19 +316,13 @@ snip.rv = complete(t[2], ['<sid>func', 'Func'])
 $0
 endsnippet
 
-# map_ft {{{1
-
-snippet map_ft "mapping for ftplugin" bm
-nno  <buffer><nowait><silent>  $0
-endsnippet
-
 # map_plug {{{1
 
 # When you perform a substitution in a mirror, you use the python regex engine.
 # The latter is different than the one in VimL:
 #
-#	  • to get a non-greedy quantifier, you must suffix it with `?`
-#	  • in the replacement part, $123 matches the 123th capturing group
+#     • to get a non-greedy quantifier, you must suffix it with `?`
+#     • in the replacement part, $123 matches the 123th capturing group
 
 snippet map_plug "plug mapping" bm
 nmap  <unique>  ${1:lhs}  <plug>(${2:plugin_function})
@@ -402,7 +396,7 @@ $0
 endsnippet
 
 # Alternative:
-#	  let w:quickfix_title = '$1'
+#     let w:quickfix_title = '$1'
 #
 # Works, but only if we're inside the qf window.
 #
@@ -430,9 +424,9 @@ endsnippet
 #
 # 1. To get a unique buffer name.
 #
-#	 Otherwise, if we re-invoke our code twice, we could get an issue.
-#	 For example, we wouldn't be able to use the same buffer name.
-#	 Besides, if the buffer is non-modifiable, `setline()` will fail.
+#    Otherwise, if we re-invoke our code twice, we could get an issue.
+#    For example, we wouldn't be able to use the same buffer name.
+#    Besides, if the buffer is non-modifiable, `setline()` will fail.
 #
 # 2. To avoid saving the buffer in a file in the working directory by accident.
 #    It shouldn't happen because of `bt=nofile`, but better be safe.
@@ -445,14 +439,14 @@ endsnippet
 #
 # However, you DO need to make a buffer non-modifiable when:
 #
-#	  • its only purpose is to be read
+#     • its only purpose is to be read
 #
-#	  • it's tied to a file
+#     • it's tied to a file
 #
-#	  • it can't be reproduced
+#     • it can't be reproduced
 #
-#	    if you edit a help file, by default, you can't undo the change
-#	    after restarting Vim;
+#       if you edit a help file, by default, you can't undo the change
+#       after restarting Vim;
 #
 # Those are sufficient conditions, but not necessary.
 # For example, `qf` buffers are not tied to  any file, and yet they are made non
@@ -484,8 +478,8 @@ endsnippet
 
 # We can call a script-local function:
 #
-#		  with `s:`     in its script
-#		  with `<sid>`  in a mapping
+#         with `s:`     in its script
+#         with `<sid>`  in a mapping
 #
 # But there's no built-in way to call it outside of its script/mapping.
 # `s:snr()` to the rescue.

@@ -449,13 +449,13 @@ def undo_ftplugin(snip): #{{{1
         #
         # The empty command before the pipe may have unexpected effect.
         # MWE:
-        #		:|echo 'hello'
-        #		    → prints current line, then echo 'hello'
+        #               :|echo 'hello'
+        #                   → prints current line, then echo 'hello'
         #
         # Update:
         # We could use this:
         #
-        #	  `!p snip.rv = ' ' if t[1] == '' else '|'`
+        #         `!p snip.rv = ' ' if t[1] == '' else '|'`
         #
         # But what if we remove `:setl …` and `:unlet! …`.
         # And what if we remove `:setl …`, and `:unlet! …`, and `:exe 'au! …'`.
