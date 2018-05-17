@@ -384,10 +384,10 @@ def trim_ws(snip): #{{{1
 
     # Why?{{{
     #
-    # There's no need to trim any line if we've expanded the snippet from normal
-    # mode. Besides, it would remove the indentation in front of `$0` in the `fu`
-    # snippet, forcing us to press Tab an extra time to indent the line before
-    # beginning writing the 1st line of the function.
+    # There's no need to trim any line if we've expanded the snippet from insert
+    # mode.
+    # Besides, it  would remove  the indentation  in front of  `$0` in  the `fu`
+    # snippet.
     #}}}
     if not snip.context['visual']:
         return
@@ -433,37 +433,38 @@ def trim_ws(snip): #{{{1
             # Alternative: snip.cursor.set(i, 0)
             #}}}
             snip.cursor.preserve()
+
 def undo_ftplugin(snip): #{{{1
     path_to_file = vim.current.buffer.name
     path_to_dir = os.path.dirname(path_to_file)
 
     if '/ftplugin' in path_to_dir:
-        # If there are autocmds, do NOT delete their augroup.{{{
-        #
-        # Even if  the autocmds for the  current buffer are no  longer relevant,
-        # and should be removed, that doesn't mean that the augroup is empty.
-        # There  could still  be other  buffers  with the  same filetype,  using
-        # autocmds in this augroup.
-        #}}}
-        # FIXME: When you  expand this snippet,  if you remove the  `setl` line,{{{
-        # make sure to remove the first pipe on the next line.
-        # Otherwise, the value of `b:undo_ftplugin` may begin with a pipe:
-        #
-        #     | some commands
-        #
-        # The empty command before the pipe may have unexpected effect.
-        # MWE:
-        #               :|echo 'hello'
-        #                   → prints current line, then echo 'hello'
-        #
-        # Update:
-        # We could use this:
-        #
-        #         `!p snip.rv = ' ' if t[1] == '' else '|'`
-        #
-        # But what if we remove `:setl …` and `:unlet! …`.
-        # And what if we remove `:setl …`, and `:unlet! …`, and `:exe 'au! …'`.
-        # ...}}}
+        """ If there are autocmds, do NOT delete their augroup.{{{
+
+        Even if  the autocmds for the  current buffer are no  longer relevant,
+        and should be removed, that doesn't mean that the augroup is empty.
+        There  could still  be other  buffers  with the  same filetype,  using
+        autocmds in this augroup.
+        }}}"""
+        """ FIXME: When you  expand this snippet,  if you remove the  `setl` line,{{{
+        make sure to remove the first pipe on the next line.
+        Otherwise, the value of `b:undo_ftplugin` may begin with a pipe:
+
+            | some commands
+
+        The empty command before the pipe may have unexpected effect.
+        MWE:
+                      :|echo 'hello'
+                          → prints current line, then echo 'hello'
+
+        Update:
+        We could use this:
+
+                `!p snip.rv = ' ' if t[1] == '' else '|'`
+
+        But what if we remove `:setl …` and `:unlet! …`.
+        And what if we remove `:setl …`, and `:unlet! …`, and `:exe 'au! …'`.
+        ...}}}"""
 
         anon_snip_body = (
               '" teardown {{' + '{1'
