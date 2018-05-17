@@ -328,36 +328,40 @@ def plugin_guard(snip): #{{{1
     # `dirname()` has removed the ending slash from the path.
     #}}}
     if '/autoload' in path_to_dir:
-        anon_snip_body = ("if exists('${2:g:autoloaded_${1:"
-            + relative_path.replace('/', '#')
-            + "}}')"
+        anon_snip_body = (
+              "if exists('${2:g:autoloaded_${1:" + relative_path.replace('/', '#') + "}}')"
             + finish
             + '\nendif'
             + '\nlet $2 = 1'
-            + '\n$0')
+            + '\n$0'
+        )
 
     elif '/plugin' in path_to_dir:
-        anon_snip_body = ("if exists('${2:g:loaded_${1:"
-            + basename
-            + "}}')"
+        anon_snip_body = (
+              "if exists('${2:g:loaded_${1:" + basename + "}}')"
             + finish
             + '\nendif'
             + '\nlet $2 = 1'
-            + '\n$0')
+            + '\n$0'
+        )
 
     elif '/ftplugin' in path_to_dir:
-        anon_snip_body = ("if exists('b:did_ftplugin')"
+        anon_snip_body = (
+              "if exists('b:did_ftplugin')"
             + finish
             + '\nendif'
             + '\nlet b:did_ftplugin = 1'
-            + '\n\n$0')
+            + '\n\n$0'
+        )
 
     elif '/syntax' in path_to_dir:
-        anon_snip_body = ("if exists('b:current_syntax')"
+        anon_snip_body = (
+              "if exists('b:current_syntax')"
             + finish
             + '\nendif'
             + '\n\n$0'
-            + "\n\nlet b:current_syntax = '$1'")
+            + "\n\nlet b:current_syntax = '$1'"
+        )
 
     else:
         # Why `preserve()`?{{{
@@ -461,7 +465,8 @@ def undo_ftplugin(snip): #{{{1
         # And what if we remove `:setl …`, and `:unlet! …`, and `:exe 'au! …'`.
         # ...}}}
 
-        anon_snip_body = ('" teardown {{' + '{1'
+        anon_snip_body = (
+              '" teardown {{' + '{1'
             + '\n'
             + "\nlet b:undo_ftplugin =         get(b:, 'undo_ftplugin', '')"
             + "\n                    \ .(empty(get(b:, 'undo_ftplugin', '')) ? '' : '|')"
@@ -474,16 +479,17 @@ def undo_ftplugin(snip): #{{{1
             + '\n                    \    | delc ${14:Cmd}}'
             + '\n                    \  "'
             + '\n$0'
-            )
+        )
 
     elif '/indent' in path_to_dir:
-        anon_snip_body = ('" teardown {{' + '{1'
+        anon_snip_body = (
+              '" teardown {{' + '{1'
             + '\n'
             + "\nlet b:undo_indent =         get(b:, 'undo_indent', '')"
             + "\n                  \ .(empty(get(b:, 'undo_indent', '')) ? '' : '|')"
             + "\n                  \ .'setl ${1:indk}<'"
             + '\n$0'
-            )
+        )
 
     else:
         snip.cursor.preserve()
