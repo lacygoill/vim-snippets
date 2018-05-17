@@ -59,6 +59,10 @@ It splits a string at the last dot, and returns a list with two items:
         >>> os.path.splitext('foo.bar.baz')
         ('foo.bar', '.baz')
 
+# How to cast a data into a string?
+
+Use the `str()` function.
+
 # I need to extract a substring from some text, but maybe it's not there. How to handle a possible exception?
 
 Use a `try` statement and a `catch` clause:
@@ -67,4 +71,47 @@ Use a `try` statement and a `catch` clause:
             substring = re.search('...(...)...', text).group(1)
         except AttributeError:
             substring = ''
+
+# Can I use continuation lines?
+
+Surround your lines with parentheses, brackets or braces:
+it's called implicit continuation.
+
+As for the indentation of the lines, some styles are recommended over others:
+
+        https://www.python.org/dev/peps/pep-0008/#indentation
+
+
+Use one of these:
+
+        # Aligned with opening delimiter.
+        foo = long_function_name(var_one, var_two,
+                                 var_three, var_four)
+
+        # More indentation included to distinguish this from the rest.
+        def long_function_name(
+                var_one, var_two, var_three,
+                var_four):
+            print(var_one)
+
+        # Hanging indents should add a level.
+        foo = long_function_name(
+            var_one, var_two,
+            var_three, var_four)
+
+---
+
+If an implicit continuation is not possible,  then use a backslash at the end of
+the line to suppress the newline.
+
+> Backslashes may still be appropriate at times.
+> For example, long, multiple with-statements cannot use implicit continuation, so
+> backslashes are acceptable:
+>
+>     with open('/path/to/some/file/you/want/to/read') as file_1, \
+>          open('/path/to/some/file/being/written', 'w') as file_2:
+>         file_2.write(file_1.read())
+
+Source:
+        https://www.python.org/dev/peps/pep-0008/#maximum-line-length
 

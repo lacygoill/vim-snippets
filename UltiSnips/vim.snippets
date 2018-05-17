@@ -232,7 +232,7 @@ endsnippet
 #}}}
 pre_expand "capture_visual_content(snip)"
 post_expand "trim_ws(snip)"
-snippet fu "function definition" bmA
+snippet fu "function definition" Abm
 fu! $1`!p
 snip.rv = complete(t[1], ['s:func', 'Func', vim.eval("snippets#get_autoload_funcname()")])
 `($2) abort
@@ -518,55 +518,9 @@ endsnippet
 
 # undo {{{1
 
-snippet undo_inde "undo indent settings" bm
-" teardown {{ {1
-
-let b:undo_indent =         get(b:, 'undo_indent', '')
-                  \ .(empty(get(b:, 'undo_indent', '')) ? '' : '|')
-                  \ .'setl ${1:indk}<'
-$0
+pre_expand "undo_ftplugin(snip)"
+snippet undo "undo filetype/indent settings" Abm
 endsnippet
-
-# If there are  autocmds, do NOT delete their augroup. Even  if the autocmds for
-# the current buffer are no longer relevant, and should be removed, that doesn't
-# mean that  the augroup is empty. There  could still be other  buffers with the
-# same filetype, using autocmds in this augroup.
-snippet undo_ft "undo ftplugin settings" bm
-" teardown {{ {1
-
-let b:undo_ftplugin =         get(b:, 'undo_ftplugin', '')
-                    \ .(empty(get(b:, 'undo_ftplugin', '')) ? '' : '|')
-                    \ ."${1:
-                    \      setl ${2:option}<}${3:
-                    \    | unlet! b:${4:variable}}${5:
-                    \    | exe 'au! ${6:group_name} * <buffer>'}${7:
-                    \    | exe '${8:n}unmap <buffer> ${9:lhs}'}${10:
-                    \    | exe '${11:c}una   <buffer> ${12:lhs}'}${13:
-                    \    | delc ${14:Cmd}}
-                    \  "
-$0
-endsnippet
-
-# FIXME:
-# when you expand this snippet, if you remove the `setl` line,
-# make sure to remove the first pipe on the next line.
-# Otherwise, the value of `b:undo_ftplugin` may begin with a pipe:
-#
-#     | some commands
-#
-# The empty command before the pipe may have unexpected effect.
-# MWE:
-#		:|echo 'hello'
-#		    → prints current line, then echo 'hello'
-#
-# Update:
-# We could use this:
-#
-#	  `!p snip.rv = ' ' if t[1] == '' else '|'`
-#
-# But what if we remove `:setl …` and `:unlet! …`.
-# And what if we remove `:setl …`, and `:unlet! …`, and `:exe 'au! …'`.
-# …
 
 # vim_plug {{{1
 

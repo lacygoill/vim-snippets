@@ -15,6 +15,13 @@ import os, random, re, string, vim
 # TODO:
 # understand all the new functions
 
+# TODO:
+# Split this file into several ones, once it becomes too big.
+# For the layout, take inspiration from there:
+#
+#     https://github.com/reconquest/vim-pythonx
+#     https://github.com/reconquest/snippets
+
 def advance_jumper(snip): #{{{1
     return _make_jumper_jump(snip, 'forwards')
 
@@ -422,3 +429,66 @@ def trim_ws(snip): #{{{1
             # Alternative: snip.cursor.set(i, 0)
             #}}}
             snip.cursor.preserve()
+def undo_ftplugin(snip): #{{{1
+    path_to_file = vim.current.buffer.name
+    path_to_dir = os.path.dirname(path_to_file)
+
+    if '/ftplugin' in path_to_dir:
+        # If there are autocmds, do NOT delete their augroup.{{{
+        #
+        # Even if  the autocmds for the  current buffer are no  longer relevant,
+        # and should be removed, that doesn't mean that the augroup is empty.
+        # There  could still  be other  buffers  with the  same filetype,  using
+        # autocmds in this augroup.
+        #}}}
+        # FIXME: When you  expand this snippet,  if you remove the  `setl` line,{{{
+        # make sure to remove the first pipe on the next line.
+        # Otherwise, the value of `b:undo_ftplugin` may begin with a pipe:
+        #
+        #     | some commands
+        #
+        # The empty command before the pipe may have unexpected effect.
+        # MWE:
+        #		:|echo 'hello'
+        #		    → prints current line, then echo 'hello'
+        #
+        # Update:
+        # We could use this:
+        #
+        #	  `!p snip.rv = ' ' if t[1] == '' else '|'`
+        #
+        # But what if we remove `:setl …` and `:unlet! …`.
+        # And what if we remove `:setl …`, and `:unlet! …`, and `:exe 'au! …'`.
+        # ...}}}
+
+        anon_snip_body = ('" teardown {{' + '{1'
+            + '\n'
+            + "\nlet b:undo_ftplugin =         get(b:, 'undo_ftplugin', '')"
+            + "\n                    \ .(empty(get(b:, 'undo_ftplugin', '')) ? '' : '|')"
+            + '\n                    \ ."${1:'
+            + '\n                    \      setl ${2:option}<}${3:'
+            + '\n                    \    | unlet! b:${4:variable}}${5:'
+            + "\n                    \    | exe 'au! ${6:group_name} * <buffer>'}${7:"
+            + "\n                    \    | exe '${8:n}unmap <buffer> ${9:lhs}'}${10:"
+            + "\n                    \    | exe '${11:c}una   <buffer> ${12:lhs}'}${13:"
+            + '\n                    \    | delc ${14:Cmd}}'
+            + '\n                    \  "'
+            + '\n$0'
+            )
+
+    elif '/indent' in path_to_dir:
+        anon_snip_body = ('" teardown {{' + '{1'
+            + '\n'
+            + "\nlet b:undo_indent =         get(b:, 'undo_indent', '')"
+            + "\n                  \ .(empty(get(b:, 'undo_indent', '')) ? '' : '|')"
+            + "\n                  \ .'setl ${1:indk}<'"
+            + '\n$0'
+            )
+
+    else:
+        snip.cursor.preserve()
+        return
+
+    snip.buffer[snip.line] = ''
+    snip.expand_anon(anon_snip_body)
+
