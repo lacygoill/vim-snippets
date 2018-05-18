@@ -65,7 +65,7 @@ Use the `str()` function.
 
 # I need to extract a substring from some text, but maybe it's not there. How to handle a possible exception?
 
-Use a `try` statement and a `catch` clause:
+Use a `try` statement and an `except` clause:
 
         try:
             substring = re.search('...(...)...', text).group(1)

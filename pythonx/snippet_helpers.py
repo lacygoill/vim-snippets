@@ -433,7 +433,7 @@ def trim_ws(snip): #{{{1
             snip.buffer[snip.snippet_start[0]+i] = ''
             # Why?{{{
             #
-            # To avoid error when we expand the snippet from normal mode:
+            # To avoid error when we expand the snippet from visual mode:
             #
             #     RuntimeError: line under the cursor was modified,
             #     but "snip.cursor" variable is not set;

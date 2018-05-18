@@ -47,3 +47,48 @@ Which is why, here, you need to concatenate two double quotes.
         '"' + str(your_variable) + '"'
         ✔
 
+# Is it possible to prevent UltiSnips from consuming the tab trigger?
+
+Only  if you  use a  `pre_expand`  statement, and  from the  expression/function
+invoked by the latter, you invoke one of these:
+
+        • snip.cursor.preserve()
+
+        • snip.expand_anon()
+
+# How to remove the tab trigger if UltiSnips didn't do it?   (assuming it's alone on the line)
+
+        snip.buffer[snip.line] = ''
+
+##
+# Issues
+## How to deal with “line under the cursor was modified, but "snip.cursor" variable is not set”?
+
+Invoke one of these:
+
+        snip.cursor.preserve()
+        snip.cursor.set(snip.cursor[0], snip.cursor[1])
+
+---
+
+MWE:
+
+        global !p
+        def func(snip):
+            if 'foobar' in vim.current.buffer.name:
+                anon_snip_body = 'hello world'
+            else:
+                snip.cursor.preserve()
+                return
+
+            snip.buffer[snip.line] = ''
+            snip.expand_anon(anon_snip_body)
+        endglobal
+
+        pre_expand "func(snip)"
+        snippet ab "" Abm
+        endsnippet
+
+This snippet expands the tab trigger `ab` into `hello world` iff the path to the
+current file contains the word `foobar`.
+

@@ -1,13 +1,3 @@
-Document the error complaining about the cursor.
-Include a MWE.
-Explain one solution is to invoke one of these:
-
-        snip.cursor.set(i, 0)
-        snip.cursor.preserve()
-
-Look for  the pattern  `preserve(` in `~/.vim/pythonx/snippet_helpers.py`  for a
-usage example.
-
 ## What's the first argument expected  by `complete()`?
 
 The weight of the text up to the word you want to complete + 1.
@@ -390,11 +380,10 @@ It positions the cursor on the 12th line and the 34th column.
 
 Only from a `pre_expand` or `post_jump` statement.
 
-If the code needs to modify the line where the trigger was matched, then it will
-have to invoke `snip.cursor.set(x,y)` with the desired cursor position.
+## When is `snip.cursor.set()` necessary?
 
-And, in that case, UltiSnips will not remove the tab_trigger: the code should do
-it itself.
+If your code  needs to modify the  line where the trigger was  matched, then you
+will have to invoke `snip.cursor.set(x,y)` with the desired cursor position.
 
 #
 #
@@ -938,9 +927,8 @@ The 'snip' object provides some properties as well:
     ` words per minute
     endsnippet
 
-            Si  on  écrit  un bloc  de  code  python,  après  le `!p`,  on  peut
-            chaque écrire  chaque instruction  sur une ligne  dédiée, pour  + de
-            lisibilité.
+            Si on écrit  un bloc de code  python, après le `!p`,  on peut écrire
+            chaque instruction sur une ligne dédiée, pour + de lisibilité.
 
             De  plus, UltiSnips  configure  automatiquement  certains objets  et
             variables python, valables au sein du bloc de code:
@@ -1749,10 +1737,6 @@ exécuter une directive. Parmi ces mots-clés, on trouve:
 #
 #
 #
-# Issues
-#
-#
-#
 # TODO
 
 Read these PRs:
@@ -1801,26 +1785,6 @@ Make some tests.
 Document the results.
 It may be a bug.
 Report it.
-
----
-
-Document this:
-
-Test if Vim is compiled with python version 2.x:
-
-    :echo has('python')
-
-The python version Vim is linked against can be found with:
-
-    :py import sys; print(sys.version)
-
-Test if Vim is compiled with python version 3.x:
-
-    :echo has('python3')
-
-The python version Vim is linked against can be found with:
-
-    :py3 import sys; print(sys.version)
 
 ---
 
