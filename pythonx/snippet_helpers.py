@@ -328,6 +328,15 @@ def plugin_guard(snip): #{{{1
     #
     # `dirname()` has removed the ending slash from the path.
     #}}}
+    # TODO: When can we omit the `+` operator?{{{
+    #
+    # We can after and before a string.
+    # But we can't after nor before a variable containing a string.
+    # So, here,  we could remove  most `+` except  the ones around  the variable
+    # `finish`.
+    # Are there other cases where we cannot?
+    # What are the rules regarding the omission of operators?
+    #}}}
     if '/autoload' in path_to_dir:
         anon_snip_body = (
             "if exists('${2:g:autoloaded_${1:" + relative_path.replace('/', '#') + "}}')"
