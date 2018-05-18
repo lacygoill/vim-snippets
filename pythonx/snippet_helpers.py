@@ -10,7 +10,11 @@
 
 # We import  the same modules  that UltiSnips  automatically import in  a python
 # interpolation.
-import os, random, re, string, vim
+import os
+import random
+import re
+import string
+import vim
 
 # TODO:
 # understand all the new functions
@@ -139,8 +143,8 @@ def clean_first_placeholder(snip): #{{{1
         #     3. the space
         #}}}
         snip.cursor.set(
-                snip.cursor[0],
-                snip.cursor[1] - 3,
+            snip.cursor[0],
+            snip.cursor[1] - 3,
         )
 
 def complete(base, candidates): #{{{1
@@ -154,7 +158,7 @@ def complete(base, candidates): #{{{1
     if base:
         # filter the  list, removing the  candidates which don't start  like the
         # text to complete
-        candidates = [ c[len(base):] for c in candidates if c.startswith(base) ]
+        candidates = [c[len(base):] for c in candidates if c.startswith(base)]
         #              └───────────┤ └─────────────────┤ └───────────────────┤{{{
         #                          │                   │                     └ but keep only the ones
         #                          │                   │                       which start with `base`
@@ -179,27 +183,24 @@ def complete(base, candidates): #{{{1
 def create_table(snip): #{{{1
     # get the dimension of the table (how many rows x how many columns)
 
-    #                                   ┌ remove leading/trailing whitespace
-    #                                   │
-    #                                   │   ┌ remove the first 2 characters (`tb`)
-    #                                   │   │
-    #                                   │   │            ┌ split the rest every `x`
-    #                                   │   │            │ do it only once
-    #                             ┌─────┤┌──┤ ┌──────────┤
-    dim  = snip.buffer[snip.line].strip()[2:].split('x',1)
+    #                                  ┌ remove leading/trailing whitespace
+    #                                  │
+    #                                  │   ┌ remove the first 2 characters (`tb`)
+    #                                  │   │
+    #                                  │   │             ┌ split the rest every `x`
+    #                                  │   │             │ do it only once
+    #                            ┌─────┤┌──┤ ┌───────────┤
+    dim = snip.buffer[snip.line].strip()[2:].split('x', 1)
     rows = int(dim[0])
     cols = int(dim[1])
 
     # create anonymous snippet with expected content and number of tabstops
-    anon_snip_title     = ' | '.join(['$' + str(col) for col in range(1,cols+1)]) + "\n"
+    anon_snip_title = ' | '.join(['$' + str(col) for col in range(1, cols+1)]) + '\n'
     anon_snip_delimiter = '--|' * (cols-1) + "--\n"
 
     anon_snip_body = ''
-    for row in range(1,rows+1):
-        anon_snip_body += ' | '.join(['$' + str(row*cols+col) for col in range(1,cols+1)]) + "\n"
-        #                                                                                    │
-        #                         not necessary, but we use double quotes to stay consistent ┘
-        #                         with how strings are parsed in other languages
+    for row in range(1, rows+1):
+        anon_snip_body += ' | '.join(['$' + str(row*cols+col) for col in range(1, cols+1)]) + '\n'
 
     anon_snip_table = anon_snip_title + anon_snip_delimiter + anon_snip_body
 
@@ -279,8 +280,8 @@ def _make_jumper_jump(snip, direction): #{{{1
     jumper['enabled'] = False
 
     vim.eval('feedkeys("\<c-r>=UltiSnips#Jump'
-                             + direction.title()
-                             + '()\<cr>")')
+             + direction.title()
+             + '()\<cr>")')
 
     return True
 
@@ -329,7 +330,7 @@ def plugin_guard(snip): #{{{1
     #}}}
     if '/autoload' in path_to_dir:
         anon_snip_body = (
-              "if exists('${2:g:autoloaded_${1:" + relative_path.replace('/', '#') + "}}')"
+            "if exists('${2:g:autoloaded_${1:" + relative_path.replace('/', '#') + "}}')"
             + finish
             + '\nendif'
             + '\nlet $2 = 1'
@@ -338,7 +339,7 @@ def plugin_guard(snip): #{{{1
 
     elif '/plugin' in path_to_dir:
         anon_snip_body = (
-              "if exists('${2:g:loaded_${1:" + basename + "}}')"
+            "if exists('${2:g:loaded_${1:" + basename + "}}')"
             + finish
             + '\nendif'
             + '\nlet $2 = 1'
@@ -347,7 +348,7 @@ def plugin_guard(snip): #{{{1
 
     elif '/ftplugin' in path_to_dir:
         anon_snip_body = (
-              "if exists('b:did_ftplugin')"
+            "if exists('b:did_ftplugin')"
             + finish
             + '\nendif'
             + '\nlet b:did_ftplugin = 1'
@@ -356,7 +357,7 @@ def plugin_guard(snip): #{{{1
 
     elif '/syntax' in path_to_dir:
         anon_snip_body = (
-              "if exists('b:current_syntax')"
+            "if exists('b:current_syntax')"
             + finish
             + '\nendif'
             + '\n\n$0'
@@ -398,7 +399,7 @@ def trim_ws(snip): #{{{1
     #                                                    │
     #                                                    │                   ┌ address of last line in snippet
     #                                ┌───────────────────┤ ┌─────────────────┤}}}
-    for i,l in enumerate(snip.buffer[snip.snippet_start[0]:snip.snippet_end[0]]):
+    for i, l in enumerate(snip.buffer[snip.snippet_start[0]:snip.snippet_end[0]]):
     #   └─┤    └───────┤{{{
     #     │            │
     #     │            └ iterate over some lines of the buffer
@@ -439,35 +440,35 @@ def undo_ftplugin(snip): #{{{1
     path_to_dir = os.path.dirname(path_to_file)
 
     if '/ftplugin' in path_to_dir:
-        """ If there are autocmds, do NOT delete their augroup.{{{
-
-        Even if  the autocmds for the  current buffer are no  longer relevant,
-        and should be removed, that doesn't mean that the augroup is empty.
-        There  could still  be other  buffers  with the  same filetype,  using
-        autocmds in this augroup.
-        }}}"""
-        """ FIXME: When you  expand this snippet,  if you remove the  `setl` line,{{{
-        make sure to remove the first pipe on the next line.
-        Otherwise, the value of `b:undo_ftplugin` may begin with a pipe:
-
-            | some commands
-
-        The empty command before the pipe may have unexpected effect.
-        MWE:
-                      :|echo 'hello'
-                          → prints current line, then echo 'hello'
-
-        Update:
-        We could use this:
-
-                `!p snip.rv = ' ' if t[1] == '' else '|'`
-
-        But what if we remove `:setl …` and `:unlet! …`.
-        And what if we remove `:setl …`, and `:unlet! …`, and `:exe 'au! …'`.
-        ...}}}"""
+        # If there are autocmds, do NOT delete their augroup.{{{
+        #
+        # Even if  the autocmds for the  current buffer are no  longer relevant,
+        # and should be removed, that doesn't mean that the augroup is empty.
+        # There  could still  be other  buffers  with the  same filetype,  using
+        # autocmds in this augroup.
+        # }}}
+        # FIXME: When you  expand this snippet,  if you remove the  `setl` line,{{{
+        # make sure to remove the first pipe on the next line.
+        # Otherwise, the value of `b:undo_ftplugin` may begin with a pipe:
+        #
+        #     | some commands
+        #
+        # The empty command before the pipe may have unexpected effect.
+        # MWE:
+        #               :|echo 'hello'
+        #                   → prints current line, then echo 'hello'
+        #
+        # Update:
+        # We could use this:
+        #
+        #         `!p snip.rv = ' ' if t[1] == '' else '|'`
+        #
+        # But what if we remove `:setl …` and `:unlet! …`.
+        # And what if we remove `:setl …`, and `:unlet! …`, and `:exe 'au! …'`.
+        # ...}}}
 
         anon_snip_body = (
-              '" teardown {{' + '{1'
+            '" teardown {{' + '{1'
             + '\n'
             + "\nlet b:undo_ftplugin =         get(b:, 'undo_ftplugin', '')"
             + "\n                    \ .(empty(get(b:, 'undo_ftplugin', '')) ? '' : '|')"
@@ -484,7 +485,7 @@ def undo_ftplugin(snip): #{{{1
 
     elif '/indent' in path_to_dir:
         anon_snip_body = (
-              '" teardown {{' + '{1'
+            '" teardown {{' + '{1'
             + '\n'
             + "\nlet b:undo_indent =         get(b:, 'undo_indent', '')"
             + "\n                  \ .(empty(get(b:, 'undo_indent', '')) ? '' : '|')"
