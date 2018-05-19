@@ -64,6 +64,9 @@ invoked by the latter, you invoke one of these:
 # Issues
 ## How to deal with “line under the cursor was modified, but "snip.cursor" variable is not set”?
 
+This issue arises when  you modify the line of the  tab trigger, without setting
+the new position of the cursor.
+
 Invoke one of these:
 
         snip.cursor.preserve()

@@ -2,20 +2,20 @@
 
 The weight of the text up to the word you want to complete + 1.
 
-Why +1?
-Probably because `0` reserved for an error.
+Why `+1`?
+Probably because `0` is reserved for an error.
 From `:h complete()`:
 
-> Use col('.') for an empty string.
-> "col('.') - 1" will replace one character by a match.
+>     Use col('.') for an empty string.
+>     "col('.') - 1" will replace one character by a match.
 
-## How to get a list of the snippets whose tab_trigger is matched by the word before the cursor?
+## How to get a list of the snippets whose tab trigger is matched by the word before the cursor?
 
 Use `UltiSnips#SnippetsInCurrentScope()`.
 
 It will give you a dictionary whose:
 
-        • keys  are the  tab_triggers of  the  snippets available  in the
+        • keys  are the  tab triggers of  the  snippets available  in the
           current buffer, and which are matched by the word before the cursor
 
         • values are the description of the snippets
@@ -45,7 +45,8 @@ What's the output of the function without argument?
 
 What's the output of the function with `1` as argument?
 The same as without argument, except the restriction “the word before the cursor
-must match the tab_trigger” is removed. IOW, all snippets are listed.
+must match the tab trigger” is removed.
+IOW, all snippets are listed.
 
 Example of value:
 
@@ -80,8 +81,8 @@ Usage example:
         endfu
         ino <silent>  <c-l>  <c-r>=Expand_possible_shorter_snippet() == 0 ? '' : UltiSnips#ExpandSnippet()<cr>
 
-This  code  installs  a  `C-l`   mapping  which  completes  a  possible  partial
-tab_trigger, and automatically expands it.
+This  code installs  a  `C-l` mapping  which completes  a  possible partial  tab
+trigger, and automatically expands it.
 
 ---
 
@@ -143,7 +144,7 @@ Note that you could also use a `post_jump` statement:
 Use the same technique as for creating an alias.
 With one caveat:
 don't  give   the  `b`  option   to  the   second  snippet  (the   one  expanded
-programmatically), unless you know for sure  that its tab_trigger will always be
+programmatically), unless you know for sure  that its tab trigger will always be
 at the beginning of a line, even inside other snippets.
 
                        ┌ don't add `b`:
@@ -368,7 +369,7 @@ From a context statement, you could also use:
 Only from a `post_expand` and `post_jump` statement.
 
 You can use them from an interpolation, but they don't give the expected result:
-they seem to give the position of the tab_trigger.
+they seem to give the position of the tab trigger.
 
 ##
 # Methods
@@ -470,8 +471,8 @@ will have to invoke `snip.cursor.set(x,y)` with the desired cursor position.
 ## context
 
 By default, a snippet is used to expand  the text before the cursor only if it's
-matched by the tab_trigger (keyword, regex).
-And a tab_trigger can be expanded with only one snippet.
+matched by the tab trigger (keyword, regex).
+And a tab trigger can be expanded with only one snippet.
 
 You  can  give more  “intelligence”  to  a  snippet  and work  around  those
 limitations, by passing it the `e` option.
@@ -481,7 +482,7 @@ It will allow you to:
         • make the snippet take into consideration more than just the text
           before the cursor
 
-        • expand a tab_trigger with more than 1 snippet
+        • expand a tab trigger with more than 1 snippet
 
 To do so, the snippet should be defined using one of those syntaxes:
 
@@ -620,12 +621,13 @@ Python code invoked from a `context` statement can use the variables:
 
                                      NOTE:
 
-            For this to work, you need to choose a single-character tab_trigger.
-            Also, the expression `snip.last_placeholder`  is not precise enough.
+            For this to work, you need to choose a single-character tab trigger.
+            Also, the expression `snip.last_placeholder` is not precise enough.
             Currently,  it will  be expanded  when you  press `=`,  while you're
             selecting a tabstop of ANY snippet.
             It should be expanded only in the snippet for which it was intended.
-            You'll need to add a condition. Ex:
+            You'll need to add a condition.
+            Ex:
 
                     snip.last_placeholder and snip.last_placeholder.current_text == 'else'
 
@@ -655,7 +657,7 @@ Python code invoked from a `context` statement can use the variables:
 
                                      NOTE:
 
-            More  generally, a  single-character tab_trigger  combined with  the
+            More  generally, a  single-character tab  trigger combined  with the
             options `Ae` allows you to include a snippet inside a snippet.
 
             And the inner snippet can itself contain tabstops:
@@ -681,7 +683,7 @@ Python code invoked from a `context` statement can use the variables:
                     └─┤
                       └ 1st tabstop of the 1st snippet is selected
 
-                        ┌ tab_trigger of inner snippet
+                        ┌ tab trigger of inner snippet
                         │
                     foo + bar
                     →
@@ -722,7 +724,8 @@ Python code invoked from a `context` statement can use the variables:
             xy        →   context2
                 xy            non-context
 
-            You can have several snippets using the same tab_trigger and the option `e`.
+            You can  have several snippets  using the  same tab trigger  and the
+            option `e`.
 
             UltiSnips will  test each  of them,  and use the  one for  which the
             expression is true.
@@ -731,9 +734,9 @@ Python code invoked from a `context` statement can use the variables:
             let the user choose one.
 
             If none of them  has a true expression, and a  snippet uses the same
-            tab_trigger without `e`, the latter will be used as a fallback.
+            tab trigger without `e`, the latter will be used as a fallback.
 
-            These rules allow you to expand a tab_trigger in as many ways as you
+            These rules allow you to expand a tab trigger in as many ways as you
             want, depending on the contents of the buffer.
 
 ## interpolation
@@ -1108,10 +1111,10 @@ Don't confuse the method `re.match()` with the object `match`.
 
 `re.match()` allows you to compare a string with a regex.
 `match` is automatically created by UltiSnips when you use the `r` option to
-create a snippet whose tab_trigger is a regex.
+create a snippet whose tab trigger is a regex.
 
 It contains the match and all captured groups resulting from the comparison
-between the regex of the tab_trigger and the text which was in front of the
+between the regex of the tab trigger and the text which was in front of the
 cursor when Tab was pressed.
 
 ---
@@ -1124,7 +1127,7 @@ To retrieve a capturing group, use the `group()` method:
                 123th  captured group,  in the  regex matched  against the  text
                 before the cursor; the regex being used in:
 
-                • the tab_trigger       (with the `r` option)
+                • the tab trigger       (with the `r` option)
                 • the expression field  (with the `e` option)
 
 ---
@@ -1376,8 +1379,9 @@ comme pex l'insertion d'une date.
                     i  <S-Tab>     *@<C-R>=UltiSnips#JumpBackwards()<cr>
                     s  <S-Tab>     *@<Esc>:call UltiSnips#JumpBackwards()<cr>
 
-            Les locaux sont installés dès qu'un tab trigger est développé, et supprimés dès que
-            le développement est terminé (:h UltiSnips-triggers):
+            Les  locaux sont  installés  dès qu'un  tab  trigger est  développé,
+            et   supprimés   dès   que   le  développement   est   terminé   (:h
+            UltiSnips-triggers):
 
                     UltiSnips will only map the jump triggers while a snippet is
                     active to interfere as little as possible with other mappings.
