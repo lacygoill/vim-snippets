@@ -17,7 +17,7 @@ substitute(join(split(execute('version'), '\n')[0:1]), '(.\{-})', '', '')
 `
  - \`$TERM\`:              `echo $TERM`
  - Shell:                `!v
-    matchstr(systemlist('zsh --version')[0], '.\{-\}\ze\s*(')
+    systemlist('zsh --version')[0]
 `
 $0
 endsnippet

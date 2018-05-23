@@ -188,7 +188,7 @@ snip.rv = complete(t[3], [',', 'list,'])
 snip.rv = complete(t[4], ['s:func', vim.eval("snippets#get_autoload_funcname()")])
 ` }${5:-nargs=$6`!p
 snip.rv = complete(t[6], ['0', '1', '*', '?', '+'])
-` } ${7:Cmd}  ${8:call ${9:s:func()}}
+` }${7:-range=% }${8:Cmd}  ${9:call ${10:s:func()}}
 endsnippet
 
 # doautocmd User {{{1
