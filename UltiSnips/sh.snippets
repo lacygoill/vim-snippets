@@ -145,8 +145,8 @@ endsnippet
 
 # https://stackoverflow.com/a/18216122/8243465
 snippet guard_root "check we've enough rights to run script" bm
-if [ "$EUID" -ne 0 ]
-	then echo "Please run as root"
+if [[ "$EUID" -ne 0 ]]; then
+	echo "Please run as root"
 	exit
 fi
 endsnippet
@@ -172,10 +172,10 @@ endsnippet
 
 snippet log "log output of script" bm
 exec 3>&1 4>&2
-[ -d ~/log ] || mkdir ~/log
-exec 1>~/log/"\$(basename "\$0" .sh)".log 2>&1
+[[ -d "${HOME}"/log ]] || mkdir "${HOME}"/log
+exec 1>"${HOME}"/log/"\$(basename "\$0" .sh)".log 2>&1
 
-
+$0
 endsnippet
 
 # rgx_comp {{{1

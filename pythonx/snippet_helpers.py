@@ -346,6 +346,16 @@ def plugin_guard(snip): #{{{1
             + '\n$0'
         )
 
+    elif 'after/plugin' in path_to_dir:
+        plugin_name = vim.eval('snippets#get_plugin_name()')
+        anon_snip_body = (
+            "if exists('${2:g:loaded_${1:" + plugin_name + "}}')"
+            + finish
+            + '\nendif'
+            + '\nlet $2 = 1'
+            + '\n$0'
+        )
+
     elif '/plugin' in path_to_dir:
         anon_snip_body = (
             "if exists('${2:g:loaded_${1:" + basename + "}}')"

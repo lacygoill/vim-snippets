@@ -1,3 +1,11 @@
+fu! snippets#get_plugin_name() abort
+    let plugin_name = getcompletion('g:loaded_*', 'var')
+    let plugin_name = filter(plugin_name, {i,v -> v =~# expand('%:t:r')})
+    let plugin_name = get(plugin_name, 0, '')
+    let plugin_name = matchstr(plugin_name, 'g:loaded_\zs.*')
+    return plugin_name
+endfu
+
 fu! snippets#get_autoload_funcname() abort "{{{1
     return expand('%:p') =~# 'autoload\|plugin'
        \ ?     substitute(matchstr(expand('%:p'), '\%(autoload\|plugin\)/\zs.*\ze.vim'), '/', '#', 'g').'#'
