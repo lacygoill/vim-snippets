@@ -1,4 +1,4 @@
-# To document:
+# To document:{{{
 #
 #         `vim.current.window.cursor[0]` can be used to access the line number.
 #         Is it equivalent to `snip.line`, or is there an offset?
@@ -21,7 +21,7 @@
 #         completely automatic. You would have to jump to it.
 #         There's no need for that with the first tabstop, because UltiSnips
 #         automatically jumps to the first tabstop after expanding a snippet.
-#
+#}}}
 snippet pr "print debug"
 printf 'XXXXXX `!p
 snip.rv = "{}:{}: {}".format(
@@ -36,17 +36,6 @@ endsnippet
 post_expand "vim.eval('feedkeys(\"\<c-r>=UltiSnips#ExpandSnippet()\<cr>\")')"
 snippet pd "Description" b
 pr$1 >${2:/tmp/debug}
-endsnippet
-
-
-
-snippet foo "" m
-beautiful foo
-endsnippet
-
-post_jump "if snip.tabstop == 1: vim.eval('feedkeys(\"\<c-r>=UltiSnips#ExpandSnippet()\<cr>\", \"in\")')"
-snippet bar "" bm
-hello foo$1 world$2
 endsnippet
 
 
@@ -145,38 +134,75 @@ endsnippet
 
 # https://stackoverflow.com/a/18216122/8243465
 snippet guard_root "check we've enough rights to run script" bm
-if [[ "$EUID" -ne 0 ]]; then
-	echo "Please run as root"
+if [[ "${EUID}" -ne 0 ]]; then
+	echo "Please run as root${2::    sudo -E env \"PATH=\$PATH\" bash -c '$1'}"
 	exit
 fi
 endsnippet
 
 # if {{{1
 
-snippet if "if … fi" bm
+snippet if "if statement" bm
 if [[ $1 ]]; then
-	${0:${VISUAL}}
-fi
+	${2:${VISUAL}}
+${4:${3:else}
+	$0
+}if
 endsnippet
 
-# ife {{{1
-
-snippet ife "if … else … fi" bm
-if [[ $1 ]]; then
-	${0:${VISUAL}}
-else
-fi
+snippet i "elseif" "snip.last_placeholder and snip.last_placeholder.current_text == 'else'" Ae
+elif $1
+	$2
+${3:else}
 endsnippet
 
-# log {{{1
+# logging {{{1
 
+# Alternative:{{{
+#
+#     snippet log "log output of script" bm
+#
+#     # log messages
+#     exec 3>&1 4>&2
+#     [[ -d "${HOME}/log" ]] || mkdir "${HOME}/log"
+#     LOGFILE="${HOME}/log/"$(basename "\$0" .sh)".log"
+#     exec 1> 2>&1
+#
+#     # show the log in a tmux pane
+#     if [[ -n "${TMUX}" ]]; then
+#       pane_id="$(tmux split-window -c /tmp -d -v -p 50 -PF "#D" tail -f "${LOGFILE}")"
+#     fi
+#
+#     # do your stuff here
+#     $0
+#
+#     # close the tmux pane
+#     if [[ -n "${TMUX}" ]]; then
+#       tmux kill-pane -t "${pane_id}"
+#     fi
+#
+#     endsnippet
+#
+# Much more complex. Maybe more powerful.
+#}}}
 snippet log "log output of script" bm
-exec 3>&1 4>&2
-[[ -d "${HOME}"/log ]] || mkdir "${HOME}"/log
-exec 1>"${HOME}"/log/"\$(basename "\$0" .sh)".log 2>&1
-
+[[ -d "${HOME}/log" ]] || mkdir "${HOME}/log"
+LOGFILE="${HOME}/log/"$(basename "\$0" .sh)".log"
+printf '\n-----------\n%s\n-----------\n\n' "$(date +%m-%d\ %H:%M)"
+${2:main${1: "\$1"}} 2>&1 | tee -a "${LOGFILE}"
 $0
 endsnippet
+
+# Is it necessary to quote `$(basename ...)`?{{{
+#
+# When a command substitution is used after a command, it needs to be quoted.
+# But here, it's used in an assignment; there's no leading command.
+# So, quoting is useless:
+#
+#	  https://unix.stackexchange.com/a/118438/289772
+#
+# However, we should stay consistent, and always quote a command substitution.
+#}}}
 
 # rgx_comp {{{1
 
@@ -195,11 +221,32 @@ endsnippet
 # select {{{1
 
 snippet select "select instruction" bm
-echo -e "\n${1:Which action do you want to perform?}\n"
+printf "\n${1:Which action do you want to perform?}\n\n"
 
 select ${2:action} in ${3:list of values}; do
 	$0
 done
+endsnippet
+
+# tc {{{1
+
+# https://stackoverflow.com/a/677212/9780968
+# Explanation of the command:{{{
+#
+#                   ┌ execute silently
+#                   ├─────────────┐
+#	  command -v $1 >/dev/null 2>&1 || { echo >&2 "I require '$1' but it's not installed.  Aborting."; exit 1; }
+#                                             ├─┘
+#                                             └ send the next message on standard error
+#
+#                                               In practice, it will still be displayed on the terminal
+#                                               because standard error is connected to the latter by default.
+#
+#                                               But, by convention, any error message should be sent
+#                                               specifically to standard error.
+#}}}
+snippet tc "Test whether Command exists" bm
+command -v $1 >/dev/null 2>&1 || { echo >&2 "I require '$1' but it's not installed.  Aborting."; exit 1; }
 endsnippet
 
 # tmp {{{1
