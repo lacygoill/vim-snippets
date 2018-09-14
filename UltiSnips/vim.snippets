@@ -182,7 +182,9 @@ endsnippet
 #     foo ${1:bar$2`!p snip.rv = complete(t[2], ['a', 'b', 'c'])` baz}
 #}}}
 snippet com "command" bm
-com! ${1:-bar }${2:-complete=custom$3`!p
+com! ${1:-bar }`!v
+expand('%:p:h:t') is# 'ftplugin' ? '-buffer' : ''
+`${2:-complete=custom$3`!p
 snip.rv = complete(t[3], [',', 'list,'])
 `$4`!p
 snip.rv = complete(t[4], ['s:func', vim.eval("snippets#get_autoload_funcname()")])

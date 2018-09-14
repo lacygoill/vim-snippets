@@ -23,7 +23,7 @@
 #         automatically jumps to the first tabstop after expanding a snippet.
 #}}}
 snippet pr "print debug"
-printf 'XXXXXX `!p
+printf -- 'XXXXXX `!p
 snip.rv = "{}:{}: {}".format(
 	os.path.basename(vim.current.window.buffer.name),
 	str(vim.current.window.cursor[0]),
@@ -135,7 +135,7 @@ endsnippet
 # https://stackoverflow.com/a/18216122/8243465
 snippet guard_root "check we've enough rights to run script" bm
 if [[ "${EUID}" -ne 0 ]]; then
-	echo "Please run as root${2::    sudo -E env \"PATH=\$PATH\" bash -c '$1'}"
+	printf -- "Please run as root${2::    sudo -E env \"PATH=\$PATH\" bash -c '$1'}\n"
 	exit
 fi
 endsnippet
@@ -188,7 +188,7 @@ endsnippet
 snippet log "log output of script" bm
 [[ -d "${HOME}/log" ]] || mkdir "${HOME}/log"
 LOGFILE="${HOME}/log/"$(basename "\$0" .sh)".log"
-printf '\n-----------\n%s\n-----------\n\n' "$(date +%m-%d\ %H:%M)"
+printf -- '\n-----------\n%s\n-----------\n\n' "$(date +%m-%d\ %H:%M)"
 ${2:main${1: "\$1"}} 2>&1 | tee -a "${LOGFILE}"
 $0
 endsnippet
@@ -221,7 +221,7 @@ endsnippet
 # select {{{1
 
 snippet select "select instruction" bm
-printf "\n${1:Which action do you want to perform?}\n\n"
+printf -- "\n${1:Which action do you want to perform?}\n\n"
 
 select ${2:action} in ${3:list of values}; do
 	$0
@@ -235,18 +235,18 @@ endsnippet
 #
 #                   ┌ execute silently
 #                   ├─────────────┐
-#	  command -v $1 >/dev/null 2>&1 || { echo >&2 "I require '$1' but it's not installed.  Aborting."; exit 1; }
-#                                             ├─┘
-#                                             └ send the next message on standard error
+#     command -v $1 >/dev/null 2>&1 || { printf -- "I require '$1' but it's not installed.  Aborting." >&2; exit 1; }
 #
-#                                               In practice, it will still be displayed on the terminal
-#                                               because standard error is connected to the latter by default.
+# The `>&2` token sends the next message on standard error.
 #
-#                                               But, by convention, any error message should be sent
-#                                               specifically to standard error.
+# In practice, it will still be displayed on the terminal because standard error
+# is connected to the latter by default.
+#
+# But, by convention, any error message  should be sent specifically to standard
+# error.
 #}}}
 snippet tc "Test whether Command exists" bm
-command -v $1 >/dev/null 2>&1 || { echo >&2 "I require '$1' but it's not installed.  Aborting."; exit 1; }
+command -v $1 >/dev/null 2>&1 || { printf -- "I require '$1' but it's not installed.  Aborting." >&2; exit 1; }
 endsnippet
 
 # tmp {{{1
