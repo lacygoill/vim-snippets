@@ -229,7 +229,7 @@ endsnippet
 # select {{{1
 
 snippet select "select instruction" bm
-printf -- "\n${1:Which action do you want to perform?}\n\n" >&2
+printf -- "\n${1:Which action do you want to perform?}\n\n"
 
 select ${2:action} in ${3:list of values}; do
 	$0
