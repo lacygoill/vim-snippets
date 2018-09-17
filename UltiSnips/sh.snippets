@@ -132,12 +132,25 @@ endsnippet
 
 # guard_root {{{1
 
+# TODO:
+# Is it the right command?
+#
+#	  sudo -E env PATH="$PATH" bash -c '...'}
+
 # https://stackoverflow.com/a/18216122/8243465
+# Why the `PATH=$PATH`?{{{
+#
+# To make sure that `~/bin` is in root's PATH.
+#}}}
 snippet guard_root "check we've enough rights to run script" bm
 if [[ "${EUID}" -ne 0 ]]; then
-	printf -- "Please run as root${2::    sudo -E env \"PATH=\$PATH\" bash -c '$1'}\n"
-	exit
+  cat <<EOF
+Please run as root${2::
+sudo -E env PATH="\\$PATH" bash -c '$1'}
+EOF
+  exit 1
 fi
+$0
 endsnippet
 
 # if {{{1
