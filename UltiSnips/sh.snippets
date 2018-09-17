@@ -90,7 +90,7 @@ snippet elvi "Template to create a custom elvi for surfraw" bm
 . surfraw || exit 1
 
 w3_usage_hook () {
-	cat <<EOF
+	cat <<EOF >&2
 Usage: $w3_argv0 [options] [search words]...
 Description:
 	Search $2 using $1 ($3)
@@ -139,7 +139,7 @@ endsnippet
 #}}}
 snippet gd_root "check we've enough rights to run script" bm
 if [[ "${EUID}" -ne 0 ]]; then
-  cat <<EOF
+  cat <<EOF >&2
 Please run as root${2::
 sudo -E PATH="\\$PATH" bash -c '$1'}
 EOF
@@ -229,7 +229,7 @@ endsnippet
 # select {{{1
 
 snippet select "select instruction" bm
-printf -- "\n${1:Which action do you want to perform?}\n\n"
+printf -- "\n${1:Which action do you want to perform?}\n\n" >&2
 
 select ${2:action} in ${3:list of values}; do
 	$0
