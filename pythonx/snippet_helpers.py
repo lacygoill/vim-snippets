@@ -207,7 +207,6 @@ def create_table(snip): #{{{1
     # erase current line
     snip.buffer[snip.line] = ''
 
-    anon_snip_table = '$1'
     # expand anonymous snippet
     snip.expand_anon(anon_snip_table)
 
