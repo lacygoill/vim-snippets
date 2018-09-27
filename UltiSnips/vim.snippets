@@ -202,7 +202,7 @@ fu! ${1:s:completion_function}(arglead, _cmdline, _pos) abort
 		return join($3, "\n")
 
 	elseif ${5:empty(a:arglead) || a:arglead[0] is# '-'}
-		let ${6:options} = [${7:'-option1', '-option2', '-option3'}]
+		let ${6:options} = [${7:'-option1', '-option2', '-mode'}]
 		return join($6, "\n")
 	endif
 
