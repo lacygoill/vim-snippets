@@ -197,10 +197,12 @@ endsnippet
 
 # There's a very long string in the python interpolation.{{{
 #
-# You can split such a string in 2 consecutive strings to gain in readibility:
+# You can split such a string in (here 4) consecutive strings to gain in readibility:
 #
-#     'let word_before_cursor = matchstr(a:cmdline, \'-\S\{-}\s*[^ -]*\%\'.a:pos.\'c\')\n'
-#     '    if word_before_cursor =~# \'^-mode\''
+#     'let word_before_cursor = matchstr(a:cmdline, \'.*\s\zs-\S.*\%\'.a:pos.\'c\')\n'
+#     '    if word_before_cursor is# \'-mode\''
+#     '    let word_before_cursor = matchstr(word_before_cursor, \'\S*\s*$\')\n'
+#     '\n'
 #
 # They will be concatenated at compile time:
 #
