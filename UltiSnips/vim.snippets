@@ -200,9 +200,9 @@ endsnippet
 # You can split such a string in (here 4) consecutive strings to gain in readibility:
 #
 #     'let word_before_cursor = matchstr(a:cmdline, \'.*\s\zs-\S.*\%\'.a:pos.\'c\')\n'
-#     '    if word_before_cursor is# \'-mode\''
 #     '    let word_before_cursor = matchstr(word_before_cursor, \'\S*\s*$\')\n'
 #     '\n'
+#     '    if word_before_cursor =~# \'^-mode\s*\''
 #
 # They will be concatenated at compile time:
 #
@@ -215,7 +215,7 @@ snip.rv = complete(t[4], ['if a:cmdline =~# \'\m-mode\s\+\w*$\'',
 'let word_before_cursor = matchstr(a:cmdline, \'.*\s\zs-\S.*\%\'.a:pos.\'c\')\n'
 '    let word_before_cursor = matchstr(word_before_cursor, \'\S*\s*$\')\n'
 '\n'
-'    if word_before_cursor is# \'-mode\''
+'    if word_before_cursor =~# \'^-mode\s*\''
 ])
 `
 		let ${5:modes} = [${6:'normal', 'visual', 'insert'}]
