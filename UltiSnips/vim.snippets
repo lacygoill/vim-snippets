@@ -117,10 +117,10 @@ endsnippet
 # Yes:
 #
 #     return empty(a:base)
-#        \ ?     candidates
-#        \ :     filter(candidates, { i,v -> v[:strlen(a:base)-1] is? a:base })
-#                                                                   │
-#                                                                   └ ignore case
+#         \ ?	  candidates
+#         \ :	  filter(candidates, {i,v -> v[:strlen(a:base)-1] is? a:base})
+#																	│
+#																	└ ignore case
 #
 # Why treating the case where `a:base` is an empty string separately?
 #
@@ -193,6 +193,24 @@ snip.rv = complete(t[6], ['0', '1', '*', '?', '+'])
 ` }${7:-range=%  }${8:Cmd}  ${9:call ${10:s:func()}}
 endsnippet
 
+# com_fu {{{1
+
+snippet com_fu "Completion function for a custom command" bm
+fu! ${1:s:completion_function}(arglead, _cmdline, _pos) abort
+	if ${2:a:cmdline =~# '-mode\s\+\w*$'}
+		let ${3:candidates_type_1} = [${4:''}]
+		return join($3, "\n")
+
+	elseif ${5:empty(a:arglead) || a:arglead[0] is# '-'}
+		let ${6:candidates_type_2} = [${7:''}]
+		return join($6, "\n")
+	endif
+
+	return ''
+endfu
+$0
+endsnippet
+
 # doautocmd User {{{1
 
 snippet do "Create a hook to be able to register for callback" bm
@@ -241,23 +259,6 @@ snip.rv = complete(t[1], ['s:func', 'Func', vim.eval("snippets#get_autoload_func
 	${0:${VISUAL}}
 endfu
 endsnippet
-
-# fu_comp {{{1
-
-snippet fu_comp "Completion function for a custom command" bm
-fu! ${1:completion_function}(_a, _l, _p) abort
-	let candidates = [ ${2:''} ]
-	return join(candidates, "\n")
-endfu
-$0
-endsnippet
-
-# Is it necessary to filter the candidates?{{{2
-#
-# It depends on the attributes given to the command which invokes this function:
-#
-#     • -complete=custom        Vim filters the candidates automatically
-#     • -complete=customlist    Vim doesn't
 
 # gd {{{1
 
@@ -560,6 +561,19 @@ while $1 && g <= 100
 	let g += 1
 endwhile
 endsnippet
+
+# why {{{1
+
+snippet why "FAQ-like question in a comment" bm
+" Why do you${1}?{{{
+"
+" ${2:Because.}
+"}}}
+endsnippet
+# TODO:
+# Move this snippet in the “universal” file, and tweak
+# the code so that the comment leader matches the type
+# of the current file.
 
 # window local options {{{1
 
