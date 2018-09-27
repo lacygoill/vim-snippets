@@ -210,8 +210,11 @@ snippet com_fu "Completion function for a custom command" bm
 fu! ${1:s:completion_function}(arglead, ${2:_}cmdline, ${3:_}pos) abort
 	$4`!p
 snip.rv = complete(t[4], ['if a:cmdline =~# \'\m-mode\s\+\w*$\'',
-'let word_before_cursor = matchstr(a:cmdline, \'-\S\{-}\s*[^ -]*\%\'.a:pos.\'c\')\n'
-'    if word_before_cursor =~# \'^-mode\''])
+'let word_before_cursor = matchstr(a:cmdline, \'.*\s\zs-\S.*\%\'.a:pos.\'c\')\n'
+'    let word_before_cursor = matchstr(word_before_cursor, \'\S*\s*$\')\n'
+'\n'
+'    if word_before_cursor =~# \'^-mode\''
+])
 `
 		let ${5:modes} = [${6:'normal', 'visual', 'insert'}]
 		return join($5, "\n")
