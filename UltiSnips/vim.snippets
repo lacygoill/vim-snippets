@@ -195,15 +195,30 @@ endsnippet
 
 # com_fu {{{1
 
+# There's a very long string in the python interpolation.{{{
+#
+# You can split such a string in 2 consecutive strings to gain in readibility:
+#
+#     'let word_before_cursor = matchstr(a:cmdline, \'-\S\{-}\s*[^ -]*\%\'.a:pos.\'c\')\n'
+#     '    if word_before_cursor =~# \'^-mode\''
+#
+# They will be concatenated at compile time:
+#
+#	  https://stackoverflow.com/a/3346295/9780968
+#}}}
 snippet com_fu "Completion function for a custom command" bm
-fu! ${1:s:completion_function}(arglead, ${2:_}cmdline, _pos) abort
-	if ${3:a:cmdline =~# '\m-mode\s\+\w*$'}
-		let ${4:modes} = [${5:'normal', 'visual', 'insert'}]
-		return join($4, "\n")
+fu! ${1:s:completion_function}(arglead, ${2:_}cmdline, ${3:_}pos) abort
+	$4`!p
+snip.rv = complete(t[4], ['if a:cmdline =~# \'\m-mode\s\+\w*$\'',
+'let word_before_cursor = matchstr(a:cmdline, \'-\S\{-}\s*[^ -]*\%\'.a:pos.\'c\')\n'
+'    if word_before_cursor =~# \'^-mode\''])
+`
+		let ${5:modes} = [${6:'normal', 'visual', 'insert'}]
+		return join($5, "\n")
 
-	elseif ${6:empty(a:arglead) || a:arglead[0] is# '-'}
-		let ${7:options} = [${8:'-option1', '-option2', '-mode'}]
-		return join($7, "\n")
+	elseif ${7:empty(a:arglead) || a:arglead[0] is# '-'}
+		let ${8:options} = [${9:'-option1', '-option2', '-mode'}]
+		return join($8, "\n")
 	endif
 
 	return ''
