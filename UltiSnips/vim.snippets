@@ -196,14 +196,14 @@ endsnippet
 # com_fu {{{1
 
 snippet com_fu "Completion function for a custom command" bm
-fu! ${1:s:completion_function}(arglead, _cmdline, _pos) abort
-	if ${2:a:cmdline =~# '\m-mode\s\+\w*$'}
-		let ${3:modes} = [${4:'normal', 'visual', 'insert'}]
-		return join($3, "\n")
+fu! ${1:s:completion_function}(arglead, ${2:_}cmdline, _pos) abort
+	if ${3:a:cmdline =~# '\m-mode\s\+\w*$'}
+		let ${4:modes} = [${5:'normal', 'visual', 'insert'}]
+		return join($4, "\n")
 
-	elseif ${5:empty(a:arglead) || a:arglead[0] is# '-'}
-		let ${6:options} = [${7:'-option1', '-option2', '-mode'}]
-		return join($6, "\n")
+	elseif ${6:empty(a:arglead) || a:arglead[0] is# '-'}
+		let ${7:options} = [${8:'-option1', '-option2', '-mode'}]
+		return join($7, "\n")
 	endif
 
 	return ''
