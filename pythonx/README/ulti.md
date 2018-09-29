@@ -95,3 +95,17 @@ MWE:
 This snippet expands the tab trigger `ab` into `hello world` iff the path to the
 current file contains the word `foobar`.
 
+## I try to compare the output of `vim.eval('VimL expr')` to a number, but it fails!
+
+The output of `vim.eval()` is a string not a number.
+
+You need to convert it into a number using the `int()` function:
+
+           ✘
+           v
+        if vim.eval('VimL expr') == 123:
+
+           ✔
+           v
+        if int(vim.eval('VimL expr')) == 123:
+
