@@ -1686,7 +1686,7 @@ exécuter une directive. Parmi ces mots-clés, on trouve:
             On peut donc développer plusieurs tab triggers ayant un même préfixe en un même snippet.
 
             Si le snippet contient du code python, celui-ci peut accéder au texte matché par la regex
-            via la variable locale `python`.
+            via la variable locale `match`.
 
 
     snippet if "test" bm
