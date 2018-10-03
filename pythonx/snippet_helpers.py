@@ -354,7 +354,7 @@ def plugin_guard(snip): #{{{1
         guard_name = vim.eval('snippets#get_plugin_name_in_guard()')
 
         anon_snip_body = (
-            "if stridx(&rtp, '${2:vim-${1:" + guard_name + "}}') == -1"
+                "if !exists('${2:g:loaded_${1:" + basename + "}}')"
             + finish
             + '\nendif'
             + '\n$0'
