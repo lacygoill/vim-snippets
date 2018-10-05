@@ -10,12 +10,20 @@ endglobal
 
 # macro {{{1
 
+# Usage:{{{
+#
 # When you need to build and replay a macro, source the first 2 lines.
 # When you're done replaying the macro, source the 3rd line.
+#}}}
+# Why the indentation?{{{
+#
+# It's useful in a markdown buffer, to prevent the weird string of characters in
+# the macro to mess up the syntax highlighting.
+#}}}
 snippet macro "" bm
-let @q = ''
-nno <buffer> <cr> @q
-nunmap <buffer> <cr>
+    let @q = ''
+    nno <buffer> <cr> @q
+    nunmap <buffer> <cr>
 $0
 endsnippet
 
