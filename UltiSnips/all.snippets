@@ -8,6 +8,17 @@ global !p
 from snippet_helpers import *
 endglobal
 
+# macro {{{1
+
+# When you need to build and replay a macro, source the first 2 lines.
+# When you're done replaying the macro, source the 3rd line.
+snippet macro "" bm
+let @q = ''
+nno <buffer> <cr> @q
+nunmap <buffer> <cr>
+$0
+endsnippet
+
 # qnd {{{1
 
 snippet qnd "Quick aNd Dirty settings" bm
