@@ -542,3 +542,15 @@ def undo_ftplugin(snip): #{{{1
     snip.buffer[snip.line] = ''
     snip.expand_anon(anon_snip_body)
 
+def why(snip): #{{{1
+    cml = vim.eval("substitute(get(split(&l:cms, '%s'), 0, ''), '\s*$', '', '')")
+    indent = vim.eval("matchstr(getline('.'), '^\s*')")
+    anon_snip_body = (
+        indent + cml + ' Why ${1}?{{' + '{'
+        + '\n' + indent + cml
+        + '\n' + indent + cml + ' ${2:Because.}'
+        + '\n' + indent + cml + '}}' + '}'
+        )
+    snip.buffer[snip.line] = ''
+    snip.expand_anon(anon_snip_body)
+
