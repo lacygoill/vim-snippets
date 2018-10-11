@@ -525,7 +525,7 @@ try
 	${1:${VISUAL}}
 ${5:catch${2: /^Vim\%((\a\+)\)\=:E${3:123}/}
 	${4:echohl ErrorMsg
-	echo v:exception
+	echom v:exception
 	echohl NONE}
 }finally
 	$0
