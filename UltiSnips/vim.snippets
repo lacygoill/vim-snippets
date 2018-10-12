@@ -92,7 +92,7 @@ fu! s:${1:complete_strings}(findstart, base) abort
 	else
 		let candidates = []
 		${3:sil keepj keepp %s/".\\\{-1,\}"/\=add(candidates, submatch(0))/gne}
-		return filter(candidates, {i,v -> stridx(v, a:base) ==# 0 })
+		return filter(candidates, {i,v -> stridx(v, a:base) ==# 0})
 	endif
 endfu
 
@@ -107,7 +107,7 @@ endsnippet
 #          v =~ '^'.a:base
 #
 # But instead, we write:
-#          filter(candidates, { i,v -> stridx(v, a:base) ==# 0 })
+#          filter(candidates, {i,v -> stridx(v, a:base) ==# 0})
 #
 # Because `a:base` could contain special characters.
 # If there are, we don't want them to be interpreted by the regex engine.
