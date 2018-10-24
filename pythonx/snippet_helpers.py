@@ -518,7 +518,7 @@ def undo_ftplugin(snip): #{{{1
             "\n    \ . '| unlet! b:${4:variable}}'${5:"
             "\n    \ . '| exe \"au! ${6:group_name} * <buffer>\"'}${7:"
             "\n    \ . '| ${8:n}unmap <buffer> ${9:lhs}}'${10:"
-            "\n    \ . '| ${11:c}una   <buffer> ${12:lhs}}'${13:"
+            "\n    \ . '| ${11:c}una <buffer> ${12:lhs}}'${13:"
             "\n    \ . '| delc ${14:Cmd}}'"
             '\n$0'
         )
