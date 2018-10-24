@@ -513,15 +513,13 @@ def undo_ftplugin(snip): #{{{1
             '" teardown {{' + '{1'
             '\n'
             "\nlet b:undo_ftplugin = get(b:, 'undo_ftplugin', '')"
-            "\n    \ .(empty(get(b:, 'undo_ftplugin', '')) ? '' : '|')"
-            '\n    \ ."${1:'
-            '\n    \   setl ${2:option}<}${3:'
-            '\n    \ | unlet! b:${4:variable}}${5:'
-            "\n    \ | exe 'au! ${6:group_name} * <buffer>'}${7:"
-            "\n    \ | exe '${8:n}unmap <buffer> ${9:lhs}'}${10:"
-            "\n    \ | exe '${11:c}una   <buffer> ${12:lhs}'}${13:"
-            '\n    \ | delc ${14:Cmd}}'
-            '\n    \ "'
+            "\n    \ . (empty(get(b:, 'undo_ftplugin', '')) ? '' : '|')"
+            "\n    \ . '${1:setl ${2:option}<}'${3:"
+            "\n    \ . '| unlet! b:${4:variable}}'${5:"
+            "\n    \ . '| exe \"au! ${6:group_name} * <buffer>\"'}${7:"
+            "\n    \ . '| ${8:n}unmap <buffer> ${9:lhs}}'${10:"
+            "\n    \ . '| ${11:c}una   <buffer> ${12:lhs}}'${13:"
+            "\n    \ . '| delc ${14:Cmd}}'"
             '\n$0'
         )
 
@@ -529,9 +527,9 @@ def undo_ftplugin(snip): #{{{1
         anon_snip_body = (
             '" teardown {{' + '{1'
             + '\n'
-            + "\nlet b:undo_indent =         get(b:, 'undo_indent', '')"
-            + "\n                  \ .(empty(get(b:, 'undo_indent', '')) ? '' : '|')"
-            + "\n                  \ .'setl ${1:indk}<'"
+            + "\nlet b:undo_indent = get(b:, 'undo_indent', '')"
+            + "\n    \ .(empty(get(b:, 'undo_indent', '')) ? '' : '|')"
+            + "\n    \ .'setl ${1:indk}<'"
             + '\n$0'
         )
 
