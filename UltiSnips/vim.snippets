@@ -117,10 +117,10 @@ endsnippet
 # Yes:
 #
 #     return empty(a:base)
-#         \ ?	  candidates
-#         \ :	  filter(candidates, {i,v -> v[:strlen(a:base)-1] is? a:base})
-#																	│
-#																	└ ignore case
+#         \ ?     candidates
+#         \ :     filter(candidates, {i,v -> v[:strlen(a:base)-1] is? a:base})
+#                                                                   │
+#                                                                   └ ignore case
 #
 # Why treating the case where `a:base` is an empty string separately?
 #
@@ -206,7 +206,7 @@ endsnippet
 #
 # They will be concatenated at compile time:
 #
-#	  https://stackoverflow.com/a/3346295/9780968
+#     https://stackoverflow.com/a/3346295/9780968
 #}}}
 snippet com_fu "Completion function for a custom command" bm
 fu! ${1:s:completion_function}(arglead, ${2:_}cmdline, ${3:_}pos) abort
@@ -557,14 +557,32 @@ endsnippet
 # subdirectory.
 #
 # If we used `+=` instead, the  default filetype plugin would be sourced before,
-# while it shouldn't be  sourced at all (thanks to a guard).   And if the custom
-# ftplugin contains a guard, it wouldn't be sourced, while it should.
+# while it shouldn't be sourced at all (thanks to a guard).
+# And if the custom ftplugin contains a  guard, it wouldn't be sourced, while it
+# should.
+#}}}
+# Why `let &rtp = ...`?{{{
+#
+# The  previous  `set rtp^=`  have  moved  `$HOME/.vim`  further away  from  its
+# original first position.
+#
+# We need to reposition it at the very beginning of the rtp.
+# Otherwise,  the  interface  of  the   custom  plugin  we're  trying  to  debug
+# (`~/.vim/plugged/vim-buggy-plugin/plugin`) would  be sourced before  our local
+# customizations (`~/.vim/plugin/vim-buggy-plugin`).
+# This could cause  an issue if our customization need to  be sourced before the
+# interface.
+# That's  the case  with the  `fzf.vim` plugin;  we need  this assignment  to be
+# sourced before the plugin:
+#
+#         let g:fzf_command_prefix = 'Fz'
 #}}}
 snippet vimrc "Minimal vimrc to test a plugin" bm
 set rtp^=~/.vim/plugged/vim-lg-lib/
 set rtp^=~/.vim/plugged/vim-readline/
 set rtp^=${1:path/to/plugin/}${2:
 set rtp+=${1/$/after/}}
+let &rtp = $HOME.'/.vim,'.join(filter(split(&rtp, ','), {i,v -> v isnot# $HOME.'/.vim'}), ',')
 filetype plugin indent on
 syntax enable
 set wildmenu showcmd
