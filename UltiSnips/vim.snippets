@@ -577,6 +577,19 @@ endsnippet
 #
 #         let g:fzf_command_prefix = 'Fz'
 #}}}
+# Is there an alternative to this `let &rtp...`?{{{
+#
+# Yes:
+#
+#         set rtp=
+#         set rtp^=...
+#         ...
+#         set rtp^=~/.vim
+#
+# Here, you need to first make the  rtp empty, otherwise, when you'll try to add
+# `~/.vim` at the beginning of the rtp,  it will fail because `:set` doesn't add
+# the same path twice in 'rtp'.
+#}}}
 snippet vimrc "Minimal vimrc to test a plugin" bm
 set rtp^=~/.vim/plugged/vim-lg-lib/
 set rtp^=~/.vim/plugged/vim-readline/
