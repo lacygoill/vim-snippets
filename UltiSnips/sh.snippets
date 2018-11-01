@@ -111,10 +111,10 @@ endsnippet
 # script or function.
 # }}}2
 snippet debug "" bm
-exec 5>/tmp/debug
+exec 5>${1:/tmp/debug}
 BASH_XTRACEFD=5
 set -x
-${1:PS4='$LINENO: '
+${2:PS4='$LINENO: '
 }$0
 endsnippet
 
