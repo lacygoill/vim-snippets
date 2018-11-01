@@ -84,11 +84,37 @@ endsnippet
 
 # https://unix.stackexchange.com/a/155553/289772
 # https://stackoverflow.com/a/25593226/9780968
+
+# BASH_XTRACEFD {{{2
+
+# If set to an integer corresponding to a valid file descriptor, bash will write
+# the trace output generated when set -x is enabled to that file descriptor.
+
+# set -x {{{2
+
+# After expanding each  simple command, `for` command,  `case` command, `select`
+# command,  or arithmetic  `for` command,  display  the expanded  value of  PS4,
+# followed by the command and its expanded arguments or associated word list.
+
+# PS4 {{{2
+
+# The value of this  parameter is expanded as with PS1 and  the value is printed
+# before each command bash displays during an execution trace.
+# The first  character of  PS4 is  replicated multiple  times, as  necessary, to
+# indicate multiple levels of indirection.
+# The default is `+ `.
+
+# LINENO {{{2
+
+# Each time this parameter is referenced, the shell substitutes a decimal number
+# representing the  current sequential  line number (starting  with 1)  within a
+# script or function.
+# }}}2
 snippet debug "" bm
 exec 5>/tmp/debug
 BASH_XTRACEFD=5
-set -xv
-${1:PS4='$LINENO: ':
+set -x
+${1:PS4='$LINENO: '
 }$0
 endsnippet
 
