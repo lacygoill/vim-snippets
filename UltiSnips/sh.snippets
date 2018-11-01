@@ -326,3 +326,20 @@ TMP="$(mktemp /tmp/.${1:pgm}.XXXXXXXXXX)"
 $0
 rm "${TMP}"
 endsnippet
+# usage {{{1
+
+post_expand "snip.buffer[snip.line + 3] = 'EOF'"
+snippet usage "print usage message" bm
+if [[ $# -eq 0 ]]; then
+	cat <<EOF >&2
+usage: `!v
+  expand('%:e') is# 'sh' ? '$(basename "$0")' : '$0'
+` ${1:command arguments}
+
+	`!v
+  expand('%:e') is# 'sh' ? 'exit 64' : 'return 64'
+`
+fi
+$0
+endsnippet
+
