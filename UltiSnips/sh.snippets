@@ -252,7 +252,7 @@ endsnippet
 post_expand "snip.buffer[snip.line + 7] = 'EOF'"
 snippet log "log output of script" bm
 [[ -d "${HOME}/log" ]] || mkdir "${HOME}/log"
-LOGFILE="${HOME}/log/"$(basename "\$0" .sh)".log"
+LOGFILE="${HOME}/log/$(basename "\$0" .sh).log"
 cat <<EOF
 -----------
 $(date +%m-%d\ %H:%M)
