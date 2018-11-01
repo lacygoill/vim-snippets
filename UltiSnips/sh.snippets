@@ -39,7 +39,6 @@ pr$1 >${2:/tmp/debug}
 endsnippet
 
 
-
 # #! {{{1
 
 snippet #! "bash shebang" bm
@@ -79,6 +78,18 @@ case ${1:my_var} in
 	*)
 		${0:final action}
 esac
+endsnippet
+
+# debug {{{1
+
+# https://unix.stackexchange.com/a/155553/289772
+# https://stackoverflow.com/a/25593226/9780968
+snippet debug "" bm
+exec 5>/tmp/debug
+BASH_XTRACEFD=5
+set -xv
+${1:PS4='$LINENO: ':
+}$0
 endsnippet
 
 # elvi {{{1
