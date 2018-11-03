@@ -230,7 +230,7 @@ endsnippet
 #     exec 3>&1 4>&2
 #     [[ -d "${HOME}/log" ]] || mkdir "${HOME}/log"
 #     LOGFILE="${HOME}/log/"$(basename "\$0" .sh)".log"
-#     exec 1> 2>&1
+#     exec 1>"${LOGFILE}" 2>&1
 #
 #     # show the log in a tmux pane
 #     if [[ -n "${TMUX}" ]]; then
