@@ -14,7 +14,7 @@ endfu
 
 fu! snippets#get_plugin_name_in_guard() abort "{{{1
     " Purpose:
-    " Try and  guess the name of  the global variable  used (as a guard)  by the
+    " Try to  guess the name of  the global variable  used (as a guard)  by the
     " plugin we're currently customizing in `~/.vim/after/plugin/foo.vim`.
     let guard_name = getcompletion('g:loaded_*', 'var')
     let guard_name = filter(guard_name, {i,v -> v =~# expand('%:t:r')})
@@ -25,7 +25,7 @@ endfu
 
 fu! snippets#get_plugin_name_in_rtp() abort "{{{1
     " Purpose:
-    " Try and  guess the name of  plugin name in the rtp.
+    " Try to  guess the name of  plugin name in the rtp.
     let rtp = split(&rtp, ',')
     let guard_name = filter(rtp, {i,v -> v =~# expand('%:t:r')})
     let guard_name = fnamemodify(get(guard_name, 0, ''), ':h:t')
