@@ -50,9 +50,9 @@ augroup END
 let b:undo_ftplugin = get(b:, 'undo_ftplugin', '')
     \ . (empty(get(b:, 'undo_ftplugin', '')) ? '' : '|')
     \ . "
-    \ setl cocu< cole< et< fdm< fdt< isk< sw< ts<
-    \|exe 'au! my_snippets * <buffer>'
-    \|exe 'au! format_snippets * <buffer>'
-    \|nunmap <buffer> q
-    \"
+    \   setl cocu< cole< et< fdm< fdt< isk< sw< ts<
+    \ | exe 'au! my_snippets * <buffer>'
+    \ | exe 'au! format_snippets * <buffer>'
+    \ | exe 'nunmap <buffer> q'
+    \ "
 

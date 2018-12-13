@@ -37,7 +37,7 @@ endsnippet
 #                                         │                   └ remaining characters
 #                                         └ first character
 
-snippet abr "uppercase abbreviation on command line" bm
+snippet abr "uppercase abbreviation on command-line" bm
 cnorea  <buffer><expr>  ${1:lhs}  getcmdtype() is# ':' && getcmdline() is# '$1'
 \\`!p snip.rv = ' '*(25 + len(t[1]))`?    '`!p snip.rv = '' if not t[1] else (t[1][0]).upper() + t[1][1:]`'
 \\`!p snip.rv = ' '*(25 + len(t[1]))`:    '`!p snip.rv = t[1]`'

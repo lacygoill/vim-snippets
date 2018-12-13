@@ -515,13 +515,13 @@ def undo_ftplugin(snip): #{{{1
             "\nlet b:undo_ftplugin = get(b:, 'undo_ftplugin', '')"
             "\n    \ . (empty(get(b:, 'undo_ftplugin', '')) ? '' : '|')"
             "\n    \ . \""
-            "\n    \ ${1:setl ${2:option}<}${3:"
-            "\n    \|unlet! b:${4:variable}}${5:"
-            "\n    \|exe 'au! ${6:group_name} * <buffer>'}${7:"
-            "\n    \|${8:n}unmap <buffer> ${9:lhs}}${10:"
-            "\n    \|${11:c}una <buffer> ${12:lhs}}${13:"
-            "\n    \|delc ${14:Cmd}}"
-            "\n    \\\""
+            "\n    \   ${1:setl ${2:option}<}${3:"
+            "\n    \ | unlet! b:${4:variable}}${5:"
+            "\n    \ | exe 'au! ${6:group_name} * <buffer>'}${7:"
+            "\n    \ | exe '${8:n}unmap <buffer> ${9:lhs}'}${10:"
+            "\n    \ | exe '${11:c}una <buffer> ${12:lhs}'}${13:"
+            "\n    \ | delc ${14:Cmd}}"
+            "\n    \\ \""
             '\n$0'
         )
 
