@@ -1,5 +1,16 @@
-" don't color in blue a leading space inside a snippet
-hi! link snipLeadingSpaces Normal
+" How to hide leading spaces which are highlighted (in blue by default)?{{{
+"
+"     hi! link snipLeadingSpaces Normal
+"}}}
+" Why should I *not* do it?{{{
+"
+" Most of our lines should be indented with  tabs, so that when a tab trigger is
+" expanded, our buffer-local options related  to indenting (like 'sw') are taken
+" into account.
+"
+" So, we should be informed whenever a  line is indented with spaces, because it
+" may mean that we need to replace them with tabs.
+"}}}
 
 " TO_DO and FIX_ME are not highlighted if they're directly followed by a colon.{{{
 " This is because of:
@@ -19,6 +30,8 @@ hi! link snipLeadingSpaces Normal
 " interpolation.
 "}}}
 syntax iskeyword @,48-57,_,192-255,-
+
+finish
 
 "                                 ┌ get rid of it once we've concealed comment leaders
 "                               ┌─┤

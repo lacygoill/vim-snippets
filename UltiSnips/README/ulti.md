@@ -1739,6 +1739,22 @@ exécuter une directive. Parmi ces mots-clés, on trouve:
                     `!p snip.rv = snip.v.text.strip('x')`
 
 #
+##
+##
+# Issues
+## I have a very long line in my snippet.  It's hard to read, and it breaks syntax highligting!
+
+Use a VimL interpolation whose return value is an empty string.
+It won't add anything to the snippet, but you can break it on several lines:
+
+        some very long line
+
+        ⇒
+
+        some very `!v ''
+        `long line
+
+##
 #
 #
 # TODO

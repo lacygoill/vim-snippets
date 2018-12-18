@@ -16,7 +16,14 @@ augroup format_snippets
     " So whenever you press `Tab` to increase  the indentation of a line, you insert a
     " literal `Tab` character.
     " This is what  we want in a  snippet (snippet...endsnippet), but not  in a python
-    " function (global...endglobal), because python expects 4 spaces.
+    " function (global...endglobal), because:
+    "
+    "     • PEP8 recommends spaces
+    "
+    "     • we could easily end up mixing tabs and spaces, when we copy paste
+    "       some code, which would raise an error:
+    "
+    "             IndentationError: unexpected indent
     "
     " To fix this, we execute `:RemoveTabs` on the global block.
     "}}}

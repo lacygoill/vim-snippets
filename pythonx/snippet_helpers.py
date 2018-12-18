@@ -150,9 +150,9 @@ def clean_first_placeholder(snip): #{{{1
 def complete(base, candidates): #{{{1
     # remove possible empty candidate
     candidates = [c for c in candidates if c != '']
-    #             └───────────────────┤ └────────┤
-    #                                 │          └ filtering
-    #                                 └ list comprehension (python construct)
+    #             ├───────────────────┘ ├────────┘
+    #             │                     └ filtering
+    #             └ list comprehension (python construct)
 
     # if the text to complete is not empty
     if base:

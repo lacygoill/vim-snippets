@@ -77,16 +77,15 @@ if (guard${1:1} >= 99)
 guard$1 += 1
 endsnippet
 
-# do not initialize `guard` to 1, and,
-# do not make `guard` a local variable:
+# Do not initialize `guard` to 1, and, do not make `guard` a local variable.
 #
-#	  it would prevent the guard from working with a recursive function
-#	  (i.e. a function which calls itself)
+# It would  prevent the  guard from  working with a  recursive function  (i.e. a
+# function which calls itself).
 #
-# if you want to check whether you're trapped inside an infinite loop,
-# add a `print guard` statement, somewhere in your code
+# If you  want to check  whether you're trapped inside  an infinite loop,  add a
+# `print guard` statement, somewhere in your code.
 #
-# The statement to go out of a function is `return`, but to go out of a loop
+# The statement  to go out of  a function is `return`,  but to go out  of a loop
 # it's `break`.
 
 # if {{{1

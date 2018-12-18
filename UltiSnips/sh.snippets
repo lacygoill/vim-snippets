@@ -133,7 +133,7 @@ endsnippet
 snippet elvi "Template to create a custom elvi for surfraw" bm
 #!/bin/sh
 #
-# elvis: ${1:name of the site} 	-- Search ${2:what} using $1 (${3:url of the main page})
+# elvis: ${1:name of the site} -- Search ${2:what} using $1 (${3:url of the main page})
 . surfraw || exit 1
 
 w3_usage_hook () {
@@ -195,11 +195,11 @@ endsnippet
 #}}}
 snippet gd_root "check we've enough rights to run script" bm
 if [[ "${EUID}" -ne 0 ]]; then
-  cat <<EOF >&2
+	cat <<EOF >&2
 Please run as root${2::
 sudo -E PATH="\\$PATH" bash -c '$1'}
 EOF
-  exit 1
+	exit 1
 fi
 $0
 endsnippet
@@ -269,7 +269,7 @@ endsnippet
 # But here, it's used in an assignment; there's no leading command.
 # So, quoting is useless:
 #
-#	  https://unix.stackexchange.com/a/118438/289772
+#     https://unix.stackexchange.com/a/118438/289772
 #
 # However, we should stay consistent, and always quote a command substitution.
 #}}}
