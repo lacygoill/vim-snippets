@@ -544,7 +544,7 @@ endsnippet
 
 snippet synr "syntax region" Abm
 syn region ${1:xGroup} ${3:matchgroup=${2:xMatchGroup} }${4:excludenl }${5:extend }${6:keepend }`!v ''
-`start=/${7:pat}/ ${8:skip=/${9:pat}/ }end=/${10:pat}/ `!v ''
+`start=/${7:pat}/ ${9:skip=/${8:pat}/ }end=/${10:pat}/ `!v ''
 `${11:concealends }${12:contained }${14:containedin=${13:xContainedIn} }${16:contains=${15:xContains} }`!v ''
 `${17:display }${18:fold }${21:nextgroup=${19:xNextGroup} skip$20`!p
 snip.rv = complete(t[20], ['white', 'nl', 'empty'])
