@@ -525,7 +525,7 @@ endsnippet
 # Otherwise, it's hard to read, and it breaks the syntax highlighting in this file.
 #}}}
 snippet synk "syntax keyword" Abm
-syn keyword ${1:xGroup} /${2:pat}/ `!v ''
+syn keyword ${1:xGroup} ${2:a_word} `!v ''
 `${3:contained }${5:containedin=${4:xContainedIn} }${7:contains=${6:xContains} }`!v ''
 `${8:display }${9:extend }${10:fold }${13:nextgroup=${11:xNextGroup} skip$12`!p
 snip.rv = complete(t[12], ['white', 'nl', 'empty'])
