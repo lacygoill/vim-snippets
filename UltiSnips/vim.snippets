@@ -513,7 +513,7 @@ endsnippet
 
 # synk, synm, synr {{{1
 
-# Why not including the arguments `cchar` or `conceal`?{{{
+# Why don't you include the arguments `cchar` or `conceal`?{{{
 #
 # They are never used in the default syntax plugins:
 #
@@ -536,12 +536,18 @@ endsnippet
 snippet synm "syntax match" Abm
 syn match ${1:xGroup} ${2:excludenl }${3:keepend }/${4:pat}/ ${6:cchar=${5:❭} }${7:conceal }`!v ''
 `${8:contained }${10:containedin=${9:xContainedIn} }${12:contains=${11:xContains} }`!v ''
-`${13:display }${14:extend }${15:fold }${18:nextgroup=${16:xNextGroup} skip$17`!p
-snip.rv = complete(t[17], ['white', 'nl', 'empty'])
-` }${19:transparent}
+`${13:display }${14:fold }${17:nextgroup=${15:xNextGroup} skip$16`!p
+snip.rv = complete(t[16], ['white', 'nl', 'empty'])
+` }${18:transparent}
 $0
 endsnippet
 
+# Why don't you include the arguments `cchar` or `conceal`?{{{
+#
+# They are never used in the default syntax plugins:
+#
+#     noa vim /\<syn.*\<region\>.*\<\%(cchar\|conceal\)\>/gj $VIMRUNTIME/syntax/*.vim | cw
+#}}}
 snippet synr "syntax region" Abm
 syn region ${1:xGroup} ${3:matchgroup=${2:xMatchGroup} }${4:excludenl }${5:extend }${6:keepend }`!v ''
 `start=/${7:pat}/ ${9:skip=/${8:pat}/ }end=/${10:pat}/ `!v ''
