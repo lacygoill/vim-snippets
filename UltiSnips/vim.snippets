@@ -526,10 +526,10 @@ endsnippet
 #}}}
 snippet synk "syntax keyword" Abm
 syn keyword ${1:xGroup} ${2:a_word} `!v ''
-`${3:contained }${5:containedin=${4:xContainedIn} }${7:contains=${6:xContains} }`!v ''
-`${8:display }${9:extend }${10:fold }${13:nextgroup=${11:xNextGroup} skip$12`!p
-snip.rv = complete(t[12], ['white', 'nl', 'empty'])
-` }${14:transparent}
+`${3:contained }${5:containedin=${4:xContainedIn} }`!v ''
+`${8:nextgroup=${6:xNextGroup} skip$7`!p
+snip.rv = complete(t[7], ['white', 'nl', 'empty'])
+` }${9:transparent}
 $0
 endsnippet
 
