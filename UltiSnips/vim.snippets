@@ -138,27 +138,9 @@ endsnippet
 
 # conceal {{{1
 
-# Why setting the priority of the match to 0 is important?{{{
+# Don't change the priority of the match (`0`)!{{{
 #
-# If the priority is greater, for some reason, any text matching the search register
-# is concealed too.
-#
-# To reproduce the issue, start Vim with this minimal vimrc:
-#
-#     let @/ = '\cconceal'
-#     set hlsearch
-#     setl cocu=nvc cole=1
-#     call matchadd('Conceal', '^.', 1, -1, {'conceal': 'x'})
-#
-# The text `conceal` will be wrongly concealed. Only the first character
-# on every line should be.
-#
-# Here's a different, but related, issue:
-#
-#     https://stackoverflow.com/a/24134318/8243465
-#
-# This link  explains that  the priorities  of syntax  highlighting, 'hlsearch',
-# 'cursorline', and concealed characters, are fixed and cannot be overruled.
+#     https://github.com/vim/vim/issues/2185
 #}}}
 snippet conceal "conceal using `matchadd()`" bm
 setl cocu=nc cole=3
