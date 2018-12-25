@@ -22,6 +22,22 @@ substitute(join(split(execute('version'), '\n')[0:1]), '(.\{-})', '', '')
 $0
 endsnippet
 
+# details {{{1
+
+# Source:{{{
+#
+#    https://www.w3schools.com/tags/tag_details.asp
+#    https://stackoverflow.com/a/33033172/8243465
+#    https://github.com/dear-github/dear-github/issues/166#issuecomment-252282315
+#}}}
+# If you  want your  answer the hidden  text to contain  a codeblock,  insert an
+# empty line right below `<summary>`.
+snippet details "view or hide text on demand" bm
+<details><summary>
+${1:answer:}</summary>
+${0:${VISUAL}}</details>
+endsnippet
+
 # note {{{1
 
 # Kept for educational purpose.
@@ -37,21 +53,6 @@ endsnippet
 
 # $0
 # endsnippet
-
-# spoiler {{{1
-
-# Source:{{{
-#
-#    https://stackoverflow.com/a/33033172/8243465
-#    https://github.com/dear-github/dear-github/issues/166#issuecomment-252282315
-#}}}
-snippet spoiler "collapsible content" bm
-<details>
-<summary>${1:title}</summary>
-
-	${0:${VISUAL}}
-</details>
-endsnippet
 
 # wpm {{{1
 
