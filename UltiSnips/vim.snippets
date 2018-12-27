@@ -25,18 +25,34 @@ endsnippet
 
 # abr {{{1
 
-#                            ┌ if the 1st tabstop is empty, the interpolation should be too;
-#                            │ we need to handle this special case, to avoid an error
-#                            │ if we delete an inserted tabstop
-#                            │ (because in this case `t[1][0]` won't exist)
-#                            │
-#                            │          ┌ text of 1st placeholder $1
-#               ┌────────────┤       ┌──┤
-# `!p snip.rv = '' if not t[1] else (t[1][0]).upper() + t[1][1:]`
-#                                         │                  └┤
-#                                         │                   └ remaining characters
-#                                         └ first character
+#                                ┌ if the 1st tabstop is empty, the interpolation should be too;
+#                                │ we need to handle this special case, to avoid an error
+#                                │ if we delete an inserted tabstop
+#                                │ (because in this case `t[1][0]` won't exist)
+#                                │
+#                                │          ┌ text of 1st placeholder $1
+#                   ┌────────────┤       ┌──┤
+#     !p snip.rv = '' if not t[1] else (t[1][0]).upper() + t[1][1:]
+#                                             │                  └┤
+#                                             │                   └ remaining characters
+#                                             └ first character
 
+# Why do you use `getcmdpos()`?  Why not `getcmdline() is# '$1'`?{{{
+#
+# `getcmdpos()` is more reliable.
+#
+# Suppose we've written a command without our abbreviation.
+# Then, we press `C-a` to move at the beginning of the line.
+# Finally, we insert the abbreviation and press `SPC` or `Enter`.
+#
+# The command-line won't contain just the abbreviation, so this will fail:
+#
+#     getcmdline() is# 'lhs'
+#
+# But not this:
+#
+#     getcmdpos() ==# 4
+#}}}
 snippet abr "uppercase abbreviation on command-line" bm
 cnorea  <buffer><expr>  ${1:lhs}  getcmdtype() is# ':' && getcmdpos() ==# `!p snip.rv = len(t[1]) + 1`
 \\`!p snip.rv = ' '*(25 + len(t[1]))`?    '`!p snip.rv = '' if not t[1] else (t[1][0]).upper() + t[1][1:]`'
