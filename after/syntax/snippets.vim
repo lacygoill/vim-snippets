@@ -31,9 +31,3 @@
 "}}}
 syntax iskeyword @,48-57,_,192-255,-
 
-finish
-
-"                                 ┌ get rid of it once we've concealed comment leaders
-"                               ┌─┤
-syn match snippetsFoldMarkers  /#\?\s*{{{\d*\s*\ze\n/  conceal cchar=❭  containedin=snipComment
-syn match snippetsFoldMarkers  /#\?\s*}}}\d*\s*\ze\n/  conceal cchar=❬  containedin=snipComment

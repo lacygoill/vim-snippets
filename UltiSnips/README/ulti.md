@@ -324,45 +324,45 @@ From a context statement, you could also use:
 
         snip.buffer.name
 
-## How to refer to the last visually-selected text (in context/pre_expand statement, interpolation, in-snippet)?
+## How to refer to the last visually-selected text (in `context`/`pre_expand` statement, interpolation, in-snippet)?
 
-        ┌───────────────┬─────────────────────┐
-        │ context       │ snip.visual_text    │
-        ├───────────────┼─────────────────────┤
-        │ pre_expand    │ snip.visual_content │
-        ├───────────────┼─────────────────────┤
-        │ interpolation │ snip.v.text         │
-        ├───────────────┼─────────────────────┤
-        │ in-snippet    │ ${VISUAL}           │
-        └───────────────┴─────────────────────┘
+    ┌───────────────┬─────────────────────┐
+    │ context       │ snip.visual_text    │
+    ├───────────────┼─────────────────────┤
+    │ pre_expand    │ snip.visual_content │
+    ├───────────────┼─────────────────────┤
+    │ interpolation │ snip.v.text         │
+    ├───────────────┼─────────────────────┤
+    │ in-snippet    │ ${VISUAL}           │
+    └───────────────┴─────────────────────┘
 
 ## How to refer to the last visual mode?
 
-        ┌───────────────┬──────────────────┐
-        │ context       │ snip.visual_mode │
-        ├───────────────┼──────────────────┤
-        │ interpolation │ snip.v.mode      │
-        └───────────────┴──────────────────┘
+    ┌───────────────┬──────────────────┐
+    │ context       │ snip.visual_mode │
+    ├───────────────┼──────────────────┤
+    │ interpolation │ snip.v.mode      │
+    └───────────────┴──────────────────┘
 
 ## What are the three variables which can be used in a `post_jump` statement?
 
-        ┌─────────────────────────────────┬─────────────────────────────────────────┐
-        │ snip.jump_direction             │ 1: forwards, -1: backwards              │
-        ├─────────────────────────────────┼─────────────────────────────────────────┤
-        │ snip.tabstop                    │ number of tabstop jumped unto           │
-        ├─────────────────────────────────┼─────────────────────────────────────────┤
-        │ snip.tabstops                   │ list of tabstops objects                │
-        └─────────────────────────────────┴─────────────────────────────────────────┘
+    ┌─────────────────────────────────┬─────────────────────────────────────────┐
+    │ snip.jump_direction             │ 1: forwards, -1: backwards              │
+    ├─────────────────────────────────┼─────────────────────────────────────────┤
+    │ snip.tabstop                    │ number of tabstop jumped unto           │
+    ├─────────────────────────────────┼─────────────────────────────────────────┤
+    │ snip.tabstops                   │ list of tabstops objects                │
+    └─────────────────────────────────┴─────────────────────────────────────────┘
 
 ## What are the three properties of the `snip.tabstops` variable?
 
-        ┌─────────────────────────────────┬─────────────────────────────────────────┐
-        │ snip.tabstops[123].current_text │ text inside the 123th tabstop           │
-        ├─────────────────────────────────┼─────────────────────────────────────────┤
-        │ snip.tabstops[123].start        │ (line, column) of its starting position │
-        ├─────────────────────────────────┼─────────────────────────────────────────┤
-        │ snip.tabstops[123].end          │ (line, column) of its ending position   │
-        └─────────────────────────────────┴─────────────────────────────────────────┘
+    ┌─────────────────────────────────┬─────────────────────────────────────────┐
+    │ snip.tabstops[123].current_text │ text inside the 123th tabstop           │
+    ├─────────────────────────────────┼─────────────────────────────────────────┤
+    │ snip.tabstops[123].start        │ (line, column) of its starting position │
+    ├─────────────────────────────────┼─────────────────────────────────────────┤
+    │ snip.tabstops[123].end          │ (line, column) of its ending position   │
+    └─────────────────────────────────┴─────────────────────────────────────────┘
 
 ## From which statement(s)/interpolation can I use `snip.snippet_start` and `snip.snippet_end`?
 
