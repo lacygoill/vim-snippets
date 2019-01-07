@@ -2,11 +2,11 @@ global !p
 from snippet_helpers import *
 endglobal
 
-# bn {{{1
+# bd {{{1
 
 pre_expand "capture_visual_content(snip)"
 post_expand "trim_ws(snip)"
-snippet bn "begin{} / end{}" bmA
+snippet bd "begin{} / end{}" bmA
 \begin{${1:document}}
 ${0:${VISUAL}}
 \end{$1}
@@ -18,9 +18,9 @@ snippet cc "{}" A
 {$0}
 endsnippet
 
-# ds {{{1
+# dc {{{1
 
-snippet ds "documentclass" bmA
+snippet dc "documentclass" bmA
 \documentclass{${1:article}}
 $0
 endsnippet
