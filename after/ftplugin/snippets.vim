@@ -44,21 +44,12 @@ setl noet sw=4 ts=4
 "         └───────┤
 "                 └ alternative: let &l:ts = &l:sw
 
-augroup my_snippets
-    au! *            <buffer>
-    au  BufWinEnter  <buffer>  setl fdm=marker
-                          \ |  setl fdt=fold#fdt#get()
-                          \ |  setl cocu=nc
-                          \ |  setl cole=3
-augroup END
-
 " Teardown {{{1
 
 let b:undo_ftplugin = get(b:, 'undo_ftplugin', '')
     \ . (empty(get(b:, 'undo_ftplugin', '')) ? '' : '|')
     \ . "
-    \   setl cocu< cole< et< fdm< fdt< isk< sw< ts<
-    \ | exe 'au! my_snippets * <buffer>'
+    \   setl et< isk< sw< ts<
     \ | exe 'au! format_snippets * <buffer>'
     \ | exe 'nunmap <buffer> q'
     \ "
