@@ -29,23 +29,28 @@ You must pass it as an argument from the snippet definition:
         snippet foo "" bm
         endsnippet
 
-# How to capture the value of a variable in `g:debug`?
+# How to capture the value of a variable in `g:d_ebug`?
 
-        vim.command('let g:debug = ' + '"' + str(your_variable) + '"')
+        vim.command('let g:d_ebug = ' + '"' + str(var) + '"')
 
-`str()` must be invoked to cast `your_variable` into a string.
+`str()` must be invoked to cast `var` into a string.
 
-Contrary to  Vim's `string()`, if  `your_variable` is already a  string, `str()`
-won't add quotes inside it.
+Contrary to  Vim's `string()`, if `var`  is already a string,  `str()` won't add
+quotes inside it.
 A double invocation won't have any effect:
 
-        str(str(your_variable))
+        str(str(var))
         ✘
 
 Which is why, here, you need to concatenate two double quotes.
 
-        '"' + str(your_variable) + '"'
+        '"' + str(var) + '"'
         ✔
+
+# How to dump the value of a variable in a file?
+
+        with open('/tmp/debug','w') as f:
+            f.write(var)
 
 # Is it possible to prevent UltiSnips from consuming the tab trigger?
 
