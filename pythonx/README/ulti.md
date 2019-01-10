@@ -50,7 +50,11 @@ Which is why, here, you need to concatenate two double quotes.
 # How to dump the value of a variable in a file?
 
         with open('/tmp/debug','w') as f:
-            f.write(var)
+            f.write(str(var))
+
+This command seems more reliable compared to the previous one.
+Probably because  a variable  can contain  double quotes,  which break  the VimL
+expression in the value of the `:let g:d_ebug` assignment.
 
 # Is it possible to prevent UltiSnips from consuming the tab trigger?
 
