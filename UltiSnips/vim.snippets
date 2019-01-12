@@ -489,25 +489,67 @@ endsnippet
 
 # snr {{{1
 
+# Purpose:{{{
+#
+# We can call a script-local function:
+#
+#    • with `s:`     in its script
+#    • with `<sid>`  in a mapping
+#
+# But there's no built-in way to call it outside of its script/mapping.
+# `s:snr()` to the rescue.
+#}}}
+# Could we use `expand('<sfile>')` outside the function?{{{
+#
+# No.
+# It would give  us the path to the  script file, while we want the  name of the
+# function.
+#}}}
+# Why `.*\zs`?{{{
+#
+# Suppose `s:snr()` is called indirectly from another script.
+# `expand('<sfile>')` will contain 2 script numbers.
+#
+# This is because of the call nesting.
+# From `:h <sfile>`:
+#
+# > function call nesting is indicated like this:
+# >
+# >		"function {function-name1}[{lnum}]..{function-name2}[{lnum}]"
+#
+# You want the *last* number, because  it matches the last script-local function
+# where `s:snr()` is defined.
+#
+# MWE:
+#
+#     $ cat <<'EOF' >~/.vim/autoload/script.vim
+#     fu! script#echo()
+#       echom 'the script number is: '. s:snr()
+#     endfu
+#     fu! s:snr()
+#       return matchstr(expand('<sfile>'), '<SNR>\zs\d\+\ze_')
+#     endfu
+#     EOF
+#
+#     $ cat <<'EOF' >/tmp/vimrc
+#     fu! s:func()
+#       call script#echo()
+#     endfu
+#     call s:func()
+#     EOF
+#
+#     $ vim -Nu /tmp/vimrc
+#     1~
+#
+# This output is wrong; `1` is *not* the number of `autoload/script.vim`.
+# It's the number of the `vimrc`.
+#}}}
 snippet snr "Function to get SNR number" bm
-fu! s:snr()
+fu! s:snr() abort
 	return matchstr(expand('<sfile>'), '.*\zs<SNR>\d\+_')
 endfu
 $0
 endsnippet
-
-# We can call a script-local function:
-#
-#         with `s:`     in its script
-#         with `<sid>`  in a mapping
-#
-# But there's no built-in way to call it outside of its script/mapping.
-# `s:snr()` to the rescue.
-#
-# NOTE:
-# We can't write `expand('<sfile>')` outside the function.
-# It would give us the path to the script file, while we want the name
-# of the function.
 
 # sync, synk, synm, synr {{{1
 
