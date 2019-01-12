@@ -491,7 +491,7 @@ endsnippet
 
 snippet snr "Function to get SNR number" bm
 fu! s:snr()
-	return matchstr(expand('<sfile>'), '<SNR>\d\+_')
+	return matchstr(expand('<sfile>'), '.*\zs<SNR>\d\+_')
 endfu
 $0
 endsnippet
