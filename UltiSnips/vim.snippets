@@ -99,9 +99,9 @@ augroup ${1:augroup name}
 augroup END
 endsnippet
 
-# cfu {{{1
+# ccfu {{{1
 
-snippet cfu "Completion function for C-x C-u" bm
+snippet ccfu "Completion function for C-x C-u" bm
 fu! s:${1:complete_strings}(findstart, base) abort
 	if a:findstart
 		return searchpos('${2:"}', 'bnW', line('.'))[1] - 1
@@ -152,6 +152,43 @@ endsnippet
 #          != a:base ('')
 
 
+# cfu {{{1
+
+# There's a very long string in the python interpolation.{{{
+#
+# You can split such a string in (here 4) consecutive strings to gain in readibility:
+#
+#     'let word_before_cursor = matchstr(a:cmdline, \'.*\s\zs-\S.*\%\'.a:pos.\'c\')\n'
+#     '    let word_before_cursor = matchstr(word_before_cursor, \'\S*\s*$\')\n'
+#     '\n'
+#     '    if word_before_cursor =~# \'^-mode\s*\''
+#
+# They will be concatenated at compile time:
+#
+#     https://stackoverflow.com/a/3346295/9780968
+#}}}
+snippet cfu "Completion function for a custom command" Abm
+fu! s:${1:completion_function}(arglead, ${2:_}cmdline, ${3:_}pos) abort
+	$4`!p
+snip.rv = complete(t[4], ['if a:cmdline =~# \'\m-mode\s\+\w*$\'',
+'let word_before_cursor = matchstr(a:cmdline, \'.*\s\zs-\S.*\%\'.a:pos.\'c.\')\n'
+'\n'
+'    if word_before_cursor =~# \'^-mode\s*\S*$\''
+])
+`
+		let ${5:modes} = [${6:'normal', 'visual', 'insert'}]
+		return join($5, "\n")
+
+	elseif ${7:empty(a:arglead) || a:arglead[0] is# '-'}
+		let ${8:options} = [${9:'-option1', '-option2', '-mode'}]
+		return join($8, "\n")
+	endif
+
+	return ''
+endfu
+$0
+endsnippet
+
 # conceal {{{1
 
 # Don't change the priority of the match (`0`)!{{{
@@ -188,44 +225,7 @@ snip.rv = complete(t[3], [',', 'list,'])
 snip.rv = complete(t[4], ['s:func', vim.eval("snippets#get_autoload_funcname()")])
 ` }${5:-nargs=$6`!p
 snip.rv = complete(t[6], ['0', '1', '*', '?', '+'])
-` }${7:-range=%  }${8:Cmd}  ${9:call ${10:s:func()}}
-endsnippet
-
-# com_fu {{{1
-
-# There's a very long string in the python interpolation.{{{
-#
-# You can split such a string in (here 4) consecutive strings to gain in readibility:
-#
-#     'let word_before_cursor = matchstr(a:cmdline, \'.*\s\zs-\S.*\%\'.a:pos.\'c\')\n'
-#     '    let word_before_cursor = matchstr(word_before_cursor, \'\S*\s*$\')\n'
-#     '\n'
-#     '    if word_before_cursor =~# \'^-mode\s*\''
-#
-# They will be concatenated at compile time:
-#
-#     https://stackoverflow.com/a/3346295/9780968
-#}}}
-snippet com_fu "Completion function for a custom command" bm
-fu! ${1:s:completion_function}(arglead, ${2:_}cmdline, ${3:_}pos) abort
-	$4`!p
-snip.rv = complete(t[4], ['if a:cmdline =~# \'\m-mode\s\+\w*$\'',
-'let word_before_cursor = matchstr(a:cmdline, \'.*\s\zs-\S.*\%\'.a:pos.\'c.\')\n'
-'\n'
-'    if word_before_cursor =~# \'^-mode\s*\S*$\''
-])
-`
-		let ${5:modes} = [${6:'normal', 'visual', 'insert'}]
-		return join($5, "\n")
-
-	elseif ${7:empty(a:arglead) || a:arglead[0] is# '-'}
-		let ${8:options} = [${9:'-option1', '-option2', '-mode'}]
-		return join($8, "\n")
-	endif
-
-	return ''
-endfu
-$0
+` }${7:-range=%  }${8:Cmd}  ${9:call s:${10:func()}}
 endsnippet
 
 # doautocmd User {{{1
