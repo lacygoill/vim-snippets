@@ -683,11 +683,13 @@ endsnippet
 # the same path twice in 'rtp'.
 #}}}
 snippet vimrc "Minimal vimrc to test a plugin" bm
-set rtp^=~/.vim/plugged/vim-lg-lib/
-set rtp^=~/.vim/plugged/vim-readline/
 set rtp^=${1:path/to/plugin/}${2:
 set rtp+=${1/$/after/}}
+set rtp^=~/.vim/plugged/vim-lg-lib/
+set rtp^=~/.vim/plugged/vim-readline/
 let &rtp = $HOME.'/.vim,'.join(filter(split(&rtp, ','), {i,v -> v isnot# $HOME.'/.vim'}), ',')
+let g:no_plugin = 1
+let g:no_after_plugin = 1
 filetype plugin indent on
 syntax enable
 set wildmenu showcmd
