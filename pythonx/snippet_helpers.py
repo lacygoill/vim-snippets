@@ -318,6 +318,15 @@ def plugin_guard(snip): #{{{1
     except AttributeError:
         relative_path = ''
 
+    if '/autoload/slow_call' in path_to_dir:
+        rtp_name = vim.eval('snippets#get_plugin_name_in_rtp()')
+        anon_snip_body = (
+            "if stridx(&rtp, '${1:" + rtp_name + "}') == -1"
+            + finish
+            + '\nendif'
+            + '\n$0'
+        )
+
     # Why the slash before 'autoload'?{{{
     #
     # It can be useful to avoid an ambiguity.
@@ -336,7 +345,7 @@ def plugin_guard(snip): #{{{1
     # Are there other cases where we cannot?
     # What are the rules regarding the omission of operators?
     #}}}
-    if '/autoload' in path_to_dir:
+    elif '/autoload' in path_to_dir:
         anon_snip_body = (
             "if exists('${2:g:autoloaded_${1:" + relative_path.replace('/', '#') + "}}')"
             + finish
