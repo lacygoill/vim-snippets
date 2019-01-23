@@ -61,9 +61,9 @@ expression in the value of the `:let g:d_ebug` assignment.
 Only  if you  use a  `pre_expand`  statement, and  from the  expression/function
 invoked by the latter, you invoke one of these:
 
-        • snip.cursor.preserve()
+   - snip.cursor.preserve()
 
-        • snip.expand_anon()
+   - snip.expand_anon()
 
 # How to remove the tab trigger if UltiSnips didn't do it?   (assuming it's alone on the line)
 

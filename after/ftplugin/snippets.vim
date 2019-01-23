@@ -18,9 +18,9 @@ augroup format_snippets
     " This is what  we want in a  snippet (snippet...endsnippet), but not  in a python
     " function (global...endglobal), because:
     "
-    "     • PEP8 recommends spaces
+    "     - PEP8 recommends spaces
     "
-    "     • we could easily end up mixing tabs and spaces, when we copy paste
+    "     - we could easily end up mixing tabs and spaces, when we copy paste
     "       some code, which would raise an error:
     "
     "             IndentationError: unexpected indent

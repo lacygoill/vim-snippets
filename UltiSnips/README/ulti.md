@@ -15,10 +15,10 @@ Use `UltiSnips#SnippetsInCurrentScope()`.
 
 It will give you a dictionary whose:
 
-        • keys  are the  tab triggers of  the  snippets available  in the
-          current buffer, and which are matched by the word before the cursor
+   - keys  are the  tab triggers of  the  snippets available  in the
+     current buffer, and which are matched by the word before the cursor
 
-        • values are the description of the snippets
+   - values are the description of the snippets
 
 Usage example:
 
@@ -38,8 +38,8 @@ Usage example:
 `UltiSnips#SnippetsInCurrentScope()` returns a Vim  dictionary with the snippets
 whose trigger:
 
-        • matches the current word, if the function was passed no argument
-        • anything,                 if the function was passed the argument 1
+   - matches the current word, if the function was passed no argument
+   - anything,                 if the function was passed the argument 1
 
 What's the output of the function without argument?
 
@@ -276,10 +276,10 @@ Note that the order matters, so you can't write that:
 # Statements
 ## What are the four statements which can invoke python code (besides an in-snippet interpolation)?
 
-        • context
-        • pre_expand
-        • post_expand
-        • post_jump
+   - context
+   - pre_expand
+   - post_expand
+   - post_jump
 
 ## When is the python code invoked by a `pre_expand` statement executed?
 
@@ -414,11 +414,11 @@ will have to invoke `snip.cursor.set(x,y)` with the desired cursor position.
             coordinates  are  indexed  from  zero, and  the  object  comes  with
             additional methods:
 
-                    • preserve()        - special method for executing pre/post/jump actions
+                    * preserve()        - special method for executing pre/post/jump actions
 
-                    • set(line,column)  - sets cursor to specified line and column
+                    * set(line,column)  - sets cursor to specified line and column
 
-                    • to_vim_cursor()
+                    * to_vim_cursor()
                                         - returns cursor position, but the coordinates being
                                           indexed from 1;
                                           suitable to be assigned to `vim.current.window.cursor`
@@ -461,10 +461,10 @@ will have to invoke `snip.cursor.set(x,y)` with the desired cursor position.
             They use `pre_expand` to “enrich” `snip.context`.
             To do so, they move it inside a dictionary:
 
-                    • one of its value is the original `snip.context`
-                    • another          is `snip.cursor`
-                    • another          is `snip.visual_content`
-                    • another          is an arbitrary info
+                    - one of its value is the original `snip.context`
+                    - another          is `snip.cursor`
+                    - another          is `snip.visual_content`
+                    - another          is an arbitrary info
 
             They then use `post_jump` to analyze this enriched `snip.context`.
 
@@ -479,10 +479,10 @@ limitations, by passing it the `e` option.
 
 It will allow you to:
 
-        • make the snippet take into consideration more than just the text
-          before the cursor
+   - make the snippet take into consideration more than just the text
+     before the cursor
 
-        • expand a tab trigger with more than 1 snippet
+   - expand a tab trigger with more than 1 snippet
 
 To do so, the snippet should be defined using one of those syntaxes:
 
@@ -785,9 +785,9 @@ The 'snip' object provides a few methods:
             IOW, `snip.mkline()` allows to copy the level of indentation of the previous line.
             The latter can be changed via:
 
-                    • snip.shift()
-                    • snip.unshift()
-                    • snip.reset_indent()
+                    - snip.shift()
+                    - snip.unshift()
+                    - snip.reset_indent()
 
 
     snip += line
@@ -905,8 +905,8 @@ The 'snip' object provides some properties as well:
 
             Info about the `${VISUAL}` placeholder. The property has two attributes:
 
-                    • snip.v.mode   v  V  ^V
-                    • snip.v.text   text that was selected
+                    - snip.v.mode   v  V  ^V
+                    - snip.v.text   text that was selected
 
 #
 #
@@ -936,10 +936,10 @@ The 'snip' object provides some properties as well:
             De  plus, UltiSnips  configure  automatiquement  certains objets  et
             variables python, valables au sein du bloc de code:
 
-                    • snip.rv    = variable 'return value';
+                    - snip.rv    = variable 'return value';
                                    sa valeur sera interpolée au sein du document
 
-                    • t          = liste dont les éléments contiennent le texte
+                    - t          = liste dont les éléments contiennent le texte
                                    inséré dans les différents tabstops;
                                    ex:    t[1] = $1, t[2] = $2
 
@@ -1050,9 +1050,9 @@ On peut également effectuer une substitution au sein du tabstop miroir.
             Ce qui  signifie que si  le texte  inséré dans le  tabstop d'origine
             commence par un:
 
-                    • `a`, le miroir commencera par `foo`
-                    • `b`, "                        `bar`
-                    • ni `a`, ni `b`, le miroir sera vide
+                    - `a`, le miroir commencera par `foo`
+                    - `b`, "                        `bar`
+                    - ni `a`, ni `b`, le miroir sera vide
 
 
                                                NOTE:
@@ -1073,9 +1073,9 @@ On peut également effectuer une substitution au sein du tabstop miroir.
 
             Si le texte inséré dans le tabstop d'origine commence par un:
 
-                    • `a`, le miroir commencera par `fooqux`
-                    • `b`, "                        `barbaz`
-                    • ni `a`, ni `b`, le miroir commencera par `barqux`
+                    - `a`, le miroir commencera par `fooqux`
+                    - `b`, "                        `barbaz`
+                    - ni `a`, ni `b`, le miroir commencera par `barqux`
 
             Illustre qu'un miroir peut être aussi intelligent qu'on veut; i.e.
             être capable d'effectuer autant  de substitutions que nécessaire, et
@@ -1097,13 +1097,13 @@ You can use this to pass arbitrary information from a statement to another.
 
 Finally, if you create a new variable:
 
-        • in a python function, it will be local to the function:
+   - in a python function, it will be local to the function:
 
-            NOT accessible to the next processed function
+       NOT accessible to the next processed function
 
-        • in a python interpolation, it will be local to the snippet:
+   - in a python interpolation, it will be local to the snippet:
 
-            ACCESSIBLE to the next interpolation
+       ACCESSIBLE to the next interpolation
 
 ---
 
@@ -1127,8 +1127,8 @@ To retrieve a capturing group, use the `group()` method:
                 123th  captured group,  in the  regex matched  against the  text
                 before the cursor; the regex being used in:
 
-                • the tab trigger       (with the `r` option)
-                • the expression field  (with the `e` option)
+                - the tab trigger       (with the `r` option)
+                - the expression field  (with the `e` option)
 
 ---
 
@@ -1164,8 +1164,8 @@ You can't use a line continuation in a VimL interpolation.
 
 Inside a snippet, you can invoke a python function in 2 ways:
 
-    • as a simple routine:                          `!p           func()`
-    • for its output to be inserted in the buffer:  `!p snip.rv = func()`
+   - as a simple routine:                          `!p           func()`
+   - for its output to be inserted in the buffer:  `!p snip.rv = func()`
 
 ---
 
@@ -1183,11 +1183,11 @@ Use `vim.eval()` instead. It's less verbose:
 
 In a python interpolation, the modules:
 
-    • os
-    • random
-    • re
-    • string
-    • vim
+   - os
+   - random
+   - re
+   - string
+   - vim
 
 ... are pre-imported.
 Other modules can be imported using the python 'import' command:
@@ -1235,50 +1235,52 @@ Quelle différence entre les 2 ?
 
 La 1e variable:
 
-        • N'est pas définie par défaut
+   - N'est pas définie par défaut
 
-        • Attend comme valeur une chaîne contenant un chemin absolu vers un dossier.
-          Le dernier composant du chemin ne doit pas être 'snippets'.
-          En effet, qd UltiSnips entre dans un dossier portant le nom 'snippets', il considère
-          que les fichiers qui s'y trouvent utilisent le format SnipMate (différent du format UltiSnips).
+   - Attend comme valeur une chaîne contenant un chemin absolu vers un dossier.
+     Le dernier composant du chemin ne doit pas être 'snippets'. En effet, qd
+     UltiSnips entre dans un dossier portant le nom 'snippets', il considère que
+     les fichiers qui s'y trouvent utilisent le format SnipMate (différent du
+     format UltiSnips).
 
-        • Est utile pour configurer le chemin vers notre dossier de snippets privé.
-          Ex:
+   - Est utile pour configurer le chemin vers notre dossier de snippets privé.
+     Ex:
 
-                let g:UltiSnipsSnippetDir = '~/.vim/UltiSnips/'
+           let g:UltiSnipsSnippetDir = '~/.vim/UltiSnips/'
 
-        • Est le 1er dossier dans lequel UltiSnips cherche le fichier de snippets à éditer
-          qd on tape :USE
+   - Est le 1er dossier dans lequel UltiSnips cherche le fichier de snippets
+     à éditer qd on tape :USE
 
 
 La 2e variable:
 
-        • Vaut ['UltiSnips'] par défaut.
+   - Vaut ['UltiSnips'] par défaut.
 
-        • Attend comme valeur une liste de chemins relatifs ou absolus.
-          Si le chemin est relatif, UltiSnips cherchera à compléter le chemin via tous les dossiers
-          du &rtp.
+   - Attend comme valeur une liste de chemins relatifs ou absolus. Si le chemin
+     est relatif, UltiSnips cherchera à compléter le chemin via tous les
+     dossiers du &rtp.
 
-        • Est utile pour pouvoir utiliser immédiatement des snippets tiers, tq:
+   - Est utile pour pouvoir utiliser immédiatement des snippets tiers, tq:
 
-                https://github.com/honza/vim-snippets
+           https://github.com/honza/vim-snippets
 
-        • Si on lui affecte un seul élément correspondant à un chemin absolu, alors UltiSnips ne
-          cherchera pas de snippets dans `&rtp` ce qui peut améliorer les performances.
+   - Si on lui affecte un seul élément correspondant à un chemin absolu, alors
+     UltiSnips ne cherchera pas de snippets dans `&rtp` ce qui peut améliorer
+     les performances.
 
 
 À l'intérieur de ces dossiers, le nom d'un fichier de snippets doit suivre un certain schéma parmi
 plusieurs possibles. Tous dépendent du type de fichiers courant.
 Pex, si le buffer courant est de type vim, UltiSnips cherchera dans un fichier nommé:
 
-        • vim.snippets
+   - vim.snippets
 
-        • vim_foo.snippets
-        • vim/foo
-        • vim/foo.snippets
+   - vim_foo.snippets
+   - vim/foo
+   - vim/foo.snippets
 
-        • all.snippets
-        • all/foo.snippets
+   - all.snippets
+   - all/foo.snippets
 
 UltiSnips considère `all` comme une sorte de type de fichiers universel.
 `all.snippets` est utile pour définir des snippets indépendant du type de fichiers,
@@ -1402,16 +1404,16 @@ comme pex l'insertion d'une date.
 Dans un fichier où des snippets sont définis, on peut faire commencer une ligne par un mot-clé pour
 exécuter une directive. Parmi ces mots-clés, on trouve:
 
-            • extends
-            • priority
-            • clearsnippets
-            • snippet
-            • endsnippet
+   - extends
+   - priority
+   - clearsnippets
+   - snippet
+   - endsnippet
 
-            • context
-            • pre_expand
-            • post_expand
-            • post_jump
+   - context
+   - pre_expand
+   - post_expand
+   - post_jump
 
 
     extends perl, ruby
@@ -1558,11 +1560,11 @@ exécuter une directive. Parmi ces mots-clés, on trouve:
             Ici il  s'agit d'une simple  chaîne de caractères, mais  on pourrait
             aussi utiliser:
 
-                    • une interpolation d'une commande shell/VimL/python… entre des backticks. Ex:
+                    - une interpolation d'une commande shell/VimL/python… entre des backticks. Ex:
 
                             ${1:`date`}
 
-                    • autre tabstop
+                    - autre tabstop
 
             Qd  notre   curseur  est  positionné   sur  un  tabstop   doté  d'un
             placeholder,  ce  dernier est  sélectionné  visuellement,  et on  se
@@ -1602,8 +1604,8 @@ exécuter une directive. Parmi ces mots-clés, on trouve:
             automatiquement supprimé.
             Plus généralement, un tabstop est automatiquement supprimé ssi:
 
-                • il est inclus dans le placeholder d'un autre tabstop
-                • il est suivi d'un texte qcq à l'intérieur du placeholder
+                - il est inclus dans le placeholder d'un autre tabstop
+                - il est suivi d'un texte qcq à l'intérieur du placeholder
 
                     snippet a
                     foo ${1:bar $2}($3)
@@ -1712,8 +1714,8 @@ exécuter une directive. Parmi ces mots-clés, on trouve:
             Il reçoit lui-même en valeur par défaut `MyCmd`.
             Ainsi qd on appuiera sur Tab, `${VISUAL}` sera développé en:
 
-                    • `MyCmd` depuis le mode insertion
-                    • la dernière sélection visuelle depuis le mode visuel
+                    - `MyCmd` depuis le mode insertion
+                    - la dernière sélection visuelle depuis le mode visuel
 
 
                                                NOTE:

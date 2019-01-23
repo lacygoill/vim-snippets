@@ -341,8 +341,8 @@ endsnippet
 # When you perform a substitution in a mirror, you use the python regex engine.
 # The latter is different than the one in VimL:
 #
-#     • to get a non-greedy quantifier, you must suffix it with `?`
-#     • in the replacement part, $123 matches the 123th capturing group
+#    - to get a non-greedy quantifier, you must suffix it with `?`
+#    - in the replacement part, $123 matches the 123th capturing group
 
 snippet map_plug "plug mapping" bm
 nmap  <unique>  ${1:lhs}  <plug>(${2:plugin_function})
@@ -461,14 +461,14 @@ endsnippet
 #
 # However, you DO need to make a buffer non-modifiable when:
 #
-#     • its only purpose is to be read
+#    - its only purpose is to be read
 #
-#     • it's tied to a file
+#    - it's tied to a file
 #
-#     • it can't be reproduced
+#    - it can't be reproduced
 #
-#       if you edit a help file, by default, you can't undo the change
-#       after restarting Vim;
+#      if you edit a help file, by default, you can't undo the change
+#      after restarting Vim;
 #
 # Those are sufficient conditions, but not necessary.
 # For example, `qf` buffers are not tied to  any file, and yet they are made non
@@ -495,8 +495,8 @@ endsnippet
 #
 # We can call a script-local function:
 #
-#    • with `s:`     in its script
-#    • with `<sid>`  in a mapping
+#    - with `s:`     in its script
+#    - with `<sid>`  in a mapping
 #
 # But there's no built-in way to call it outside of its script/mapping.
 # `s:snr()` to the rescue.
