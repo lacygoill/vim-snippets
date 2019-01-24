@@ -1761,6 +1761,21 @@ It won't add anything to the snippet, but you can break it on several lines:
 #
 # TODO
 
+`:FzSnippets` prints  the description of  the snippets  (✔), but doesn't  use it
+when filtering the results (✘).
+
+Try this:
+
+    command! -bang Snippets call fzf#run(fzf#wrap({'source': Func()}, <bang>0))
+    fu! Func() abort
+        let snippets = UltiSnips#SnippetsInCurrentScope(1)
+        let source = keys(snippets)
+        call map(source, {i,v -> v . '    ' . snippets[v]})
+        return source
+    endfu
+
+---
+
 Read these PRs:
 
     pre/post-expand and post-jump actions
