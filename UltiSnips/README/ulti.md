@@ -1764,15 +1764,154 @@ It won't add anything to the snippet, but you can break it on several lines:
 `:FzSnippets` prints  the description of  the snippets  (✔), but doesn't  use it
 when filtering the results (✘).
 
+The  issue  is  due to  `:FzSnippets`  which  uses  the  `-n 1`  option  in  the
+`'options'` key of a dictionary; if you remove `-n 1`, the issue is fixed.
+
 Try this:
 
-    command! -bang Snippets call fzf#run(fzf#wrap({'source': Func()}, <bang>0))
-    fu! Func() abort
+    command! Snippets call fzf#run(fzf#wrap({
+        \ 'source': s:snippets(),
+        \ 'sink': function('s:inject_snippet'),
+        \ }))
+    fu! s:snippets() abort
         let snippets = UltiSnips#SnippetsInCurrentScope(1)
         let source = keys(snippets)
-        call map(source, {i,v -> v . '    ' . snippets[v]})
-        return source
+        return map(source, {i,v -> v . "\t" . snippets[v]})
     endfu
+    function! s:inject_snippet(line)
+        let snip = split(a:line, "\t")[0]
+        let snip = substitute(snip, '^\s*\|\s*$', '', 'g')
+        execute 'normal! a' . snip . "\<c-r>=UltiSnips#ExpandSnippet()\<cr>"
+    endfunction
+
+Or:
+
+    command! -bar -bang Snippets call s:fzf_snippets(<bang>0)
+    let s:TYPE = {'dict': type({}), 'funcref': type(function('call')), 'string': type(''), 'list': type([])}
+    let s:ansi = {'black': 30, 'red': 31, 'green': 32, 'yellow': 33, 'blue': 34, 'magenta': 35, 'cyan': 36}
+    function! s:fzf_snippets(...)
+        if !exists(':UltiSnipsEdit')
+            return s:warn('UltiSnips not found')
+        endif
+        let list = UltiSnips#SnippetsInCurrentScope()
+        if empty(list)
+            return s:warn('No snippets available here')
+        endif
+        let aligned = sort(s:align_lists(items(list)))
+        let colored = map(aligned, 's:yellow(v:val[0])."\t".v:val[1]')
+        return s:fzf('snippets', {
+        \ 'source':  colored,
+        \ 'options': '--ansi --tiebreak=index +m -d "\t"',
+        \ 'sink':    function('s:inject_snippet')}, a:000)
+    endfunction
+    function! s:warn(message)
+        echohl WarningMsg
+        echom a:message
+        echohl None
+        return 0
+    endfunction
+    function! s:inject_snippet(line)
+        let snip = split(a:line, "\t")[0]
+        execute 'normal! a'.s:strip(snip)."\<c-r>=UltiSnips#ExpandSnippet()\<cr>"
+    endfunction
+    function! s:strip(str)
+        return substitute(a:str, '^\s*\|\s*$', '', 'g')
+    endfunction
+    function! s:align_lists(lists)
+        let maxes = {}
+        for list in a:lists
+            let i = 0
+            while i < len(list)
+                let maxes[i] = max([get(maxes, i, 0), len(list[i])])
+                let i += 1
+            endwhile
+        endfor
+        for list in a:lists
+            call map(list, "printf('%-'.maxes[v:key].'s', v:val)")
+        endfor
+        return a:lists
+    endfunction
+    function! s:fzf(name, opts, extra)
+        let [extra, bang] = [{}, 0]
+        if len(a:extra) <= 1
+            let first = get(a:extra, 0, 0)
+            if type(first) == s:TYPE.dict
+                let extra = first
+            else
+                let bang = first
+            endif
+        elseif len(a:extra) == 2
+            let [extra, bang] = a:extra
+        else
+            throw 'invalid number of arguments'
+        endif
+        let eopts  = has_key(extra, 'options') ? remove(extra, 'options') : ''
+        let merged = extend(copy(a:opts), extra)
+        call s:merge_opts(merged, eopts)
+        return fzf#run(s:wrap(a:name, merged, bang))
+    endfunction
+    for s:color_name in keys(s:ansi)
+        execute "function! s:".s:color_name."(str, ...)\n"
+        \ "  return s:ansi(a:str, get(a:, 1, ''), '".s:color_name."')\n"
+        \ "endfunction"
+    endfor
+    function! s:ansi(str, group, default, ...)
+        let fg = s:get_color('fg', a:group)
+        let bg = s:get_color('bg', a:group)
+        let color = (empty(fg) ? s:ansi[a:default] : s:csi(fg, 1)) .
+        \ (empty(bg) ? '' : ';'.s:csi(bg, 0))
+        return printf("\x1b[%s%sm%s\x1b[m", color, a:0 ? ';1' : '', a:str)
+    endfunction
+    function! s:get_color(attr, ...)
+        let gui = has('termguicolors') && &termguicolors
+        let fam = gui ? 'gui' : 'cterm'
+        let pat = gui ? '^#[a-f0-9]\+' : '^[0-9]\+$'
+        for group in a:000
+            let code = synIDattr(synIDtrans(hlID(group)), a:attr, fam)
+            if code =~? pat
+                return code
+            endif
+        endfor
+        return ''
+    endfunction
+    function! s:merge_opts(dict, eopts)
+        return s:extend_opts(a:dict, a:eopts, 0)
+    endfunction
+    function! s:extend_opts(dict, eopts, prepend)
+        if empty(a:eopts)
+            return
+        endif
+        if has_key(a:dict, 'options')
+            if type(a:dict.options) == s:TYPE.list && type(a:eopts) == s:TYPE.list
+                if a:prepend
+                    let a:dict.options = extend(copy(a:eopts), a:dict.options)
+                else
+                    call extend(a:dict.options, a:eopts)
+                endif
+            else
+                let all_opts = a:prepend ? [a:eopts, a:dict.options] : [a:dict.options, a:eopts]
+                let a:dict.options = join(map(all_opts, 'type(v:val) == s:TYPE.list ? join(map(copy(v:val), "fzf#shellescape(v:val)")) : v:val'))
+            endif
+        else
+            let a:dict.options = a:eopts
+        endif
+    endfunction
+    function! s:wrap(name, opts, bang)
+        " fzf#wrap does not append --expect if sink or sink* is found
+        let opts = copy(a:opts)
+        let options = ''
+        if has_key(opts, 'options')
+            let options = type(opts.options) == s:TYPE.list ? join(opts.options) : opts.options
+        endif
+        if options !~ '--expect' && has_key(opts, 'sink*')
+            let Sink = remove(opts, 'sink*')
+            let wrapped = fzf#wrap(a:name, opts, a:bang)
+            let wrapped['sink*'] = Sink
+        else
+            let wrapped = fzf#wrap(a:name, opts, a:bang)
+        endif
+        return wrapped
+    endfunction
 
 ---
 
