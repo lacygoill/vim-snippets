@@ -1774,7 +1774,7 @@ Try this:
         \ 'sink': function('s:inject_snippet'),
         \ }))
     fu! s:snippets() abort
-        let snippets = UltiSnips#SnippetsInCurrentScope(1)
+        let snippets = UltiSnips#SnippetsInCurrentScope()
         let source = keys(snippets)
         return map(source, {i,v -> v . "\t" . snippets[v]})
     endfu
