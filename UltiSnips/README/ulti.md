@@ -1788,7 +1788,6 @@ Or:
 
     command! -bar -bang FzfSnippets call s:fzf_snippets(<bang>0)
     let s:TYPE = {'dict': type({}), 'funcref': type(function('call')), 'string': type(''), 'list': type([])}
-    let s:ansi = {'black': 30, 'red': 31, 'green': 32, 'yellow': 33, 'blue': 34, 'magenta': 35, 'cyan': 36}
     function! s:fzf_snippets(bang) abort
         let list = UltiSnips#SnippetsInCurrentScope()
         if empty(list)
@@ -1829,14 +1828,12 @@ Or:
         return fzf#run(s:wrap(a:name, merged, a:bang))
     endfunction
     function! s:yellow(str, ...) abort
-        return s:ansi(a:str, get(a:, 1, ''), 'yellow')
-    endfunction
-    function! s:ansi(str, group, default, ...) abort
-        let fg = s:get_color('fg', a:group)
-        let bg = s:get_color('bg', a:group)
-        let color = (empty(fg) ? s:ansi[a:default] : s:csi(fg, 1)) .
+        let  group = get(a:, 1, '')
+        let fg = s:get_color('fg', group)
+        let bg = s:get_color('bg', group)
+        let color = (empty(fg) ? 33 : s:csi(fg, 1)) .
         \ (empty(bg) ? '' : ';'.s:csi(bg, 0))
-        return printf("\x1b[%s%sm%s\x1b[m", color, a:0 ? ';1' : '', a:str)
+        return printf("\x1b[%s%sm%s\x1b[m", color, '', a:str)
     endfunction
     function! s:get_color(attr, ...) abort
         let gui = has('termguicolors') && &termguicolors
