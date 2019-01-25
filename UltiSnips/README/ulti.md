@@ -1773,9 +1773,7 @@ Try this:
     function! s:fzf_snippets(bang) abort
         let list = UltiSnips#SnippetsInCurrentScope()
         if empty(list)
-            echohl WarningMsg
-            echom 'No snippets available here'
-            echohl None
+            echohl WarningMsg | echom 'No snippets available here' | echohl None
         endif
         let aligned = sort(s:align_lists(items(list)))
         let colored = map(aligned, {i,v -> "\x1b[33m" . v[0] . "\x1b[m\t" . v[1]})
@@ -1784,21 +1782,19 @@ Try this:
             \ 'options': '--ansi --tiebreak=index +m -d "\t"',
             \ 'sink':    function('s:inject_snippet')}, a:bang))
     endfunction
-    function! s:inject_snippet(line) abort
-        let snip = substitute(split(a:line, "\t")[0], '^\s*\|\s*$', '', 'g')
-        execute 'normal! a'.snip."\<c-r>=UltiSnips#ExpandSnippet()\<cr>"
-    endfunction
     function! s:align_lists(lists) abort
         let maxes = [0, 0]
         for list in a:lists
-            for i in [0, 1]
-                let maxes[i] = max([maxes[i], len(list[i])])
-            endfor
+            call map(maxes, {i,v -> max([maxes[i], len(list[i])])})
         endfor
         for list in a:lists
             call map(list, {i,v -> printf('%-' . maxes[i] . 's', v)})
         endfor
         return a:lists
+    endfunction
+    function! s:inject_snippet(line) abort
+        let snip = trim(split(a:line, "\t")[0])
+        execute 'normal! a'.snip."\<c-r>=UltiSnips#ExpandSnippet()\<cr>"
     endfunction
 
 ---
