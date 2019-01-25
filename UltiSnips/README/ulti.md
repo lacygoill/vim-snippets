@@ -1769,33 +1769,7 @@ The  issue  is  due to  `:FzSnippets`  which  uses  the  `-n 1`  option  in  the
 
 Try this:
 
-    command! -bar -bang FzfSnippets call s:fzf_snippets(<bang>0)
-    function! s:fzf_snippets(bang) abort
-        let list = UltiSnips#SnippetsInCurrentScope()
-        if empty(list)
-            echohl WarningMsg | echom 'No snippets available here' | echohl None
-        endif
-        let aligned = sort(s:align_lists(items(list)))
-        let colored = map(aligned, {i,v -> "\x1b[33m" . v[0] . "\x1b[m\t" . v[1]})
-        call fzf#run(fzf#wrap('snippets', {
-            \ 'source':  colored,
-            \ 'options': '--ansi --tiebreak=index +m',
-            \ 'sink':    function('s:inject_snippet')}, a:bang))
-    endfunction
-    function! s:align_lists(lists) abort
-        let maxes = [0, 0]
-        for list in a:lists
-            call map(maxes, {i,v -> max([maxes[i], len(list[i])])})
-        endfor
-        for list in a:lists
-            call map(list, {i,v -> printf('%-' . maxes[i] . 's', v)})
-        endfor
-        return a:lists
-    endfunction
-    function! s:inject_snippet(line) abort
-        let snip = trim(split(a:line, "\t")[0])
-        execute 'normal! a'.snip."\<c-r>=UltiSnips#ExpandSnippet()\<cr>"
-    endfunction
+    command! -bar -bang Snippets call fzf#vim#snippets({'options': '-n ..'}, <bang>0)
 
 ---
 
