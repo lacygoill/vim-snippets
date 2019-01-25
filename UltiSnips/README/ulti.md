@@ -1796,7 +1796,7 @@ Or:
         endif
         let aligned = sort(s:align_lists(items(list)))
         let colored = map(aligned, {i,v -> printf("\x1b[%sm%s\x1b[m", 33, v[0]) . "\t" . v[1]})
-        return fzf#run(s:wrap('snippets', {
+        return fzf#run(fzf#wrap('snippets', {
         \ 'source':  colored,
         \ 'options': '--ansi --tiebreak=index +m -d "\t"',
         \ 'sink':    function('s:inject_snippet')}, a:bang))
@@ -1821,11 +1821,6 @@ Or:
             call map(list, {k,v -> printf('%-' . maxes[k] . 's', v)})
         endfor
         return a:lists
-    endfunction
-    function! s:wrap(name, opts, bang) abort
-        let opts = copy(a:opts)
-        let wrapped = fzf#wrap(a:name, opts, a:bang)
-        return wrapped
     endfunction
 
 ---
