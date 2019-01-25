@@ -1808,11 +1808,9 @@ Or:
     function! s:align_lists(lists) abort
         let maxes = {}
         for list in a:lists
-            let i = 0
-            while i < len(list)
+            for i in [0, 1]
                 let maxes[i] = max([get(maxes, i, 0), len(list[i])])
-                let i += 1
-            endwhile
+            endfor
         endfor
         for list in a:lists
             call map(list, {k,v -> printf('%-' . maxes[k] . 's', v)})
