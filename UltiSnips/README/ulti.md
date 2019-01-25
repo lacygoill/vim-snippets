@@ -1769,23 +1769,6 @@ The  issue  is  due to  `:FzSnippets`  which  uses  the  `-n 1`  option  in  the
 
 Try this:
 
-    command! Snippets call fzf#run(fzf#wrap({
-        \ 'source': s:snippets(),
-        \ 'sink': function('s:inject_snippet'),
-        \ }))
-    fu! s:snippets() abort
-        let snippets = UltiSnips#SnippetsInCurrentScope()
-        let source = keys(snippets)
-        return map(source, {i,v -> v . "\t" . snippets[v]})
-    endfu
-    function! s:inject_snippet(line)
-        let snip = split(a:line, "\t")[0]
-        let snip = substitute(snip, '^\s*\|\s*$', '', 'g')
-        execute 'normal! a' . snip . "\<c-r>=UltiSnips#ExpandSnippet()\<cr>"
-    endfunction
-
-Or:
-
     command! -bar -bang FzfSnippets call s:fzf_snippets(<bang>0)
     function! s:fzf_snippets(bang) abort
         let list = UltiSnips#SnippetsInCurrentScope()
@@ -1802,8 +1785,8 @@ Or:
             \ 'sink':    function('s:inject_snippet')}, a:bang))
     endfunction
     function! s:inject_snippet(line) abort
-        let snip = split(a:line, "\t")[0]
-        execute 'normal! a'.trim(snip)."\<c-r>=UltiSnips#ExpandSnippet()\<cr>"
+        let snip = trim(split(a:line, "\t")[0])
+        execute 'normal! a'.snip."\<c-r>=UltiSnips#ExpandSnippet()\<cr>"
     endfunction
     function! s:align_lists(lists) abort
         let maxes = [0, 0]
