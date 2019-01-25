@@ -1786,10 +1786,10 @@ Try this:
 
 Or:
 
-    command! -bar -bang Snippets call s:fzf_snippets(<bang>0)
+    command! -bar -bang FzfSnippets call s:fzf_snippets(<bang>0)
     let s:TYPE = {'dict': type({}), 'funcref': type(function('call')), 'string': type(''), 'list': type([])}
     let s:ansi = {'black': 30, 'red': 31, 'green': 32, 'yellow': 33, 'blue': 34, 'magenta': 35, 'cyan': 36}
-    function! s:fzf_snippets(...) abort
+    function! s:fzf_snippets(bang) abort
         let list = UltiSnips#SnippetsInCurrentScope()
         if empty(list)
             echohl WarningMsg
@@ -1801,7 +1801,7 @@ Or:
         return s:fzf('snippets', {
         \ 'source':  colored,
         \ 'options': '--ansi --tiebreak=index +m -d "\t"',
-        \ 'sink':    function('s:inject_snippet')}, a:000)
+        \ 'sink':    function('s:inject_snippet')}, a:bang)
     endfunction
     function! s:inject_snippet(line) abort
         let snip = split(a:line, "\t")[0]
@@ -1824,10 +1824,9 @@ Or:
         endfor
         return a:lists
     endfunction
-    function! s:fzf(name, opts, extra) abort
-        let bang = get(a:extra, 0, 0)
+    function! s:fzf(name, opts, bang) abort
         let merged = extend(copy(a:opts), {})
-        return fzf#run(s:wrap(a:name, merged, bang))
+        return fzf#run(s:wrap(a:name, merged, a:bang))
     endfunction
     for s:color_name in keys(s:ansi)
         execute "function! s:".s:color_name."(str, ...) abort\n"
