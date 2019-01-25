@@ -1847,16 +1847,8 @@ Or:
         return ''
     endfunction
     function! s:wrap(name, opts, bang) abort
-        " fzf#wrap does not append `--expect` if sink or sink* is found
         let opts = copy(a:opts)
-        let options = opts.options
-        if options !~ '--expect' && has_key(opts, 'sink*')
-            let Sink = remove(opts, 'sink*')
-            let wrapped = fzf#wrap(a:name, opts, a:bang)
-            let wrapped['sink*'] = Sink
-        else
-            let wrapped = fzf#wrap(a:name, opts, a:bang)
-        endif
+        let wrapped = fzf#wrap(a:name, opts, a:bang)
         return wrapped
     endfunction
 
