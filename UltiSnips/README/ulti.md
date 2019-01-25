@@ -1761,18 +1761,6 @@ It won't add anything to the snippet, but you can break it on several lines:
 #
 # TODO
 
-`:FzSnippets` prints  the description of  the snippets  (✔), but doesn't  use it
-when filtering the results (✘).
-
-The  issue  is  due to  `:FzSnippets`  which  uses  the  `-n 1`  option  in  the
-`'options'` key of a dictionary; if you remove `-n 1`, the issue is fixed.
-
-Try this:
-
-    command! -bar -bang Snippets call fzf#vim#snippets({'options': '-n ..'}, <bang>0)
-
----
-
 Read these PRs:
 
     pre/post-expand and post-jump actions
