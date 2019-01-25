@@ -1797,23 +1797,23 @@ Or:
         let aligned = sort(s:align_lists(items(list)))
         let colored = map(aligned, {i,v -> "\x1b[33m" . v[0] . "\x1b[m\t" . v[1]})
         return fzf#run(fzf#wrap('snippets', {
-        \ 'source':  colored,
-        \ 'options': '--ansi --tiebreak=index +m -d "\t"',
-        \ 'sink':    function('s:inject_snippet')}, a:bang))
+            \ 'source':  colored,
+            \ 'options': '--ansi --tiebreak=index +m -d "\t"',
+            \ 'sink':    function('s:inject_snippet')}, a:bang))
     endfunction
     function! s:inject_snippet(line) abort
         let snip = split(a:line, "\t")[0]
         execute 'normal! a'.trim(snip)."\<c-r>=UltiSnips#ExpandSnippet()\<cr>"
     endfunction
     function! s:align_lists(lists) abort
-        let maxes = {}
+        let maxes = [0, 0]
         for list in a:lists
             for i in [0, 1]
-                let maxes[i] = max([get(maxes, i, 0), len(list[i])])
+                let maxes[i] = max([maxes[i], len(list[i])])
             endfor
         endfor
         for list in a:lists
-            call map(list, {k,v -> printf('%-' . maxes[k] . 's', v)})
+            call map(list, {i,v -> printf('%-' . maxes[i] . 's', v)})
         endfor
         return a:lists
     endfunction
