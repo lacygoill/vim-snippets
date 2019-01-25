@@ -1795,7 +1795,7 @@ Or:
             echohl None
         endif
         let aligned = sort(s:align_lists(items(list)))
-        let colored = map(aligned, {i,v -> printf("\x1b[%sm%s\x1b[m", 33, v[0]) . "\t" . v[1]})
+        let colored = map(aligned, {i,v -> "\x1b[33m" . v[0] . "\x1b[m\t" . v[1]})
         return fzf#run(fzf#wrap('snippets', {
         \ 'source':  colored,
         \ 'options': '--ansi --tiebreak=index +m -d "\t"',
