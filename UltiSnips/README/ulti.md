@@ -1785,7 +1785,7 @@ Try this:
             \ 'sink':    function('s:inject_snippet')}, a:bang))
     endfunction
     function! s:inject_snippet(line) abort
-        let snip = trim(split(a:line, "\t")[0])
+        let snip = substitute(split(a:line, "\t")[0], '^\s*\|\s*$', '', 'g')
         execute 'normal! a'.snip."\<c-r>=UltiSnips#ExpandSnippet()\<cr>"
     endfunction
     function! s:align_lists(lists) abort
