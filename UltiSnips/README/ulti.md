@@ -1779,7 +1779,7 @@ Try this:
         let colored = map(aligned, {i,v -> "\x1b[33m" . v[0] . "\x1b[m\t" . v[1]})
         call fzf#run(fzf#wrap('snippets', {
             \ 'source':  colored,
-            \ 'options': '--ansi --tiebreak=index +m -d "\t"',
+            \ 'options': '--ansi --tiebreak=index +m',
             \ 'sink':    function('s:inject_snippet')}, a:bang))
     endfunction
     function! s:align_lists(lists) abort
