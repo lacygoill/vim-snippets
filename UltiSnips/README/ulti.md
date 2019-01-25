@@ -1795,7 +1795,7 @@ Or:
             echohl None
         endif
         let aligned = sort(s:align_lists(items(list)))
-        let colored = map(aligned, {i,v -> s:yellow(v[0]) . "\t" . v[1]})
+        let colored = map(aligned, {i,v -> printf("\x1b[%sm%s\x1b[m", 33, v[0]) . "\t" . v[1]})
         return s:fzf('snippets', {
         \ 'source':  colored,
         \ 'options': '--ansi --tiebreak=index +m -d "\t"',
@@ -1825,9 +1825,6 @@ Or:
     function! s:fzf(name, opts, bang) abort
         let merged = extend(copy(a:opts), {})
         return fzf#run(s:wrap(a:name, merged, a:bang))
-    endfunction
-    function! s:yellow(str) abort
-        return printf("\x1b[%s%sm%s\x1b[m", 33, '', a:str)
     endfunction
     function! s:wrap(name, opts, bang) abort
         let opts = copy(a:opts)
