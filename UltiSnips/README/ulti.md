@@ -1787,7 +1787,6 @@ Try this:
 Or:
 
     command! -bar -bang FzfSnippets call s:fzf_snippets(<bang>0)
-    let s:TYPE = {'dict': type({}), 'funcref': type(function('call')), 'string': type(''), 'list': type([])}
     function! s:fzf_snippets(bang) abort
         let list = UltiSnips#SnippetsInCurrentScope()
         if empty(list)
@@ -1850,10 +1849,7 @@ Or:
     function! s:wrap(name, opts, bang) abort
         " fzf#wrap does not append `--expect` if sink or sink* is found
         let opts = copy(a:opts)
-        let options = ''
-        if has_key(opts, 'options')
-            let options = type(opts.options) == s:TYPE.list ? join(opts.options) : opts.options
-        endif
+        let options = opts.options
         if options !~ '--expect' && has_key(opts, 'sink*')
             let Sink = remove(opts, 'sink*')
             let wrapped = fzf#wrap(a:name, opts, a:bang)
