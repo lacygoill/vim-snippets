@@ -1826,25 +1826,8 @@ Or:
         let merged = extend(copy(a:opts), {})
         return fzf#run(s:wrap(a:name, merged, a:bang))
     endfunction
-    function! s:yellow(str, ...) abort
-        let  group = get(a:, 1, '')
-        let fg = s:get_color('fg', group)
-        let bg = s:get_color('bg', group)
-        let color = (empty(fg) ? 33 : s:csi(fg, 1)) .
-        \ (empty(bg) ? '' : ';'.s:csi(bg, 0))
-        return printf("\x1b[%s%sm%s\x1b[m", color, '', a:str)
-    endfunction
-    function! s:get_color(attr, ...) abort
-        let gui = has('termguicolors') && &termguicolors
-        let fam = gui ? 'gui' : 'cterm'
-        let pat = gui ? '^#[a-f0-9]\+' : '^[0-9]\+$'
-        for group in a:000
-            let code = synIDattr(synIDtrans(hlID(group)), a:attr, fam)
-            if code =~? pat
-                return code
-            endif
-        endfor
-        return ''
+    function! s:yellow(str) abort
+        return printf("\x1b[%s%sm%s\x1b[m", 33, '', a:str)
     endfunction
     function! s:wrap(name, opts, bang) abort
         let opts = copy(a:opts)
