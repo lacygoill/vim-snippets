@@ -1828,11 +1828,9 @@ Or:
         let merged = extend(copy(a:opts), {})
         return fzf#run(s:wrap(a:name, merged, a:bang))
     endfunction
-    for s:color_name in keys(s:ansi)
-        execute "function! s:".s:color_name."(str, ...) abort\n"
-        \ "  return s:ansi(a:str, get(a:, 1, ''), '".s:color_name."')\n"
-        \ "endfunction"
-    endfor
+    function! s:yellow(str, ...) abort
+        return s:ansi(a:str, get(a:, 1, ''), 'yellow')
+    endfunction
     function! s:ansi(str, group, default, ...) abort
         let fg = s:get_color('fg', a:group)
         let bg = s:get_color('bg', a:group)
@@ -1853,7 +1851,7 @@ Or:
         return ''
     endfunction
     function! s:wrap(name, opts, bang) abort
-        " fzf#wrap does not append --expect if sink or sink* is found
+        " fzf#wrap does not append `--expect` if sink or sink* is found
         let opts = copy(a:opts)
         let options = ''
         if has_key(opts, 'options')
