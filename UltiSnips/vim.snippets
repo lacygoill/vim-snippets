@@ -102,17 +102,17 @@ endsnippet
 # ccfu {{{1
 
 snippet ccfu "Completion function for C-x C-u" Abm
-let s:candidates = ${1:[]}
-fu! s:${2:complete_words}(findstart, base) abort
+let ${1:s:candidates} = ${2:[]}
+fu! s:${3:complete_words}(findstart, base) abort
 	if a:findstart
-		return searchpos('${3:<}', 'bnW', line('.'))[1] - 1
+		return searchpos('${4:<}', 'bnW', line('.'))[1] - 1
 	else
-		return filter(copy(s:candidates), {i,v -> stridx(v, a:base) ==# 0})
+		return filter(copy($1), {i,v -> stridx(v, a:base) ==# 0})
 	endif
 endfu
 
-${5:" make sure s:snr() is defined
-}let &l:cfu = s:snr().'$2'
+${6:" make sure s:snr() is defined
+}let &l:cfu = s:snr().'$3'
 $0
 endsnippet
 
@@ -167,20 +167,20 @@ endsnippet
 #     https://stackoverflow.com/a/3346295/9780968
 #}}}
 snippet cfu "Completion function for a custom command" Abm
-fu! s:${1:completion_function}(arglead, ${2:_}cmdline, ${3:_}pos) abort
-	$4`!p
-snip.rv = complete(t[4], ['if a:cmdline =~# \'\m-mode\s\+\w*$\'',
+fu! s:${1:completion_function}(${3:${2:_}arglead}, ${4:_}cmdline, ${5:_}pos) abort
+	$6`!p
+snip.rv = complete(t[6], ['if a:cmdline =~# \'\m-mode\s\+\w*$\'',
 'let word_before_cursor = matchstr(a:cmdline, \'.*\s\zs-\S.*\%\'.a:pos.\'c.\')\n'
 '\n'
 '    if word_before_cursor =~# \'^-mode\s*\S*$\''
 ])
 `
-		let ${5:modes} = [${6:'normal', 'visual', 'insert'}]
+		let ${7:modes} = [${8:'normal', 'visual', 'insert'}]
 		return join($5, "\n")
 
-	elseif ${7:empty(a:arglead) || a:arglead[0] is# '-'}
-		let ${8:options} = [${9:'-option1', '-option2', '-mode'}]
-		return join($8, "\n")
+	elseif ${9:empty(a:$3) || a:$3[0] is# '-'}
+		let ${10:options} = [${11:'-option1', '-option2', '-mode'}]
+		return join($10, "\n")
 	endif
 
 	return ''
