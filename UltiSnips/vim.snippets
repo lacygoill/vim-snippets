@@ -101,19 +101,18 @@ endsnippet
 
 # ccfu {{{1
 
-snippet ccfu "Completion function for C-x C-u" bm
-fu! s:${1:complete_strings}(findstart, base) abort
+snippet ccfu "Completion function for C-x C-u" Abm
+let s:candidates = ${1:[]}
+fu! s:${2:complete_words}(findstart, base) abort
 	if a:findstart
-		return searchpos('${2:"}', 'bnW', line('.'))[1] - 1
+		return searchpos('${3:<}', 'bnW', line('.'))[1] - 1
 	else
-		let candidates = []
-		${3:sil keepj keepp %s/".\\\{-1,\}"/\=add(candidates, submatch(0))/gne}
-		return filter(candidates, {i,v -> stridx(v, a:base) ==# 0})
+		return filter(copy(s:candidates), {i,v -> stridx(v, a:base) ==# 0})
 	endif
 endfu
 
-${4:" make sure s:snr() is defined
-}let &l:cfu = s:snr().'$1'
+${5:" make sure s:snr() is defined
+}let &l:cfu = s:snr().'$2'
 $0
 endsnippet
 
