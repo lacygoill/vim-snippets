@@ -1777,7 +1777,7 @@ Try this:
         endif
         let aligned = sort(s:align_lists(items(list)))
         let colored = map(aligned, {i,v -> "\x1b[33m" . v[0] . "\x1b[m\t" . v[1]})
-        return fzf#run(fzf#wrap('snippets', {
+        call fzf#run(fzf#wrap('snippets', {
             \ 'source':  colored,
             \ 'options': '--ansi --tiebreak=index +m -d "\t"',
             \ 'sink':    function('s:inject_snippet')}, a:bang))
