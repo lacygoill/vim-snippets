@@ -1803,10 +1803,7 @@ Or:
     endfunction
     function! s:inject_snippet(line) abort
         let snip = split(a:line, "\t")[0]
-        execute 'normal! a'.s:strip(snip)."\<c-r>=UltiSnips#ExpandSnippet()\<cr>"
-    endfunction
-    function! s:strip(str) abort
-        return substitute(a:str, '^\s*\|\s*$', '', 'g')
+        execute 'normal! a'.trim(snip)."\<c-r>=UltiSnips#ExpandSnippet()\<cr>"
     endfunction
     function! s:align_lists(lists) abort
         let maxes = {}
