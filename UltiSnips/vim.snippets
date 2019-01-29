@@ -711,12 +711,12 @@ set rtp+=${1/$/after/}}
 set rtp^=~/.vim/plugged/vim-lg-lib/
 set rtp^=~/.vim/plugged/vim-readline/
 let &rtp = $HOME.'/.vim,'.join(filter(split(&rtp, ','), {i,v -> v isnot# $HOME.'/.vim'}), ',')
+
 set vi=
 $3`!p
-snip.rv = complete(t[3], ['set noloadplugins', 'let g:no_plugin = 1'
-'\n'
-'let g:no_after_plugin = 1'])`
-`!v has('nvim') ? 'set gcr=' : ''`
+snip.rv = complete(t[3], ['set noloadplugins', 'let g:no_plugin = 1 | let g:no_after_plugin = 1'])``
+!v has('nvim') ? 'set gcr=' : ''`
+
 filetype plugin indent on
 syntax enable
 set wildmenu showcmd
