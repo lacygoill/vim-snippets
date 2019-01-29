@@ -689,6 +689,7 @@ set rtp+=${1/$/after/}}
 set rtp^=~/.vim/plugged/vim-lg-lib/
 set rtp^=~/.vim/plugged/vim-readline/
 let &rtp = $HOME.'/.vim,'.join(filter(split(&rtp, ','), {i,v -> v isnot# $HOME.'/.vim'}), ',')
+set vi=
 let g:no_plugin = 1
 let g:no_after_plugin = 1
 filetype plugin indent on
