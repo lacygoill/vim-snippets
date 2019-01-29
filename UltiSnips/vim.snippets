@@ -683,6 +683,14 @@ endsnippet
 # `~/.vim` at the beginning of the rtp,  it will fail because `:set` doesn't add
 # the same path twice in 'rtp'.
 #}}}
+# Why `set vi=`?{{{
+#
+# It's equivalent to `-i NONE` on the shell command-line.
+# The latter is recommended when debugging an issue.
+#
+#	  https://github.com/chrisbra/vim_faq
+#	  /faq-2.5
+#}}}
 snippet vimrc "Minimal vimrc to test a plugin" bm
 set rtp^=${1:path/to/plugin/}${2:
 set rtp+=${1/$/after/}}
@@ -690,8 +698,10 @@ set rtp^=~/.vim/plugged/vim-lg-lib/
 set rtp^=~/.vim/plugged/vim-readline/
 let &rtp = $HOME.'/.vim,'.join(filter(split(&rtp, ','), {i,v -> v isnot# $HOME.'/.vim'}), ',')
 set vi=
-let g:no_plugin = 1
-let g:no_after_plugin = 1
+$3`!p
+snip.rv = complete(t[3], ['set noloadplugins', 'let g:no_plugin = 1'
+'\n'
+'let g:no_after_plugin = 1'])`
 filetype plugin indent on
 syntax enable
 set wildmenu showcmd
