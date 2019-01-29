@@ -691,6 +691,20 @@ endsnippet
 #	  https://github.com/chrisbra/vim_faq
 #	  /faq-2.5
 #}}}
+# Why `set gcr=`?{{{
+#
+# By default,  Neovim sets  `'gcr'`, which  makes it  send escape  sequences, to
+# set  the  shape  of the  cursor;  those  are  not  understood by  our  current
+# xfce4-terminal.
+#
+# This is  not an  issue when  we start  `$ nvim`  with `vim-term`,  because the
+# latter correctly makes `'gcr'` empty when we're in xfce4-terminal.
+# But it does become an issue when we start `$ nvim -Nu NONE`.
+#
+# Anyway, this is wrong, Neovim shouldn't do that:
+#
+#     https://github.com/neovim/neovim/issues/6778#issuecomment-302945056
+# }}}
 snippet vimrc "Minimal vimrc to test a plugin" bm
 set rtp^=${1:path/to/plugin/}${2:
 set rtp+=${1/$/after/}}
@@ -702,6 +716,7 @@ $3`!p
 snip.rv = complete(t[3], ['set noloadplugins', 'let g:no_plugin = 1'
 '\n'
 'let g:no_after_plugin = 1'])`
+`!v has('nvim') ? 'set gcr=' : ''`
 filetype plugin indent on
 syntax enable
 set wildmenu showcmd
