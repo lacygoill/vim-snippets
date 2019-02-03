@@ -1761,6 +1761,13 @@ It won't add anything to the snippet, but you can break it on several lines:
 #
 # TODO
 
+Learn how to use `pyrasite` to debug python code used in a snippet:
+
+    https://www.reddit.com/r/vim/comments/am8dc9/writing_python_plugins_i_wish_i_had_known_about/
+    https://github.com/lmacken/pyrasite
+
+---
+
 Read these PRs:
 
     pre/post-expand and post-jump actions
