@@ -9,13 +9,7 @@ snippet #! "awk shebang" bm
 #!/usr/bin/awk -f
 endsnippet
 
-# \d {{{1
-
-snippet \d "digits regex" i
-[0-9]
-endsnippet
-
-# beg {{{1
+# BEGIN {{{1
 
 snippet beg "BEGIN {…}" bm
 BEGIN {
@@ -23,12 +17,18 @@ BEGIN {
 }
 endsnippet
 
-# end {{{1
+# END {{{1
 
 snippet end "END {…}" bm
 END {
 	$0
 }
+endsnippet
+
+# digits regex {{{1
+
+snippet \d "digits regex" i
+[0-9]
 endsnippet
 
 # do {{{1
@@ -55,7 +55,7 @@ for (${1:i} in ${2:array})${3: \{}
 ${3/.+/\}/}
 endsnippet
 
-# fu {{{1
+# function {{{1
 
 snippet fu "function" bm
 function ${1:myfunc}($2) {
@@ -64,7 +64,7 @@ function ${1:myfunc}($2) {
 }
 endsnippet
 
-# gd {{{1
+# guard {{{1
 
 snippet gd "prevent infinite loop or recursion" Am
 if (g > 999)
@@ -101,7 +101,7 @@ else if ($1)${2: \{}
 ${2/.+/\} /}${4:else}
 endsnippet
 
-# isnum {{{1
+# is number {{{1
 
 snippet isnum "test if n is a number" bm
 function isnum(n) {
@@ -117,7 +117,7 @@ function isnum(n) {
 $0
 endsnippet
 
-# pr {{{1
+# print {{{1
 
 snippet pr "print" m
 	print ${1:"$2"}$0
@@ -130,21 +130,20 @@ endsnippet
 # In this case, we end up directly inside the quotes, then after pressing tab,
 # we select the whole string.
 
-# rr {{{1
+# rule {{{1
 
 snippet rr "rule" Abm
 ${2:/${1:pat}/ }{ ${3:action} }
 endsnippet
 
-# shout {{{1
+# shell output {{{1
 
-# shout: SHell OUTput
 snippet shout "capture output of shell command" m
 "${1:cmd}" | getline ${2:var}
 close("$1")
 endsnippet
 
-# sort_array {{{1
+# sort array {{{1
 
 snippet sort_array "sort array" m
 for (${1:i} in ${2:array})
@@ -174,7 +173,7 @@ snippet cc "case" Am
 		break
 endsnippet
 
-# test_func {{{1
+# test function {{{1
 
 snippet test_func "test custom function" bm
 { printf("%${2:-10}s %${3:20}s\n", \$0, ${1:myfunc}(\$0)) }
@@ -184,7 +183,7 @@ function $1(${4:x}) {
 }
 endsnippet
 
-# test_pattern {{{1
+# test pattern {{{1
 
 snippet test_pattern "test pattern" bm
 match(\$0, ${1:/pattern/}, match_array) { print match_array[0]; next }

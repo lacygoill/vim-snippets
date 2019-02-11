@@ -23,7 +23,7 @@ snippet ?: "(test ? expr1 : expr2)" im
 ($1 ? $2 : $3)
 endsnippet
 
-# abr {{{1
+# abbreviation {{{1
 
 #                                ┌ if the 1st tabstop is empty, the interpolation should be too;
 #                                │ we need to handle this special case, to avoid an error
@@ -59,7 +59,7 @@ cnorea  <buffer><expr>  ${1:lhs}  getcmdtype() is# ':' && getcmdpos() ==# `!p sn
 \\`!p snip.rv = ' '*(25 + len(t[1]))`:    '`!p snip.rv = t[1]`'
 endsnippet
 
-# au {{{1
+# autocmd {{{1
 
 # Explanation of the mirror:{{{
 #
@@ -99,7 +99,7 @@ augroup ${1:test_sth}
 augroup END
 endsnippet
 
-# ccfu {{{1
+# completion function (c-x c-u){{{1
 
 snippet ccfu "Completion function for C-x C-u" Abm
 let ${1:s:candidates} = ${2:[]}
@@ -151,7 +151,7 @@ endsnippet
 #          != a:base ('')
 
 
-# cfu {{{1
+# completion function (custom command) {{{1
 
 # There's a very long string in the python interpolation.{{{
 #
@@ -200,7 +200,7 @@ call matchadd('Conceal', ${2:'${1:pat}'}, 0, -1, {'conceal': '${3:x}'})
 $0
 endsnippet
 
-# com {{{1
+# command {{{1
 
 # FIXME:{{{
 # We need  to add  a tabstop, iff,  the user chooses  the public  function right
@@ -252,7 +252,7 @@ for ${1:i} in ${2:a_list}
 endfor
 endsnippet
 
-# fu {{{1
+# function {{{1
 
 # FIXME:
 # Expand the snippet in an autoloaded file.
@@ -276,7 +276,7 @@ snip.rv = complete(t[1], ['s:func', 'Func', vim.eval("snippets#get_autoload_func
 endfu
 endsnippet
 
-# gd {{{1
+# guard {{{1
 
 pre_expand "plugin_guard(snip)"
 snippet gd "plugin guard" Abm
@@ -323,12 +323,12 @@ endsnippet
 # end
 # endsnippet
 
-# map {{{1
+# regular mapping {{{1
 
 # TODO:
 # We should add `<unique>`, but maybe only for non-plug mappings?
 # And only in a plugin file (not in vimrc or temp file)?
-snippet map "prototype mapping" bm
+snippet map "regular mapping" bm
 nno  `!v
 expand('%:p:h:t') is# 'ftplugin' ? '<buffer><nowait><silent>' : '<silent>'
 `  ${1:cd}  :<c-u>call $2`!p
@@ -337,7 +337,7 @@ snip.rv = complete(t[2], ['<sid>func', 'Func'])
 $0
 endsnippet
 
-# map_plug {{{1
+# plug mapping {{{1
 
 # When you perform a substitution in a mirror, you use the python regex engine.
 # The latter is different than the one in VimL:
@@ -351,7 +351,7 @@ nno  <silent>  <plug>($2)  :<c-u>call ${2/(.*?)_(.*)/$1#$2/}()<cr>
 $0
 endsnippet
 
-# map_user {{{1
+# user mapping {{{1
 
 snippet map_user "Install user-respectful mappings" bm
 if empty(mapcheck('${1:key}', '${3:mode}')) && !hasmapto('<plug>(${2:plugin_some_func})', '$3')
@@ -409,7 +409,7 @@ snippet printf "execute printf()" m
 exe printf('$1', $0)
 endsnippet
 
-# qf_title {{{1
+# qf title {{{1
 
 snippet qf_title "set the title of the qf window" bm
 call set$1`!p
@@ -427,14 +427,14 @@ endsnippet
 # It allows us to set the title even outside the qf window, for example inside
 # a function which is building the qf list.
 
-# reg_restore {{{1
+# restore register {{{1
 
 snippet reg_restore "Restore the contents and type of registers" bm
 call setreg('${1:z}', $1_reg, $1_type)
 $0
 endsnippet
 
-# reg_save {{{1
+# save register {{{1
 
 snippet reg_save "Temporarily save the contents and type of registers" bm
 let [ ${1:z}_reg, $1_type ] = [ getreg('$1'), getregtype('$1') ]
@@ -554,7 +554,7 @@ endfu
 $0
 endsnippet
 
-# sync, synk, synm, synr {{{1
+# syntax cluster, keyword, match, region {{{1
 
 snippet sync "syntax cluster" Abm
 syn cluster ${1:MyCluster} contains=${2:Group1,Group2}
