@@ -9,22 +9,6 @@ snippet #! "awk shebang" bm
 #!/usr/bin/awk -f
 endsnippet
 
-# BEGIN {{{1
-
-snippet beg "BEGIN {…}" bm
-BEGIN {
-	$0
-}
-endsnippet
-
-# END {{{1
-
-snippet end "END {…}" bm
-END {
-	$0
-}
-endsnippet
-
 # digits regex {{{1
 
 snippet \d "digits regex" i
@@ -133,7 +117,7 @@ endsnippet
 # rule {{{1
 
 snippet rr "rule" Abm
-${2:/${1:pat}/ }{ ${3:action} }
+$1`!p snip.rv = complete(t[1], ['BEGIN ', 'END ', '/pat/ '])`{ ${2:action} }
 endsnippet
 
 # shell output {{{1
