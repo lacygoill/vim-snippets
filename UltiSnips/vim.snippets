@@ -236,7 +236,7 @@ endif
 $0
 endsnippet
 
-# for {{{1
+# f {{{1
 
 post_expand "forkv_comma(snip)"
 #                                                              ┌ don't translate `\b` into `\u0008`
@@ -246,7 +246,7 @@ snippet , "for [k,v] in …" "snip.last_placeholder and re.match(r'^\s*for\b', s
 endsnippet
 
 post_jump "forkv_items(snip)"
-snippet for "for loop" bm
+snippet f "for loop" bm
 for ${1:i} in ${2:a_list}
 	${0:${VISUAL}}
 endfor
@@ -282,9 +282,9 @@ pre_expand "plugin_guard(snip)"
 snippet gd "plugin guard" Abm
 endsnippet
 
-# if {{{1
+# i {{{1
 
-snippet if "if statement" bm
+snippet i "if statement" bm
 if $1
 	${2:${VISUAL}}
 ${4:${3:else}
@@ -292,7 +292,8 @@ ${4:${3:else}
 }endif
 endsnippet
 
-snippet i "elseif" "snip.last_placeholder and snip.last_placeholder.current_text == 'else'" Ae
+context "snip.last_placeholder and snip.last_placeholder.current_text == 'else'"
+snippet e "elseif" A
 elseif $1
 	$2
 ${3:else}
@@ -723,7 +724,7 @@ set wildmenu showcmd
 $0
 endsnippet
 
-# while {{{1
+# w {{{1
 
 snippet w "while loop" bm
 let g = 0

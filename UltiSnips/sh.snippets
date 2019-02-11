@@ -63,7 +63,7 @@ endsnippet
 
 # case {{{1
 
-snippet case "case condition" bm
+snippet cc "case condition" Abm
 case ${1:my_var} in
 	${2:val1})
 		${3:action 1}
@@ -166,13 +166,13 @@ endsnippet
 
 # for {{{1
 
-snippet for "for ... in ... done" bm
+snippet ff "for ... in ... done" Abm
 for ${1:i} in ${2:words}; do
 	${0:${VISUAL}}
 done
 endsnippet
 
-# fu {{{1
+# function {{{1
 
 snippet fu "function" bm
 ${1:my_func}() {
@@ -206,7 +206,7 @@ endsnippet
 
 # if {{{1
 
-snippet if "if statement" bm
+snippet ii "if statement" Abm
 if [[ $1 ]]; then
 	${2:${VISUAL}}
 ${4:${3:else}
@@ -214,7 +214,8 @@ ${4:${3:else}
 }fi
 endsnippet
 
-snippet i "elseif" "snip.last_placeholder and snip.last_placeholder.current_text == 'else'" Ae
+context "snip.last_placeholder and snip.last_placeholder.current_text == 'else'"
+snippet e "elseif" A
 elif $1
 	$2
 ${3:else}
@@ -274,9 +275,9 @@ endsnippet
 # However, we should stay consistent, and always quote a command substitution.
 #}}}
 
-# rgx_comp {{{1
+# pattern matching {{{1
 
-snippet rgx_comp "test if pattern match string" bm
+snippet pat_match "test if pattern match string" bm
 case "${1:string}" in
 	${2:pat1|pat2}) $3 ;;
 	*) $4 ;;
@@ -326,6 +327,7 @@ TMP="$(mktemp /tmp/.${1:pgm}.XXXXXXXXXX)"
 $0
 rm "${TMP}"
 endsnippet
+
 # usage {{{1
 
 post_expand "snip.buffer[snip.line + 3] = 'EOF'"

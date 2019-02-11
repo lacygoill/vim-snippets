@@ -1,15 +1,16 @@
-# global {{{1
+# global snippet {{{1
 
-snippet global "global snippet" bm
+snippet glob "global snippet" bm
 global !p
 ${0:${VISUAL}}
 endglobal
 endsnippet
 
-# snip {{{1
+# regular snippet {{{1
 
 snippet snip "regular snippet" bm
 snippet ${1:Tab_trigger} "${2:Description}" ${3:Options}
 ${0:${VISUAL}}
 `echo endsnippet`
 endsnippet
+

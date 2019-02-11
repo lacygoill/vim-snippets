@@ -1,3 +1,7 @@
+global !p
+from snippet_helpers import *
+endglobal
+
 # #! {{{1
 
 # cannot use /usr/bin/env because it does not support parameters (as -f)
@@ -30,7 +34,7 @@ endsnippet
 # case {{{1
 
 # the `case` statement is part of the `switch` one
-snippet case "case" bm
+snippet case "case" m
 	case $1:
 		$0
 		break
@@ -38,23 +42,23 @@ endsnippet
 
 # do {{{1
 
-snippet do "do … while" bm
+snippet do "do … while" m
 do {
 	$0
 } while ($1)
 endsnippet
 
-# for {{{1
+# f {{{1
 
-snippet for "for" bm
+snippet f "for" m
 for (${2:i} = ${3:1}; $2 <= ${1:n}; ${4:++$2}) {
-	$0
+	${0:${VISUAL}}
 }
 endsnippet
 
-# fori {{{1
+# fi {{{1
 
-snippet fori "for in" bm
+snippet fi "for in" m
 for (${1:i} in ${2:array}) {
 	$0
 }
@@ -69,46 +73,61 @@ function ${1:myfunc}($2) {
 }
 endsnippet
 
-# guard {{{1
+# gd {{{1
 
-snippet guard "prevent excessive recursion" bm
-if (guard${1:1} >= 99)
-	${2:return}
-guard$1 += 1
+snippet gd "prevent excessive recursion" m
+if (g > 999)
+	$1`!p snip.rv = complete(t[1], ['break', 'return'])`
+g += 1
 endsnippet
 
-# Do not initialize `guard` to 1, and, do not make `guard` a local variable.
+# Do not initialize `g` to 1, and, do not make `g` a local variable.
 #
 # It would  prevent the  guard from  working with a  recursive function  (i.e. a
 # function which calls itself).
 #
 # If you  want to check  whether you're trapped inside  an infinite loop,  add a
-# `print guard` statement, somewhere in your code.
+# `print g` statement, somewhere in your code.
 #
 # The statement  to go out of  a function is `return`,  but to go out  of a loop
 # it's `break`.
 
-# if {{{1
+# i {{{1
 
-snippet if "if {…}" bm
+# snippet i "if {...}" m
+# if ($1) {
+# 	${0:${VISUAL}}
+# }
+# endsnippet
+
+snippet i "if {...}" bm
 if ($1) {
-	$0${VISUAL}
+	${2:${VISUAL}}
+}${4:${3: else}
+	$0
 }
 endsnippet
 
-# ife {{{1
+# e {{{1
 
-snippet ife "if … else …" bm
-if ($1) {
-	${2:${VISUAL}}
+context "snip.last_placeholder and snip.last_placeholder.current_text == 'else'"
+snippet e "if ... else ..." Am
 } else {
 	$0
 }
 endsnippet
 
+# snippet e "if ... else ..." Am
+# if ($1) {
+# 	${2:${VISUAL}}
+# } else {
+# 	$0
+# }
+# endsnippet
+
 # elif {{{1
 
-snippet elif "else if …" bm
+snippet elif "else if …" m
 else if ($1) {
 	$0
 }
@@ -116,7 +135,7 @@ endsnippet
 
 # el {{{1
 
-snippet el "else {…}" bm
+snippet el "else {…}" m
 else {
 	$0
 }
@@ -138,9 +157,9 @@ function isnum(n) {
 $0
 endsnippet
 
-# pri {{{1
+# pr {{{1
 
-snippet pri "print" bm
+snippet pr "print" m
 	print ${1:"$2"}$0
 endsnippet
 
@@ -151,17 +170,23 @@ endsnippet
 # In this case, we end up directly inside the quotes, then after pressing tab,
 # we select the whole string.
 
+# rr {{{1
+
+snippet rr "rule" Abm
+${2:/${1:pat}/} { ${3:action} }
+endsnippet
+
 # shout {{{1
 
 # shout: SHell OUTput
-snippet shout "capture output of shell command" bm
+snippet shout "capture output of shell command" m
 "${1:cmd}" | getline ${2:var}
 close("$1")
 endsnippet
 
 # sort_array {{{1
 
-snippet sort_array "sort array" bm
+snippet sort_array "sort array" m
 for (${1:i} in ${2:array})
 	print $2[$1] | "sort${5:${3: -nr}${4: >/tmp/file}}"
 close("sort$5")
@@ -171,7 +196,7 @@ endsnippet
 # sw {{{1
 
 # the switch statement is a gawk extension
-snippet sw "switch" bm
+snippet sw "switch" m
 switch ($1) {
 case $2:
 	$3
@@ -200,9 +225,9 @@ match(\$0, ${1:/pattern/}, match_array) { print match_array[0]; next }
 $0
 endsnippet
 
-# wh {{{1
+# w {{{1
 
-snippet wh "while" bm
+snippet w "while" m
 while ($1) {
 	$2
 }

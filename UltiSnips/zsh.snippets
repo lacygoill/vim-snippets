@@ -1,7 +1,7 @@
 # Enable snippets from `sh` filetype
 extends sh
 
-# fu {{{1
+# function {{{1
 
 snippet fu "function definition" Abm
 ${1:func}() {
@@ -10,7 +10,7 @@ ${1:func}() {
 }
 endsnippet
 
-# syn_hi {{{1
+# syntax highlighting {{{1
 
 snippet syn_hi "syntax highlighting" bm
 : ${ZSH_HIGHLIGHT_STYLES[${1:my_highlighter}:${2:my_style}]:=${3:fg=red,bold}}
