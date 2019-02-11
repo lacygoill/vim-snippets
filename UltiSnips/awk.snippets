@@ -51,7 +51,7 @@ endsnippet
 # for {{{1
 
 snippet ff "for" Am
-for (${2:i} = ${3:1}; $2 <= ${1:n}; ${4:++$2}) {
+for (${2:i} = ${3:1}; $2 <= ${1:n}; ${4:$2++}) {
 	${0:${VISUAL}}
 }
 endsnippet
@@ -141,7 +141,7 @@ endsnippet
 # rr {{{1
 
 snippet rr "rule" Abm
-${2:/${1:pat}/} { ${3:action} }
+${2:/${1:pat}/ }{ ${3:action} }
 endsnippet
 
 # shout {{{1
