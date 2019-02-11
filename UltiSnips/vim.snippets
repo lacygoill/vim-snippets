@@ -287,9 +287,10 @@ endsnippet
 snippet ii "if statement" Abm
 if $1
 	${2:${VISUAL}}
-${4:${3:else}
-	$0
+${5:${3:else}
+	$4
 }endif
+$0
 endsnippet
 
 context "snip.last_placeholder and snip.last_placeholder.current_text == 'else'"

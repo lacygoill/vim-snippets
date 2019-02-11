@@ -94,51 +94,28 @@ endsnippet
 
 # if {{{1
 
-# snippet ii "if {...}" Am
-# if ($1) {
-# 	${0:${VISUAL}}
-# }
-# endsnippet
+#     snippet ii "if statement" Abm
+#     if $1
+#     	${2:${VISUAL}}
+#     ${5:${3:else}
+#     	$4
+#     }endif
+#     $0
+#     endsnippet
 
 snippet ii "if {...}" Am
 if ($1) {
 	${2:${VISUAL}}
-}${4:${3: else}
+} ${4:${3:else} {
 	$0
-}
+}}
 endsnippet
-
-# e {{{1
 
 context "snip.last_placeholder and snip.last_placeholder.current_text == 'else'"
 snippet e "if ... else ..." Am
-} else {
-	$0
-}
-endsnippet
-
-# snippet e "if ... else ..." Am
-# if ($1) {
-# 	${2:${VISUAL}}
-# } else {
-# 	$0
-# }
-# endsnippet
-
-# elif {{{1
-
-snippet elif "else if …" m
 else if ($1) {
-	$0
-}
-endsnippet
-
-# el {{{1
-
-snippet el "else {…}" m
-else {
-	$0
-}
+	$2
+} ${3:else}
 endsnippet
 
 # isnum {{{1
