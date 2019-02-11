@@ -34,7 +34,7 @@ endsnippet
 # case {{{1
 
 # the `case` statement is part of the `switch` one
-snippet case "case" m
+snippet cc "case" Am
 	case $1:
 		$0
 		break
@@ -42,23 +42,23 @@ endsnippet
 
 # do {{{1
 
-snippet do "do … while" m
+snippet do "do ... while" m
 do {
 	$0
 } while ($1)
 endsnippet
 
-# f {{{1
+# for {{{1
 
-snippet f "for" m
+snippet ff "for" Am
 for (${2:i} = ${3:1}; $2 <= ${1:n}; ${4:++$2}) {
 	${0:${VISUAL}}
 }
 endsnippet
 
-# fi {{{1
+# for ... in {{{1
 
-snippet fi "for in" m
+snippet fii "for in" Am
 for (${1:i} in ${2:array}) {
 	$0
 }
@@ -92,15 +92,15 @@ endsnippet
 # The statement  to go out of  a function is `return`,  but to go out  of a loop
 # it's `break`.
 
-# i {{{1
+# if {{{1
 
-# snippet i "if {...}" m
+# snippet ii "if {...}" Am
 # if ($1) {
 # 	${0:${VISUAL}}
 # }
 # endsnippet
 
-snippet i "if {...}" bm
+snippet ii "if {...}" Am
 if ($1) {
 	${2:${VISUAL}}
 }${4:${3: else}
@@ -225,9 +225,9 @@ match(\$0, ${1:/pattern/}, match_array) { print match_array[0]; next }
 $0
 endsnippet
 
-# w {{{1
+# while {{{1
 
-snippet w "while" m
+snippet ww "while" Am
 while ($1) {
 	$2
 }
