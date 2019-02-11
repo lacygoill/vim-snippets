@@ -346,13 +346,37 @@ def plugin_guard(snip): #{{{1
     # What are the rules regarding the omission of operators?
     #}}}
     elif '/autoload' in path_to_dir:
-        anon_snip_body = (
-            "if exists('${2:g:autoloaded_${1:" + relative_path.replace('/', '#') + "}}')"
-            + finish
-            + '\nendif'
-            + '\nlet $2 = 1'
-            + '\n$0'
-        )
+        if snip.line == 0:
+            anon_snip_body = (
+                "if exists('${2:g:autoloaded_${1:" + relative_path.replace('/', '#') + "}}')"
+                + finish
+                + '\nendif'
+                + '\nlet $2 = 1'
+                + '\n$0'
+            )
+        else:
+            # guard to prevent infinite:
+            #
+            #    - loop (`break`)
+            #    - recursive call of a function (`return`)
+            #
+            # TODO: add a tabstop and make the snippet complete it,
+            # so that we can choose between `break` and `return`.
+            # I tried to replace this line:
+            #     + '\nbreak | return'
+            #
+            # with:
+            #     + "\n$1`!p snip.rv = complete(t[1], ['break', 'return'])`"
+            #
+            # But it raises an error, because `complete()` is not recognized.
+            # The code doesn't contain any syntax error, so I think the issue
+            # comes from the fact that the snippet is anonymous.
+            anon_snip_body = (
+                  'if g > 999'
+                + '\nbreak | return'
+                + '\ng += 1'
+                + '\n$0'
+            )
 
     # This block deals with a file such as ~/.vim/after/plugin/foo.vim.{{{
     #
