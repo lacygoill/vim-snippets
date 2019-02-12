@@ -48,8 +48,8 @@ def clean_first_placeholder(snip): #{{{1
     #
     # It assumes that the 1st tabstop is:
     #
-    #     • on a single line
-    #     • on the same line as the 2nd one
+    #    - on a single line
+    #    - on the same line as the 2nd one
     #
     # It will erase the wrong text if the 2 tabstops are on different lines.
     # IOW, this function must be adapted to the snippet for which you call it.
@@ -318,7 +318,32 @@ def plugin_guard(snip): #{{{1
     except AttributeError:
         relative_path = ''
 
-    if '/autoload/slow_call' in path_to_dir:
+    if snip.line != 0:
+        # guard to prevent infinite:
+        #
+        #    - loop (`break`)
+        #    - recursive call of a function (`return`)
+        #
+        # TODO: add a tabstop and make the snippet complete it,{{{
+        # so that we can choose between `break` and `return`.
+        # I tried to replace this line:
+        #     + '\nbreak | return'
+        #
+        # with:
+        #     + "\n$1`!p snip.rv = complete(t[1], ['break', 'return'])`"
+        #
+        # But it raises an error, because `complete()` is not recognized.
+        # The code doesn't contain any syntax error, so I think the issue
+        # comes from the fact that the snippet is anonymous.
+        #}}}
+        anon_snip_body = (
+              'if g > 999'
+            + '\nbreak | return'
+            + '\ng += 1'
+            + '\n$0'
+        )
+
+    elif '/autoload/slow_call' in path_to_dir:
         rtp_name = vim.eval('snippets#get_plugin_name_in_rtp()')
         anon_snip_body = (
             "if stridx(&rtp, '${1:" + rtp_name + "}') == -1"
@@ -346,7 +371,6 @@ def plugin_guard(snip): #{{{1
     # What are the rules regarding the omission of operators?
     #}}}
     elif '/autoload' in path_to_dir:
-        if snip.line == 0:
             anon_snip_body = (
                 "if exists('${2:g:autoloaded_${1:" + relative_path.replace('/', '#') + "}}')"
                 + finish
@@ -354,31 +378,8 @@ def plugin_guard(snip): #{{{1
                 + '\nlet $2 = 1'
                 + '\n$0'
             )
-        else:
-            # guard to prevent infinite:
-            #
-            #    - loop (`break`)
-            #    - recursive call of a function (`return`)
-            #
-            # TODO: add a tabstop and make the snippet complete it,
-            # so that we can choose between `break` and `return`.
-            # I tried to replace this line:
-            #     + '\nbreak | return'
-            #
-            # with:
-            #     + "\n$1`!p snip.rv = complete(t[1], ['break', 'return'])`"
-            #
-            # But it raises an error, because `complete()` is not recognized.
-            # The code doesn't contain any syntax error, so I think the issue
-            # comes from the fact that the snippet is anonymous.
-            anon_snip_body = (
-                  'if g > 999'
-                + '\nbreak | return'
-                + '\ng += 1'
-                + '\n$0'
-            )
 
-    # This block deals with a file such as ~/.vim/after/plugin/foo.vim.{{{
+    # This block deals with a file such as `~/.vim/after/plugin/foo.vim`.{{{
     #
     # Yes, we should put a guard in it.
     # It shouldnt'be sourced if the plugin has been temporarily disabled.
@@ -398,8 +399,8 @@ def plugin_guard(snip): #{{{1
     #
     # It shouldnt'be sourced if:
     #
-    #     • the plugin has already been sourced
-    #     • the plugin has been temporarily disabled
+    #    - the plugin has already been sourced
+    #    - the plugin has been temporarily disabled
     #}}}
     elif '/.vim/plugin' in path_to_dir:
         guard_name = vim.eval('snippets#get_plugin_name_in_guard()')
