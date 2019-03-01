@@ -716,7 +716,7 @@ let &rtp = $HOME.'/.vim,'.join(filter(split(&rtp, ','), {i,v -> v isnot# $HOME.'
 
 set vi=
 $3`!p
-snip.rv = complete(t[3], ['set noloadplugins', 'let g:no_plugin = 1 | let g:no_after_plugin = 1'])``
+snip.rv = complete(t[3], ['set noloadplugins', 'let [g:no_plugin, g:no_after_plugin] = [1,1]'])``
 !v has('nvim') ? 'set gcr=' : ''`
 
 filetype plugin indent on
