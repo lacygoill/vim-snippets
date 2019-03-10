@@ -250,18 +250,23 @@ endsnippet
 #
 # Much more complex. Maybe more powerful.
 #}}}
-post_expand "snip.buffer[snip.line + 7] = 'EOF'"
+post_expand "snip.buffer[snip.line + 9] = 'EOF'"
 snippet log "log output of script" bm
 [[ -d "${HOME}/log" ]] || mkdir "${HOME}/log"
 LOGFILE="${HOME}/log/$(basename "\$0" .sh).log"
-cat <<EOF
+
+$1() {
+	cat <<EOF
+
 -----------
 $(date +%m-%d\ %H:%M)
 -----------
 
 
-${2:main${1: "\$1"}} 2>&1 | tee -a "${LOGFILE}"
+
 $0
+}
+${1:main} 2>&1 | tee -a "${LOGFILE}"
 endsnippet
 
 # Is it necessary to quote `$(basename ...)`?{{{
