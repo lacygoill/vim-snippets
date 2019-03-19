@@ -579,14 +579,24 @@ def undo_ftplugin(snip): #{{{1
     snip.expand_anon(anon_snip_body)
 
 def why(snip): #{{{1
-    cml = vim.eval("substitute(get(split(&l:cms, '%s'), 0, ''), '\s*$', '', '')")
+    cml = vim.eval("matchstr(get(split(&l:cms, '%s'), 0, ''), '\S\+')")
+    cml_r = vim.eval("matchstr(get(split(&l:cms, '%s'), 1, ''), '\S\+')")
     indent = vim.eval("matchstr(getline('.'), '^\s*')")
-    anon_snip_body = (
-        indent + cml + ' Why ${1}?{{' + '{'
-        + '\n' + indent + cml
-        + '\n' + indent + cml + ' ${2:Because.}'
-        + '\n' + indent + cml + '}}' + '}'
-        )
+    if cml_r == '':
+        anon_snip_body = (
+            indent + cml + ' Why ${1}?{{' + '{'
+            + '\n' + indent + cml
+            + '\n' + indent + cml + ' ${2:Because.}'
+            + '\n' + indent + cml + '}}' + '}'
+            )
+    else:
+        anon_snip_body = (
+            indent + cml + ' Why ${1}? ' + cml_r + cml + '{{' + '{' + cml_r
+            + '\n'
+            + '\n' + indent + cml + ' ${2:Because.} ' + cml_r
+            + '\n'
+            + '\n' + indent + cml + ' ' + cml_r + cml + '}}' + '}' + cml_r
+            )
     snip.buffer[snip.line] = ''
     snip.expand_anon(anon_snip_body)
 
