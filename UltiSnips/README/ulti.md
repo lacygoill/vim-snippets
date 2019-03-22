@@ -1761,6 +1761,20 @@ It won't add anything to the snippet, but you can break it on several lines:
 #
 # TODO
 
+Document the `append()` method of the `snip.buffer` object.
+
+It's not documented in the help.
+It's just used in a single example:
+
+                                                        vvvvvvvvvv
+    pre_expand "del snip.buffer[snip.line]; snip.buffer.append(''); snip.cursor.set(len(snip.buffer)-1, 0)"
+    snippet x
+    def $1():
+            ${2:${VISUAL}}
+    endsnippet
+
+---
+
 Learn how to use `pyrasite` to debug python code used in a snippet:
 
     https://www.reddit.com/r/vim/comments/am8dc9/writing_python_plugins_i_wish_i_had_known_about/
