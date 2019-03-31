@@ -1,3 +1,11 @@
+global !p
+from snippet_helpers import *
+endglobal
+
+snippet ex "example" bm
+\$ $1`!p snip.rv = complete(t[1], ['seq 3', "printf '%s\\n' a b c"])` | sed '$0'
+endsnippet
+
 # bug {{{1
 
 snippet bug "filing bug report for (Neo)Vim" bm
