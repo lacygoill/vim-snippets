@@ -159,16 +159,15 @@ def complete(base, candidates): #{{{1
         # filter the  list, removing the  candidates which don't start  like the
         # text to complete
         candidates = [c[len(base):] for c in candidates if c.startswith(base)]
-        #              └───────────┤ └─────────────────┤ └───────────────────┤{{{
-        #                          │                   │                     └ but keep only the ones
-        #                          │                   │                       which start with `base`
-        #                          │                   │                       (filtering)
-        #                          │                   │
-        #                          │                   └ make `c` iterate over the values stored in `candidates`
-        #                          │
-        #                          └ expression which will be evaluated with a range of values for `c`;
-        #                            the set of all the evaluations will populate the list `candidates`
-        #                            (list comprehension)
+        #              ├──────────┘ ├─────────────────┘ ├────────────────────┘
+        #              │            │                   └ but keep only the ones which start with `base`
+        #              │            │                     (filtering)
+        #              │            │
+        #              │            └ make `c` iterate over the values stored in `candidates`
+        #              │
+        #              └ expression which will be evaluated with a range of values for `c`;
+        #                the set of all the evaluations will populate the list `candidates`
+        #                (list comprehension)
         #}}}
 
     if not candidates:
@@ -178,7 +177,7 @@ def complete(base, candidates): #{{{1
         return candidates[0]
     # if there are more, return all of them (with some formatting)
     else:
-        return '[' + '|'.join(candidates) + ']'
+        return '[' + ' | '.join(candidates) + ']'
 
 def create_table(snip): #{{{1
     # get the dimension of the table (how many rows x how many columns)
