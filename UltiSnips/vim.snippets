@@ -656,10 +656,10 @@ endsnippet
 # And if the custom ftplugin contains a  guard, it wouldn't be sourced, while it
 # should.
 #}}}
-# Why `let &rtp = ...`?{{{
+# Why `set rtp-=$HOME/.vim`?{{{
 #
-# The  previous  `set rtp^=`  have  moved  `$HOME/.vim`  further away  from  its
-# original first position.
+# The next  `set rtp^=` will  move `$HOME/.vim`  further away from  its original
+# first position.
 #
 # We need to reposition it at the very beginning of the rtp.
 # Otherwise,  the  interface  of  the   custom  plugin  we're  trying  to  debug
@@ -671,6 +671,16 @@ endsnippet
 # sourced before the plugin:
 #
 #         let g:fzf_command_prefix = 'Fz'
+#
+# In the past, we used this:
+#
+#     let &rtp = $HOME.'/.vim,'.join(filter(split(&rtp, ','), {i,v -> v isnot# $HOME.'/.vim'}), ',')
+#
+# But I find the current solution easier to read:
+#
+#     set rtp-=$HOME/.vim
+#     ...
+#     set rtp^=$HOME/.vim
 #}}}
 # Is there an alternative to this `let &rtp...`?{{{
 #
@@ -708,11 +718,12 @@ endsnippet
 #     https://github.com/neovim/neovim/issues/6778#issuecomment-302945056
 # }}}
 snippet vimrc "Minimal vimrc to test a plugin" bm
+set rtp-=$HOME/.vim
 set rtp^=~/.vim/plugged/${1:plugin}${2:
 set rtp+=~/.vim/plugged/${1/$/\/after/}}
 set rtp^=~/.vim/plugged/vim-lg-lib
 set rtp^=~/.vim/plugged/vim-readline
-let &rtp = $HOME.'/.vim,'.join(filter(split(&rtp, ','), {i,v -> v isnot# $HOME.'/.vim'}), ',')
+set rtp^=$HOME/.vim
 
 set vi=
 $3`!p
