@@ -1,0 +1,41 @@
+global !p
+from snippet_helpers import *
+endglobal
+
+snippet -- "double hyphen" bm
+\-\^\-
+endsnippet
+
+# Why the `u` in front of `u'NAME...`?{{{
+#
+# To convert it as a unicode string.
+# Without, you would raise this error when selecting the string by pressing `N`:
+#
+#     UnicodeDecodeError: 'ascii' codec can't decode byte 0xe2 in position 13: ordinal not in range(128)
+#
+# For more info, see: https://stackoverflow.com/a/35444608/9780968
+#}}}
+snippet sh "Section Header" bm
+.\" ========================================================
+.SH $1`!p snip.rv = complete(t[1],
+[
+  u'NAME command — description',
+  'SYNOPSIS',
+  'DESCRIPTION',
+  'EXAMPLES',
+  'OVERVIEW',
+  'OPTIONS',
+  'EXIT STATUS',
+  'ENVIRONMENT',
+  'FILES',
+  'SEE ALSO',
+  ])`
+$0
+endsnippet
+
+# See `$ man man` for what section names are conventionally used in a manpage.
+snippet th "Text Header" bm
+.TH ${1:COMMAND NAME} ${2:manual section number} "${3:revision date}" "${4:revision number}"
+$0
+endsnippet
+

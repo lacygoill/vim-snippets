@@ -1756,6 +1756,14 @@ It won't add anything to the snippet, but you can break it on several lines:
         some very `!v ''
         `long line
 
+## `\U` doesn't work in the replacement field of a substitution in a mirror!
+
+Use `\E`, even if you don't need it.
+
+    snippet th "Text Header" bm
+    .TH $1 ${1/.*/\U$0\E/}
+    endsnippet
+
 ##
 #
 #
