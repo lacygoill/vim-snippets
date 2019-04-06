@@ -1230,7 +1230,7 @@ UltiSnips permet de développer un tab trigger en snippet.
 Qd UltiSnips doit développer un tab trigger et qu'il cherche le fichier dans lequel il est défini,
 il regarde dans un certain nb de dossiers.
 
-Ces derniers sont définis par les variables `g:UltiSnipsSnippetDir` et `g:UltiSnipsSnippetDirectories`.
+Ces derniers sont définis par les variables `g:UltiSnipsSnippetsDir` et `g:UltiSnipsSnippetDirectories`.
 Quelle différence entre les 2 ?
 
 La 1e variable:
@@ -1246,7 +1246,7 @@ La 1e variable:
    - Est utile pour configurer le chemin vers notre dossier de snippets privé.
      Ex:
 
-           let g:UltiSnipsSnippetDir = '~/.vim/UltiSnips/'
+           let g:UltiSnipsSnippetsDir = '~/.vim/UltiSnips/'
 
    - Est le 1er dossier dans lequel UltiSnips cherche le fichier de snippets
      à éditer qd on tape :USE
@@ -1268,6 +1268,27 @@ La 2e variable:
      UltiSnips ne cherchera pas de snippets dans `&rtp` ce qui peut améliorer
      les performances.
 
+---
+
+Note that I can't use `g:UltiSnipsSnippetsDir` atm.
+No matter how I assign it a value, the snippets in there are not used.
+It may be due to an issue:
+<https://github.com/SirVer/ultisnips/issues/711>
+
+See also this comment: <https://github.com/SirVer/ultisnips/issues/711#issuecomment-227159748>
+
+Also, note the absence of an `s` at the end of `Snippet` in one of the variable, but not in the other:
+
+                      v
+    g:UltiSnipsSnippetsDir
+    g:UltiSnipsSnippetDirectories
+                     ^
+                     no 's' at the end
+
+Also, avoid using `~` at the start of a path; it may not be expanded.
+Prefer `$HOME`.
+
+---
 
 À l'intérieur de ces dossiers, le nom d'un fichier de snippets doit suivre un certain schéma parmi
 plusieurs possibles. Tous dépendent du type de fichiers courant.
@@ -1292,7 +1313,7 @@ comme pex l'insertion d'une date.
 
             Édite le fichier de snippets correspondant au type de fichier du buffer courant.
 
-            Dans un 1er temps, UltiSnips cherche dans le dossier `g:UltiSnipsSnippetDir`, puis
+            Dans un 1er temps, UltiSnips cherche dans le dossier `g:UltiSnipsSnippetsDir`, puis
             s'il ne trouve rien, il cherche dans les dossiers `g:UltiSnipsSnippetDirectories`.
 
 

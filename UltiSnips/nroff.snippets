@@ -34,8 +34,10 @@ $0
 endsnippet
 
 # See `$ man man` for what section names are conventionally used in a manpage.
+# We use double quotes to surround  the revision date and version number because
+# they could contain whitespace.
 snippet th "Text Header" bm
-.TH ${1:COMMAND NAME} ${2:manual section number} "${3:revision date}" "${4:revision number}"
+.TH ${1:COMMAND NAME} ${2:manual section number} "${3:revision date}" "${4:version number}"
 $0
 endsnippet
 

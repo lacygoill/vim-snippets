@@ -8,14 +8,14 @@ endglobal
 # The cursor should automatically jump, so that we don't have to press Tab
 # twice to jump to the arguments.
 
-context "make_context(snip)"
-post_jump "clean_first_placeholder(snip)"
-snippet x "" bm
-`!p jump_to_second_when_first_is_empty(snip)
-`func (${1:blah}) $2() {
-	$3
-}
-endsnippet
+#     context "make_context(snip)"
+#     post_jump "clean_first_placeholder(snip)"
+#     snippet x "" bm
+#     `!p jump_to_second_when_first_is_empty(snip)
+#     `func (${1:blah}) $2() {
+#     	$3
+#     }
+#     endsnippet
 
 # ?: {{{1
 
@@ -193,6 +193,11 @@ endsnippet
 # Don't change the priority of the match (`0`)!{{{
 #
 #     https://github.com/vim/vim/issues/2185
+#
+# Update:
+# This should be fixed by:
+#
+#     https://github.com/vim/vim/commit/ab62c19ea034d76632bbbf4265a9fc17e7508541
 #}}}
 snippet conceal "conceal using `matchadd()`" bm
 setl cocu=nc cole=3
