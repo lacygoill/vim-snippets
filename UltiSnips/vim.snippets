@@ -661,10 +661,10 @@ endsnippet
 # And if the custom ftplugin contains a  guard, it wouldn't be sourced, while it
 # should.
 #}}}
-# Why `set rtp-=$HOME/.vim`?{{{
+# Why `set rtp-=~/.vim`?{{{
 #
-# The next  `set rtp^=` will  move `$HOME/.vim`  further away from  its original
-# first position.
+# The next `set  rtp^=` will move `~/.vim` further away  from its original first
+# position.
 #
 # We need to reposition it at the very beginning of the rtp.
 # Otherwise,  the  interface  of  the   custom  plugin  we're  trying  to  debug
@@ -683,22 +683,9 @@ endsnippet
 #
 # But I find the current solution easier to read:
 #
-#     set rtp-=$HOME/.vim
+#     set rtp-=~/.vim
 #     ...
-#     set rtp^=$HOME/.vim
-#}}}
-# Is there an alternative to this `let &rtp...`?{{{
-#
-# Yes:
-#
-#         set rtp=
-#         set rtp^=...
-#         ...
-#         set rtp^=~/.vim
-#
-# Here, you need to first make the  rtp empty, otherwise, when you'll try to add
-# `~/.vim` at the beginning of the rtp,  it will fail because `:set` doesn't add
-# the same path twice in 'rtp'.
+#     set rtp^=~/.vim
 #}}}
 # Why `set vi=`?{{{
 #
@@ -723,12 +710,12 @@ endsnippet
 #     https://github.com/neovim/neovim/issues/6778#issuecomment-302945056
 # }}}
 snippet vimrc "Minimal vimrc to test a plugin" bm
-set rtp-=$HOME/.vim
+set rtp-=~/.vim
 set rtp^=~/.vim/plugged/${1:plugin}${2:
 set rtp+=~/.vim/plugged/${1/$/\/after/}}
 set rtp^=~/.vim/plugged/vim-lg-lib
 set rtp^=~/.vim/plugged/vim-readline
-set rtp^=$HOME/.vim
+set rtp^=~/.vim
 
 set vi=
 $3`!p
