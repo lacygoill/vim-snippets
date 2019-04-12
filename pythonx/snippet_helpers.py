@@ -547,10 +547,9 @@ def undo_ftplugin(snip): #{{{1
         anon_snip_body = (
             '" teardown {{' + '{1'
             '\n'
-            "\nlet b:undo_ftplugin = get(b:, 'undo_ftplugin', '')"
-            "\n    \ . (empty(get(b:, 'undo_ftplugin', '')) ? '' : '|')"
+            "\nlet b:undo_ftplugin = get(b:, 'undo_ftplugin', 'exe')"
             "\n    \ . \""
-            "\n    \   ${1:setl ${2:option}<}${3:"
+            "\n    \ | ${1:setl ${2:option}<}${3:"
             "\n    \ | unlet! b:${4:variable}}${5:"
             "\n    \ | exe 'au! ${6:group_name} * <buffer>'}${7:"
             "\n    \ | exe '${8:n}unmap <buffer> ${9:lhs}'}${10:"
@@ -564,9 +563,8 @@ def undo_ftplugin(snip): #{{{1
         anon_snip_body = (
             '" teardown {{' + '{1'
             + '\n'
-            + "\nlet b:undo_indent = get(b:, 'undo_indent', '')"
-            + "\n    \ . (empty(get(b:, 'undo_indent', '')) ? '' : '|')"
-            + "\n    \ . 'setl ${1:indk}<'"
+            + "\nlet b:undo_indent = get(b:, 'undo_indent', 'exe')"
+            + "\n    \ . ' | setl ${1:indk}<'"
             + '\n$0'
         )
 
