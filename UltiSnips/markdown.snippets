@@ -8,10 +8,10 @@ endsnippet
 
 # bug {{{1
 
-snippet bug "filing bug report for (Neo)Vim" bm
+snippet bug "filing bug report for (N)Vim" bm
  - \``!v
     has('nvim') ? 'n' : ''
-`vim --version\`:      `!v
+`vim --version\`:        `!v
 substitute(join(split(execute('version'), '\n')[0:1]), '(.\{-})', '', '')
 `
 `!v
@@ -19,11 +19,11 @@ substitute(join(split(execute('version'), '\n')[0:1]), '(.\{-})', '', '')
 '` - Operating system:     `!v
     matchstr(system('lsb_release -d'), 'Description:\s*\zs.*')[:-2]
 `
- - Terminal emulator:    rxvt-unicode v9.22`!v
+ - Terminal emulator:    `!v systemlist('st -v')[0]``!v
     !empty($TMUX) ? '
  - Terminal multiplexer: '.systemlist('tmux -V')[0] : ''
 `
- - \`$TERM\`:              `echo $TERM`
+ - \`$TERM\`:                `echo $TERM`
  - Shell:                `!v
     systemlist('zsh --version')[0]
 `

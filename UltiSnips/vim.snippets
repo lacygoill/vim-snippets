@@ -334,9 +334,9 @@ endsnippet
 # We should add `<unique>`, but maybe only for non-plug mappings?
 # And only in a plugin file (not in vimrc or temp file)?
 snippet map "regular mapping" bm
-nno  `!v
+nno `!v
 expand('%:p:h:t') is# 'ftplugin' ? '<buffer><nowait><silent>' : '<silent>'
-`  ${1:cd}  :<c-u>call $2`!p
+` ${1:cd} :<c-u>call $2`!p
 snip.rv = complete(t[2], ['<sid>func', 'Func'])
 `()<cr>
 $0
@@ -351,8 +351,8 @@ endsnippet
 #    - in the replacement part, $123 matches the 123th capturing group
 
 snippet map_plug "plug mapping" bm
-nmap  <unique>  ${1:lhs}  <plug>(${2:plugin_function})
-nno  <silent>  <plug>($2)  :<c-u>call ${2/(.*?)_(.*)/$1#$2/}()<cr>
+nmap <unique> ${1:lhs} <plug>(${2:plugin_function})
+nno <silent> <plug>($2) :<c-u>call ${2/(.*?)_(.*)/$1#$2/}()<cr>
 $0
 endsnippet
 
@@ -360,9 +360,9 @@ endsnippet
 
 snippet map_user "Install user-respectful mappings" bm
 if empty(mapcheck('${1:key}', '${3:mode}')) && !hasmapto('<plug>(${2:plugin_some_func})', '$3')
-	$3map  <unique>  $1  <plug>($2)
+	$3map <unique> $1 <plug>($2)
 endif
-$3no  <silent>  <plug>($2)  :<c-u>call ${2/_/#/}()<cr>
+$3no <silent> <plug>($2) :<c-u>call ${2/_/#/}()<cr>
 $0
 endsnippet
 
