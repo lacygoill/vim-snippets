@@ -38,14 +38,31 @@ endsnippet
 #
 # Choose one or the other, but don't mix the two.
 #}}}
+# Replace the `tmux-xxx-PID.log` lines with the links to the actual files.{{{
+#
+# To do so, open a GUI file manager, and drag-and-drop the file into the issue;
+#
+# GitHub will  automatically upload your file,  create a link, and  name it with
+# the original filename.
+#
+# Don't close the file manager until the link has been generated.
+#}}}
+# How to recompile tmux, during a bisecting?{{{
+#
+#     $ sudo make clean ; sudo make distclean ; sudo sh autogen.sh && sudo ./configure && sudo make
+#}}}
 snippet bug_tmux "filing bug report for tmux" bm
- - tmux version: `tmux -V`
- - OS: `uname -sp`
+ - \`$ tmux -V\`: `tmux -V`
+ - \`$ uname -sp\`: `uname -sp`
+ - terminal: st
  - \`$TERM\` outside tmux: ${1:st-256color}
  - \`$TERM\` inside tmux: `echo $TERM`
- - \`$ tmux -L test -f /tmp/tmux.conf -vv new\`: [tmux-client-${2:pid}.log](${3:url}), and [tmux-server-${4:pid}.log](${5:url})
- - \`$ gdb -n -ex 'thread apply all bt full' -batch tmux ./core\`: [backtrace.txt](${6:url})
- - \`$ git bisect\`: [\`${7:1234567}\`](${8:url})
+ - logs from \`$ tmux -vv -L test -f /tmp/tmux.conf new\`:
+   tmux-client-PID.log
+   tmux-out-PID.log
+   tmux-server-PID.log${3:
+ - \`$ gdb -n -ex 'thread apply all bt full' -batch tmux ./core\`: [backtrace.txt](${2:url})}${6:
+ - \`$ git bisect\`: [\`${4:1234567}\`](${5:url})}
 $0
 endsnippet
 
