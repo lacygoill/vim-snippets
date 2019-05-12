@@ -1,3 +1,41 @@
+# How to debug UltiSnips?
+
+Start with a minimal vimrc and a test snippet:
+
+    $ mkdir /tmp/snippets
+
+    $ cat <<'EOF' >/tmp/snippets/vim.snippets
+    snippet trigger
+    my snippet has been expanded
+    endsnippet
+    EOF
+
+    $ cat <<'EOF' >/tmp/vimrc
+    let g:UltiSnipsSnippetDirectories = ['/tmp/snippets']
+    let g:UltiSnipsExpandTrigger = '<tab>'
+    set rtp-=$HOME/.vim
+    set rtp^=$HOME/.vim/plugged/ultisnips
+    set rtp+=$HOME/.vim/plugged/ultisnips/after
+    set rtp^=$HOME/.vim
+    set vi=
+    let [g:no_plugin, g:no_after_plugin] = [1,1]
+    filetype plugin on
+    EOF
+
+    $ vim -Nu /tmp/vimrc +"put ='trigger'" +'startinsert!' /tmp/vim.vim
+
+Press Tab.
+The word “trigger” should be expanded.
+
+If it's  not, something  is wrong  in your Vim  build (try  to recompile  a more
+recent version  with more  features), or  something is  wrong in  your UltiSnips
+plugin (make  sure it's correctly  installed), or something in  your environment
+intercepts Tab before Vim.
+
+If it is expanded, you have a working starting point.
+From there, progressively re-include your custom Vim config and your snippets.
+
+##
 ## What's the first argument expected  by `complete()`?
 
 The weight of the text up to the word you want to complete + 1.

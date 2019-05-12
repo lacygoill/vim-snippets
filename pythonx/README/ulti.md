@@ -23,15 +23,15 @@ beginning of the file.
 
 You must pass it as an argument from the snippet definition:
 
-                          `snip` is passed to `func()` as an argument
-                          v
-        post_expand "func(snip)"
-        snippet foo "" bm
-        endsnippet
+                      `snip` is passed to `func()` as an argument
+                      v
+    post_expand "func(snip)"
+    snippet foo "" bm
+    endsnippet
 
 # How to capture the value of a variable in `g:d_ebug`?
 
-        vim.command('let g:d_ebug = ' + '"' + str(var) + '"')
+    vim.command('let g:d_ebug = ' + '"' + str(var) + '"')
 
 `str()` must be invoked to cast `var` into a string.
 
@@ -39,18 +39,18 @@ Contrary to  Vim's `string()`, if `var`  is already a string,  `str()` won't add
 quotes inside it.
 A double invocation won't have any effect:
 
-        str(str(var))
-        ✘
+    str(str(var))
+    ✘
 
 Which is why, here, you need to concatenate two double quotes.
 
-        '"' + str(var) + '"'
-        ✔
+    '"' + str(var) + '"'
+    ✔
 
 # How to dump the value of a variable in a file?
 
-        with open('/tmp/debug','w') as f:
-            f.write(str(var))
+    with open('/tmp/debug','w') as f:
+        f.write(str(var))
 
 This command seems more reliable compared to the previous one.
 Probably because  a variable  can contain  double quotes,  which break  the VimL
@@ -67,7 +67,7 @@ invoked by the latter, you invoke one of these:
 
 # How to remove the tab trigger if UltiSnips didn't do it?   (assuming it's alone on the line)
 
-        snip.buffer[snip.line] = ''
+    snip.buffer[snip.line] = ''
 
 ##
 # Issues
@@ -78,28 +78,28 @@ the new position of the cursor.
 
 Invoke one of these:
 
-        snip.cursor.preserve()
-        snip.cursor.set(snip.cursor[0], snip.cursor[1])
+    snip.cursor.preserve()
+    snip.cursor.set(snip.cursor[0], snip.cursor[1])
 
 ---
 
 MWE:
 
-        global !p
-        def func(snip):
-            if 'foobar' in vim.current.buffer.name:
-                anon_snip_body = 'hello world'
-            else:
-                snip.cursor.preserve()
-                return
+    global !p
+    def func(snip):
+        if 'foobar' in vim.current.buffer.name:
+            anon_snip_body = 'hello world'
+        else:
+            snip.cursor.preserve()
+            return
 
-            snip.buffer[snip.line] = ''
-            snip.expand_anon(anon_snip_body)
-        endglobal
+        snip.buffer[snip.line] = ''
+        snip.expand_anon(anon_snip_body)
+    endglobal
 
-        pre_expand "func(snip)"
-        snippet ab "" Abm
-        endsnippet
+    pre_expand "func(snip)"
+    snippet ab "" Abm
+    endsnippet
 
 This snippet expands the tab trigger `ab` into `hello world` iff the path to the
 current file contains the word `foobar`.
@@ -110,11 +110,11 @@ The output of `vim.eval()` is a string not a number.
 
 You need to convert it into a number using the `int()` function:
 
-           ✘
-           v
-        if vim.eval('VimL expr') == 123:
+       ✘
+       v
+    if vim.eval('VimL expr') == 123:
 
-           ✔
-           v
-        if int(vim.eval('VimL expr')) == 123:
+       ✔
+       v
+    if int(vim.eval('VimL expr')) == 123:
 

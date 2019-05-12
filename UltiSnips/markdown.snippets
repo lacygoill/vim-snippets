@@ -68,15 +68,39 @@ endsnippet
 
 # bug_vim {{{1
 
-snippet bug_vim "filing bug report for (N)Vim" bm
- - \``!v
-    has('nvim') ? 'n' : ''
-`vim --version\`:        `!v
+snippet bug_vim "filing bug report for Nvim" bm
+**Describe the bug**
+
+**To Reproduce**
+
+1. Run \`vim --clean\` (or \`gvim --clean\`, etc.)
+2. Edit \`filename\`
+3. Type '....'
+4. Describe the error
+
+**Expected behavior**
+
+${1:**Screenshots**
+
+}**Environment**
+ - \`vim --version\`: `!v
+substitute(join(split(execute('version'), '\n')[0:1]), '(.\{-})', '', '')`
+ - OS: `!v
+	matchstr(system('lsb_release -d'), 'Description:\s*\zs.*')[:-2]`
+ - Terminal: st
+${2:
+**Additional context**}
+$0
+endsnippet
+
+# bug_nvim {{{1
+
+snippet bug_nvim "filing bug report for Nvim" bm
+ - \`nvim --version\`:        `!v
 substitute(join(split(execute('version'), '\n')[0:1]), '(.\{-})', '', '')
 `
-`!v
-    !has('nvim') ? '' : ' - Vim (version: ) behaves differently?
-'` - Operating system:     `!v
+ - Vim (version: ) behaves differently?
+ - Operating system:     `!v
     matchstr(system('lsb_release -d'), 'Description:\s*\zs.*')[:-2]
 `
  - Terminal emulator:    `!v systemlist('st -v')[0]``!v
