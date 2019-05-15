@@ -99,7 +99,8 @@ snippet bug_nvim "filing bug report for Nvim" bm
  - \`nvim --version\`:        `!v
 substitute(join(split(execute('version'), '\n')[0:1]), '(.\{-})', '', '')
 `
- - Vim (version: ) behaves differently?
+ - Vim (version: `!v
+substitute(join(split(execute('version'), '\n')[0:1]), '(.\{-})', '', '')`) behaves differently? ${1:Yes}
  - Operating system:     `!v
     matchstr(system('lsb_release -d'), 'Description:\s*\zs.*')[:-2]
 `
@@ -111,6 +112,14 @@ substitute(join(split(execute('version'), '\n')[0:1]), '(.\{-})', '', '')
  - Shell:                `!v
     systemlist('zsh --version')[0]
 `
+
+### Steps to reproduce using \`nvim -u NORC\`
+
+	nvim -u NORC
+
+### Actual behaviour
+
+### Expected behaviour
 $0
 endsnippet
 
