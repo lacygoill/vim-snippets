@@ -99,6 +99,15 @@ augroup ${1:test_sth}
 augroup END
 endsnippet
 
+snippet auu  "one shot autocmd" bm
+unlet! s:one_shot
+au ${1:Event1,Event2,...} $2`!p snip.rv = complete(t[2], ['*', '<buffer>'])` ++once
+	\ if get(s:, 'one_shot', 1)
+	\ |     let s:one_shot = 0
+	\ |     ${3:" do sth just once}
+	\ | endif
+endsnippet
+
 # completion function (c-x c-u){{{1
 
 snippet ccfu "Completion function for C-x C-u" Abm
