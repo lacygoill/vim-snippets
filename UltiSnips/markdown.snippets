@@ -8,36 +8,6 @@ endsnippet
 
 # bug_tmux {{{1
 
-# My backtrace doesn't contain any useful info!  Help!{{{
-#
-# Ok, so you've got sth like this:
-#
-#     #0  0x0000000000414fe6 in ?? ()
-#      No symbol table info available.
-#     #1  0x0000000000410787 in ?? ()
-#      No symbol table info available.
-#     #2  0x0000000000000000 in ?? ()
-#      No symbol table info available.
-#
-# It's probably because you didn't use  the same tmux binary when you reproduced
-# the crash, and when you run `$ gdb` to extract a backtrace from the core.
-#
-# Make sure to use the same binary.
-# That is, do *not* do that:
-#
-#     $ ./tmux -Ltest -f/dev/null new
-#       ^^^^^^
-#
-#     $ gdb -n -ex 'thread apply all bt full' -batch tmux core >backtrace.txt
-#                                                    ^^^^
-#
-# In  the first  command,  where you  reproduce the  crash,  you're calling  the
-# compiled binary in the current directory.
-# While  in  the  second  command,  you're calling  the  installed  tmux  binary
-# `/usr/local/bin/tmux`.
-#
-# Choose one or the other, but don't mix the two.
-#}}}
 # Replace the `tmux-xxx-PID.log` lines with the links to the actual files.{{{
 #
 # To do so, open a GUI file manager, and drag-and-drop the file into the issue;
@@ -47,22 +17,24 @@ endsnippet
 #
 # Don't close the file manager until the link has been generated.
 #}}}
-# How to recompile tmux, during a bisecting?{{{
-#
-#     $ sudo make clean ; sudo make distclean ; sudo sh autogen.sh && sudo ./configure && sudo make
-#}}}
 snippet bug_tmux "filing bug report for tmux" bm
+### Issue description
+
+To reproduce, run these shell commands:
+
+### Required information
+
  - \`$ tmux -V\`: `tmux -V`
  - \`$ uname -sp\`: `uname -sp`
  - terminal: st
  - \`$TERM\` outside tmux: ${1:st-256color}
  - \`$TERM\` inside tmux: `echo $TERM`
- - logs from \`$ tmux -vv -L test -f /tmp/tmux.conf new\`:
+ - logs from \`$ tmux -vv -L test -f /dev/null new\`:
    tmux-client-PID.log
    tmux-out-PID.log
    tmux-server-PID.log${3:
- - \`$ gdb -n -ex 'thread apply all bt full' -batch tmux ./core\`: [backtrace.txt](${2:url})}${6:
- - \`$ git bisect\`: [\`${4:1234567}\`](${5:url})}
+ - backtrace from \`$ gdb -n -ex 'thread apply all bt full' -batch ./tmux ./core\`: [backtrace.txt](${2:url})}${6:
+ - possible offending commit(s) from \`$ git bisect\`: [\`${4:1234567}\`](${5:url})}
 $0
 endsnippet
 
