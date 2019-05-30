@@ -581,10 +581,10 @@ def why(snip): #{{{1
     indent = vim.eval("matchstr(getline('.'), '^\s*')")
     if cml_r == '':
         anon_snip_body = (
-            indent + cml + ' Why ${1}?{{' + '{'
+            indent + cml + ' Why ${1}? {{' + '{'
             + '\n' + indent + cml
             + '\n' + indent + cml + ' ${2:Because.}'
-            + '\n' + indent + cml + '}}' + '}'
+            + '\n' + indent + cml + ' }}' + '}'
             )
     else:
         anon_snip_body = (
@@ -592,7 +592,7 @@ def why(snip): #{{{1
             + '\n'
             + '\n' + indent + cml + ' ${2:Because.} ' + cml_r
             + '\n'
-            + '\n' + indent + cml + ' ' + cml_r + cml + '}}' + '}' + cml_r
+            + '\n' + indent + cml + ' ' + cml_r + cml + ' }}' + '}' + cml_r
             )
     snip.buffer[snip.line] = ''
     snip.expand_anon(anon_snip_body)

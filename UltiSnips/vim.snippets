@@ -359,7 +359,7 @@ endsnippet
 #    - to get a non-greedy quantifier, you must suffix it with `?`
 #    - in the replacement part, $123 matches the 123th capturing group
 
-snippet map_plug "plug mapping" bm
+snippet mp "plug mapping" bm
 nmap <unique> ${1:lhs} <plug>(${2:plugin_function})
 nno <silent> <plug>($2) :<c-u>call ${2/(.*?)_(.*)/$1#$2/}()<cr>
 $0
@@ -367,12 +367,27 @@ endsnippet
 
 # user mapping {{{1
 
-snippet map_user "Install user-respectful mappings" bm
+snippet mu "Install user-respectful mappings" bm
 if empty(mapcheck('${1:key}', '${3:mode}')) && !hasmapto('<plug>(${2:plugin_some_func})', '$3')
 	$3map <unique> $1 <plug>($2)
 endif
 $3no <silent> <plug>($2) :<c-u>call ${2/_/#/}()<cr>
 $0
+endsnippet
+
+# q mapping {{{1
+
+snippet mq "local mapping to end recording without closing window" bm
+nno <buffer><expr><nowait><silent> q reg_recording() isnot# '' ? 'q' : ':<c-u>$1`!p
+snip.rv = complete(t[1], ['q', 'close'])
+`!<cr>'
+$0
+endsnippet
+
+snippet mqq "end recording without closing window" bm
+if reg_recording() isnot# ''
+	return feedkeys('q', 'int')[-1]
+endif
 endsnippet
 
 # op {{{1
@@ -500,7 +515,7 @@ setl bh=delete bt=nofile nobl noswf nowrap
 
 call setline(1, ${4:put your text})
 
-nno  <buffer><nowait><silent>  q  :<c-u>close<cr>
+nno <buffer><expr><nowait><silent> q reg_recording() isnot# '' ? 'q' : ':<c-u>close!<cr>'
 $0
 endsnippet
 
