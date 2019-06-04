@@ -580,19 +580,24 @@ def why(snip): #{{{1
     cml_r = vim.eval("matchstr(get(split(&l:cms, '%s'), 1, ''), '\S\+')")
     indent = vim.eval("matchstr(getline('.'), '^\s*')")
     if cml_r == '':
+        # Why don't you add a space before the fold markers?{{{
+        #
+        # The default `zf` command in visual mode doesn't add any space.
+        # Let's try to be consistent.
+        #}}}
         anon_snip_body = (
-            indent + cml + ' Why ${1}? {{' + '{'
+            indent + cml + ' Why ${1}?{{' + '{'
             + '\n' + indent + cml
             + '\n' + indent + cml + ' ${2:Because.}'
-            + '\n' + indent + cml + ' }}' + '}'
+            + '\n' + indent + cml + '}}' + '}'
             )
     else:
         anon_snip_body = (
-            indent + cml + ' Why ${1}? ' + cml_r + cml + '{{' + '{' + cml_r
+            indent + cml + ' Why ${1}?' + cml_r + cml + '{{' + '{' + cml_r
             + '\n'
             + '\n' + indent + cml + ' ${2:Because.} ' + cml_r
             + '\n'
-            + '\n' + indent + cml + ' ' + cml_r + cml + ' }}' + '}' + cml_r
+            + '\n' + indent + cml + ' ' + cml_r + cml + '}}' + '}' + cml_r
             )
     snip.buffer[snip.line] = ''
     snip.expand_anon(anon_snip_body)
