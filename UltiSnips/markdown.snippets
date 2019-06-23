@@ -22,7 +22,7 @@ snippet bug_tmux "filing bug report for tmux" bm
 
 To reproduce, run these shell commands:
 
-	$ tmux -Ltest -f/dev/null new
+	$ tmux -Lx -f/dev/null new
 
 ### Required information
 
@@ -31,7 +31,7 @@ To reproduce, run these shell commands:
  - terminal: xterm
  - \`$TERM\` outside tmux: ${1:xterm-256color}
  - \`$TERM\` inside tmux: ${2:screen}
- - logs from \`$ tmux -vv -Ltest -f/dev/null new\`:
+ - logs from \`$ tmux -vv -Lx -f/dev/null new\`:
    tmux-client-PID.log
    tmux-out-PID.log
    tmux-server-PID.log${3:
