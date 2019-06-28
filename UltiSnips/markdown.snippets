@@ -22,7 +22,7 @@ snippet bug_tmux "filing bug report for tmux" bm
 
 To reproduce, run these shell commands:
 
-	$ tmux -Lx -f/dev/null new
+	$ tmux -Lx -f/dev/null
 
 ### Required information
 
@@ -31,11 +31,8 @@ To reproduce, run these shell commands:
  - terminal: xterm
  - \`$TERM\` outside tmux: ${1:xterm-256color}
  - \`$TERM\` inside tmux: ${2:screen}
- - logs from \`$ tmux -vv -Lx -f/dev/null new\`:
-   tmux-client-PID.log
-   tmux-out-PID.log
-   tmux-server-PID.log${3:
- - backtrace from \`$ gdb -n -ex 'thread apply all bt full' -batch ./tmux ./core\`: [backtrace.txt](${2:url})}${6:
+ - logs from \`$ tmux -vv -Lx -f/dev/null\`:
+ ${3:- backtrace from \`$ gdb -n -ex 'thread apply all bt full' -batch ./tmux ./core\`: [backtrace.txt](${2:url})}${6:
  - possible offending commit(s) from \`$ git bisect\`: [\`${4:1234567}\`](${5:url})}
 $0
 endsnippet
