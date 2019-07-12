@@ -71,7 +71,8 @@ snippet bug_nvim "filing bug report for Nvim" bm
 substitute(join(split(execute('version'), '\n')[0:1]), '(.\{-})', '', '')
 `
  - Vim (version: `!v
-substitute(join(split(execute('version'), '\n')[0:1]), '(.\{-})', '', '')`) behaves differently? ${1:Yes}
+system('vim --version | sed -n "1s/VIM - Vi IMproved\|(.*//gp ; 2p" | tr -d "\n"')
+`) behaves differently? ${1:Yes}
  - Operating system:     `!v
     matchstr(system('lsb_release -d'), 'Description:\s*\zs.*')[:-2]
 `
