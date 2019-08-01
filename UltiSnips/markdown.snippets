@@ -26,14 +26,14 @@ To reproduce, run these shell commands:
 
 ### Required information
 
- - \`$ tmux -V\`: `tmux -V`
+ - \`$ tmux -V\`: `tmux -V`, commit `git -C ~/GitRepos/tmux rev-parse HEAD`
  - \`$ uname -sp\`: `uname -sp`
  - terminal: xterm
  - \`$TERM\` outside tmux: ${1:xterm-256color}
  - \`$TERM\` inside tmux: ${2:screen}
  - logs from \`$ tmux -vv -Lx -f/dev/null\`:
- ${3:- backtrace from \`$ gdb -n -ex 'thread apply all bt full' -batch ./tmux ./core\`: [backtrace.txt](${2:url})}${6:
- - possible offending commit(s) from \`$ git bisect\`: [\`${4:1234567}\`](${5:url})}
+ ${3:- backtrace from \`$ gdb -n -ex 'thread apply all bt full' -batch ./tmux ./core\`: }${4:
+ - possible offending commit(s) from \`$ git bisect\`: }
 $0
 endsnippet
 
