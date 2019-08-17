@@ -386,7 +386,7 @@ endsnippet
 
 snippet mqq "end recording without closing window" bm
 if reg_recording() isnot# ''
-	return feedkeys('q', 'int')[-1]
+	return feedkeys('q', 'in')[-1]
 endif
 endsnippet
 
