@@ -25,16 +25,16 @@ endsnippet
 
 # abbreviation {{{1
 
-#                                ┌ if the 1st tabstop is empty, the interpolation should be too;
-#                                │ we need to handle this special case, to avoid an error
-#                                │ if we delete an inserted tabstop
-#                                │ (because in this case `t[1][0]` won't exist)
-#                                │
-#                                │          ┌ text of 1st placeholder $1
-#                   ┌────────────┤       ┌──┤
+#                   ┌ if the 1st tabstop is empty, the interpolation should be too;
+#                   │ we need to handle this special case,
+#                   │ to avoid an error if we delete an inserted tabstop
+#                   │ (because in this case `t[1][0]` won't exist)
+#                   │
+#                   │                    ┌ text of 1st placeholder $1
+#                   ├────────────┐       ├──┐
 #     !p snip.rv = '' if not t[1] else (t[1][0]).upper() + t[1][1:]
-#                                             │                  └┤
-#                                             │                   └ remaining characters
+#                                             │                  ├┘
+#                                             │                  └ remaining characters
 #                                             └ first character
 
 # Why do you use `getcmdpos()`?  Why not `getcmdline() is# '$1'`?{{{
@@ -63,31 +63,31 @@ endsnippet
 
 # Explanation of the mirror:{{{
 #
-#                 ┌ look for a space followed by a star,
-#                 │ and capture it so that I can test whether the subpattern has been matched, via `?1`
-#                 │
-#                 │  ┌ OR, look for anything
-#             ┌───┤ ┌┤
+#             ┌ look for a space followed by a star,
+#             │ and capture it so that I can test whether the subpattern has been matched, via `?1`
+#             │
+#             │     ┌ OR, look for anything
+#             ├───┐ ├┐
 #         ${2/( \*)|.*/(?1:: \*)/}
-#                       └┤└┤└─┤
-#                        │ │  └ otherwise, insert a space followed by a star
-#                        │ │    (to leave the autocmd pattern unchanged)
-#                        │ │
-#                        │ └ replace its contents with nothing
-#                        │   (SPC * SPC <buffer>  →  SPC <buffer>)
-#                        │
-#                        └ if the 1st capturing group is not empty (SPC *)
+#                       ├┘├┘├─┘
+#                       │ │ └ otherwise, insert a space followed by a star
+#                       │ │   (to leave the autocmd pattern unchanged)
+#                       │ │
+#                       │ └ replace its contents with nothing
+#                       │   (SPC * SPC <buffer>  →  SPC <buffer>)
+#                       │
+#                       └ if the 1st capturing group is not empty (SPC *)
 #}}}
 # Also, from :h UltiSnips-replacement-string:{{{
 #
-#         Finally, the  replacement string can contain  conditional replacements
-#         using the syntax (?123:foo:bar). This  reads as follows:
-#
-#             if the group 123 has matched, replace it with "foo", otherwise insert "bar"
-#
-#         "bar"  is  optional  and  if   not  provided  defaults  to  the  empty
-#         string. This feature is  very powerful. It allows you  to add OPTIONAL
-#         text into snippets.
+# > Finally, the  replacement string can contain  conditional replacements
+# > using the syntax (?123:foo:bar). This  reads as follows:
+# >
+# >     if the group 123 has matched, replace it with "foo", otherwise insert "bar"
+# >
+# > "bar"  is  optional  and  if   not  provided  defaults  to  the  empty
+# > string. This feature is  very powerful. It allows you  to add OPTIONAL
+# > text into snippets.
 #}}}
 
 pre_expand "capture_visual_content(snip)"
@@ -121,17 +121,19 @@ fu! s:${3:complete_words}(findstart, base) abort
 endfu
 
 ${6:" make sure s:snr() is defined
-}let &l:cfu = s:snr().'$3'
+}let &l:cfu = s:snr()..'$3'
 $0
 endsnippet
 
 # Why not using  v =~ '^'.a:base  ?{{{2
 #
 # To filter the candidates, we could write this condition:
-#          v =~ '^'.a:base
+#
+#      v =~ '^'.a:base
 #
 # But instead, we write:
-#          filter(candidates, {i,v -> stridx(v, a:base) ==# 0})
+#
+#      filter(candidates, {i,v -> stridx(v, a:base) ==# 0})
 #
 # Because `a:base` could contain special characters.
 # If there are, we don't want them to be interpreted by the regex engine.
@@ -166,20 +168,19 @@ endsnippet
 #
 # You can split such a string in (here 4) consecutive strings to gain in readibility:
 #
-#     'let word_before_cursor = matchstr(a:cmdline, \'.*\s\zs-\S.*\%\'.a:pos.\'c\')\n'
+#     'let word_before_cursor = matchstr(a:cmdline, \'.*\s\zs-\S.*\%\'..a:pos..\'c\')\n'
 #     '    let word_before_cursor = matchstr(word_before_cursor, \'\S*\s*$\')\n'
 #     '\n'
 #     '    if word_before_cursor =~# \'^-mode\s*\''
 #
 # They will be concatenated at compile time:
-#
-#     https://stackoverflow.com/a/3346295/9780968
+# https://stackoverflow.com/a/3346295/9780968
 #}}}
 snippet cfu "Completion function for a custom command" Abm
 fu! s:${1:completion_function}(${3:${2:_}arglead}, ${4:_}cmdline, ${5:_}pos) abort
 	$6`!p
 snip.rv = complete(t[6], ['if a:cmdline =~# \'\m-mode\s\+\w*$\'',
-'let word_before_cursor = matchstr(a:cmdline, \'.*\s\zs-\S.*\%\'.a:pos.\'c.\')\n'
+'let word_before_cursor = matchstr(a:cmdline, \'.*\s\zs-\S.*\%\'..a:pos..\'c.\')\n'
 '\n'
 '    if word_before_cursor =~# \'^-mode\s*\S*$\''
 ])
@@ -201,12 +202,12 @@ endsnippet
 
 # Don't change the priority of the match (`0`)!{{{
 #
-#     https://github.com/vim/vim/issues/2185
+# https://github.com/vim/vim/issues/2185
 #
 # Update:
 # This should be fixed by:
 #
-#     https://github.com/vim/vim/commit/ab62c19ea034d76632bbbf4265a9fc17e7508541
+# https://github.com/vim/vim/commit/ab62c19ea034d76632bbbf4265a9fc17e7508541
 #}}}
 snippet conceal "conceal using `matchadd()`" bm
 setl cocu=nc cole=3
@@ -394,7 +395,7 @@ endsnippet
 
 snippet op "Custom Operator" bm
 nno  <silent>  ${1:key}  :<c-u>set opfunc=${2:function name}<cr>g@
-nno  <silent>  $1${1/.(.*)/$1/}  :<c-u>set opfunc=$2<bar>exe 'norm! '.v:count1.'g@_'<cr>
+nno  <silent>  $1${1/.(.*)/$1/}  :<c-u>set opfunc=$2<bar>exe 'norm! '..v:count1..'g@_'<cr>
 xno  <silent>  $1  :<c-u>call $2('vis')<cr>
 
 com! -bar -range ${3:MyCom} call ${2/<(sid|SID)>/s:/}('Ex', <line1>, <line2>)
@@ -416,7 +417,7 @@ fu! ${2/<(sid|SID)>/s:/}(type, ...) abort
 		elseif a:type is# 'vis'
 			${7:sil norm! gvy}
 		${8:elseif a:type is# 'Ex'
-			${9:sil exe a:1.','.a:2.'y'}}
+			${9:sil exe a:1..','..a:2..'y'}}
 		else
 			return
 		endif
@@ -448,6 +449,7 @@ $0
 endsnippet
 
 # Alternative:
+#
 #     let w:quickfix_title = '$1'
 #
 # Works, but only if we're inside the qf window.
@@ -507,7 +509,7 @@ endsnippet
 # a qf buffer, because it could introduce a discrepancy with the qfl.
 #}}}
 snippet sidebar "" bm
-let tempfile = tempname().'/${1:buffer name}'
+let tempfile = tempname()..'/${1:buffer name}'
 exe '$2`!p
 snip.rv = complete(t[2], ['leftabove', 'topleft'])
 ` '.(&columns/3).'vnew '.tempfile
@@ -699,7 +701,7 @@ endsnippet
 # That's  the case  with the  `fzf.vim` plugin;  we need  this assignment  to be
 # sourced before the plugin:
 #
-#         let g:fzf_command_prefix = 'Fz'
+#     let g:fzf_command_prefix = 'Fz'
 #
 # In the past, we used this:
 #
@@ -716,8 +718,8 @@ endsnippet
 # It's equivalent to `-i NONE` on the shell command-line.
 # The latter is recommended when debugging an issue.
 #
-#	  https://github.com/chrisbra/vim_faq
-#	  /faq-2.5
+# https://github.com/chrisbra/vim_faq
+# /faq-2.5
 #}}}
 # Why `set gcr=`?{{{
 #
@@ -730,8 +732,7 @@ endsnippet
 # But it does become an issue when we start `$ nvim -Nu NONE`.
 #
 # Anyway, this is wrong, Neovim shouldn't do that:
-#
-#     https://github.com/neovim/neovim/issues/6778#issuecomment-302945056
+# https://github.com/neovim/neovim/issues/6778#issuecomment-302945056
 # }}}
 snippet vimrc "Minimal vimrc to test a plugin" bm
 set rtp-=~/.vim
