@@ -54,10 +54,9 @@ snippet bug_vim "filing bug report for Nvim" bm
 ${1:**Screenshots**
 
 }**Environment**
- - \`vim --version\`: `!v
-substitute(join(split(execute('version'), '\n')[0:1]), '(.\{-})', '', '')`
- - OS: `!v
-	matchstr(system('lsb_release -d'), 'Description:\s*\zs.*')[:-2]`
+ - Vim version: `!v
+matchstr(substitute(join(split(execute('version'), '\n')[0:1]), '(.\{-})', '', ''), '\d.*')`
+ - OS: `!v g:my_ultisnips_info['lsb_release -d']`
  - Terminal: st
 ${2:
 **Additional context**}
@@ -70,19 +69,14 @@ snippet bug_nvim "filing bug report for Nvim" bm
  - \`nvim --version\`:        `!v
 substitute(join(split(execute('version'), '\n')[0:1]), '(.\{-})', '', '')
 `
- - Vim (version: `!v
-system('vim --version | sed -n "1s/VIM - Vi IMproved\|(.*//gp ; 2p" | tr -d "\n"')
-`) behaves differently? ${1:Yes}
- - Operating system:     `!v
-    matchstr(system('lsb_release -d'), 'Description:\s*\zs.*')[:-2]
-`
- - Terminal emulator:    `!v systemlist('st -v')[0]``!v
+ - Vim (version: `!v g:my_ultisnips_info['vim --version'] `) behaves differently? ${1:Yes}
+ - Operating system:     `!v g:my_ultisnips_info['lsb_release -d']`
+ - Terminal emulator:    `!v g:my_ultisnips_info['st -v']``!v
     !empty($TMUX) ? '
- - Terminal multiplexer: '.systemlist('tmux -V')[0] : ''
+ - Terminal multiplexer: '.. g:my_ultisnips_info['tmux -V'] : ''
 `
  - \`$TERM\`:                `echo $TERM`
- - Shell:                `!v
-    systemlist('zsh --version')[0]
+ - Shell:                `!v g:my_ultisnips_info['zsh --version']
 `
 
 ### Steps to reproduce using \`nvim -u NORC\`
