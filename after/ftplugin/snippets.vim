@@ -32,7 +32,7 @@ augroup END
 
 " Mappings {{{1
 
-nno  <buffer><nowait><silent>  q  :<c-u>norm 1<space>q<cr>
+nmap <buffer><nowait><silent> q <plug>(my_quit)
 
 " Options "{{{1
 
