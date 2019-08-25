@@ -394,9 +394,9 @@ endsnippet
 # op {{{1
 
 snippet op "Custom Operator" bm
-nno  <silent>  ${1:key}  :<c-u>set opfunc=${2:function name}<cr>g@
-nno  <silent>  $1${1/.(.*)/$1/}  :<c-u>set opfunc=$2<bar>exe 'norm! '..v:count1..'g@_'<cr>
-xno  <silent>  $1  :<c-u>call $2('vis')<cr>
+nno <silent> ${1:key} :<c-u>set opfunc=${2:function name}<cr>g@
+nno <silent> $1${1/.(.*)/$1/} :<c-u>set opfunc=$2<bar>exe 'norm! '..v:count1..'g@_'<cr>
+xno <silent> $1 :<c-u>call $2('vis')<cr>
 
 com! -bar -range ${3:MyCom} call ${2/<(sid|SID)>/s:/}('Ex', <line1>, <line2>)
 
