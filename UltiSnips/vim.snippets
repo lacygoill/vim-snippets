@@ -338,6 +338,14 @@ endsnippet
 # end
 # endsnippet
 
+# let-heredoc {{{1
+
+snippet let-heredoc "" bm
+let ${1:var} =<< ${2:trim }$3`!p snip.rv = complete(t[3], ['END', 'EOF'])`
+$0
+$3
+endsnippet
+
 # regular mapping {{{1
 
 # TODO:

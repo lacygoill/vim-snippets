@@ -1,3 +1,7 @@
+global !p
+from snippet_helpers import *
+endglobal
+
 # To document:{{{
 #
 #         `vim.current.window.cursor[0]` can be used to access the line number.
@@ -336,11 +340,11 @@ endsnippet
 
 post_expand "snip.buffer[snip.line + 3] = 'EOF'"
 snippet usage "print usage message" bm
-if [[ $# -eq 0 ]]; then
+if [[ $# $1`!p snip.rv = complete(t[1], ['-ne 12', '-lt 34'])` ]]; then
 	cat <<EOF >&2
 usage: `!v
   expand('%:e') is# 'sh' ? '$(basename "$0")' : '$0'
-` ${1:command arguments}
+` ${2:command arguments}
 
 	`!v
   expand('%:e') is# 'sh' ? 'exit 64' : 'return 64'
