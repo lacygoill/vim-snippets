@@ -23,8 +23,8 @@ import vim
 # Split this file into several ones, once it becomes too big.
 # For the layout, take inspiration from there:
 #
-#     https://github.com/reconquest/vim-pythonx
-#     https://github.com/reconquest/snippets
+# https://github.com/reconquest/vim-pythonx
+# https://github.com/reconquest/snippets
 
 def advance_jumper(snip): #{{{1
     return _make_jumper_jump(snip, 'forwards')
