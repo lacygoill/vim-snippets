@@ -6,7 +6,7 @@ endfu
 
 fu! snippets#get_lg_tag_number() abort "{{{1
     let lines = reverse(getline(1, line('.')-1))
-    call filter(lines, {i,v -> v =~# '^\s*\*lg-lib-\%(\d\+\)\*\s*$'})
+    call filter(lines, {_,v -> v =~# '^\s*\*lg-lib-\%(\d\+\)\*\s*$'})
     return empty(lines)
        \ ?     ''
        \ :     matchstr(lines[0], '^\s*\*lg-lib-\zs\d\+\ze\*\s*$')
@@ -17,7 +17,7 @@ fu! snippets#get_plugin_name_in_guard() abort "{{{1
     " Try to  guess the name of  the global variable  used (as a guard)  by the
     " plugin we're currently customizing in `~/.vim/after/plugin/foo.vim`.
     let guard_name = getcompletion('g:loaded_*', 'var')
-    let guard_name = filter(guard_name, {i,v -> v =~# expand('%:t:r')})
+    let guard_name = filter(guard_name, {_,v -> v =~# expand('%:t:r')})
     let guard_name = get(guard_name, 0, '')
     let guard_name = matchstr(guard_name, 'g:loaded_\zs.*')
     return guard_name
@@ -27,7 +27,7 @@ fu! snippets#get_plugin_name_in_rtp() abort "{{{1
     " Purpose:
     " Try to  guess the name of  plugin name in the rtp.
     let rtp = split(&rtp, ',')
-    let guard_name = filter(rtp, {i,v -> v =~# expand('%:t:r')})
+    let guard_name = filter(rtp, {_,v -> v =~# expand('%:t:r')})
     let guard_name = fnamemodify(get(guard_name, 0, ''), ':h:t')
     return guard_name
 endfu

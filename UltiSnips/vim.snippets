@@ -116,7 +116,7 @@ fu! s:${3:complete_words}(findstart, base) abort
 	if a:findstart
 		return searchpos('${4:<}', 'bnW', line('.'))[1] - 1
 	else
-		return filter(copy($1), {i,v -> stridx(v, a:base) ==# 0})
+		return filter(copy($1), {_,v -> stridx(v, a:base) ==# 0})
 	endif
 endfu
 
@@ -133,7 +133,7 @@ endsnippet
 #
 # But instead, we write:
 #
-#      filter(candidates, {i,v -> stridx(v, a:base) ==# 0})
+#      filter(candidates, {_,v -> stridx(v, a:base) ==# 0})
 #
 # Because `a:base` could contain special characters.
 # If there are, we don't want them to be interpreted by the regex engine.
@@ -144,7 +144,7 @@ endsnippet
 #
 #     return empty(a:base)
 #         \ ?     candidates
-#         \ :     filter(candidates, {i,v -> v[:strlen(a:base)-1] is? a:base})
+#         \ :     filter(candidates, {_,v -> v[:strlen(a:base)-1] is? a:base})
 #                                                                   │
 #                                                                   └ ignore case
 #
@@ -713,7 +713,7 @@ endsnippet
 #
 # In the past, we used this:
 #
-#     let &rtp = $HOME.'/.vim,'.join(filter(split(&rtp, ','), {i,v -> v isnot# $HOME.'/.vim'}), ',')
+#     let &rtp = $HOME.'/.vim,'.join(filter(split(&rtp, ','), {_,v -> v isnot# $HOME.'/.vim'}), ',')
 #
 # But I find the current solution easier to read:
 #
