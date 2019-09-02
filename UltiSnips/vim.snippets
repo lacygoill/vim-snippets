@@ -253,14 +253,6 @@ endsnippet
 
 # for {{{1
 
-post_expand "forkv_comma(snip)"
-#                                                              ┌ don't translate `\b` into `\u0008`
-#                                                              │ (literal backspace)
-#                                                              │
-snippet , "for [k,v] in …" "snip.last_placeholder and re.match(r'^\s*for\b', snip.buffer[snip.line])" Ae
-endsnippet
-
-post_jump "forkv_items(snip)"
 snippet ff "for loop" Abm
 for ${1:i} in ${2:a_list}
 	${0:${VISUAL}}

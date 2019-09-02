@@ -209,16 +209,6 @@ def create_table(snip): #{{{1
     # expand anonymous snippet
     snip.expand_anon(anon_snip_table)
 
-def forkv_comma(snip): #{{{1
-    snip.buffer[snip.line] = 'for [k,v] in items(a_dict)'
-
-def forkv_items(snip): #{{{1
-    try:
-        if snip.tabstops[2].current_text == 'items(':
-            vim.eval('timer_start(0, {-> feedkeys("\<c-g>6lo6l\<c-g>", "in")})')
-    except KeyError:
-        pass
-
 def get_jumper_position(snip): #{{{1
     if not snip.context or 'jumper' not in snip.context:
         return None
