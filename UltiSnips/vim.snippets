@@ -379,9 +379,7 @@ endsnippet
 # q mapping {{{1
 
 snippet mq "local mapping to end recording without closing window" bm
-nno <buffer><expr><nowait><silent> q reg_recording() isnot# '' ? 'q' : ':<c-u>$1`!p
-snip.rv = complete(t[1], ['q', 'close'])
-`!<cr>'
+nno <buffer><expr><nowait><silent> q reg_recording() isnot# '' ? 'q' : ':<c-u>q<cr>'
 $0
 endsnippet
 
@@ -477,7 +475,6 @@ endsnippet
 # Why invoking `tempname()`?{{{
 #
 # 1. To get a unique buffer name.
-#
 #    Otherwise, if we re-invoke our code twice, we could get an issue.
 #    For example, we wouldn't be able to use the same buffer name.
 #    Besides, if the buffer is non-modifiable, `setline()` will fail.
@@ -513,11 +510,11 @@ let tempfile = tempname()..'/${1:buffer name}'
 exe '$2`!p
 snip.rv = complete(t[2], ['leftabove', 'topleft'])
 ` '.(&columns/3).'vnew '.tempfile
-setl bh=delete bt=nofile nobl noswf nowrap
+setl bh=delete bt=nofile nobl noswf wfw nowrap
 
 call setline(1, ${4:put your text})
 
-nno <buffer><expr><nowait><silent> q reg_recording() isnot# '' ? 'q' : ':<c-u>close!<cr>'
+nno <buffer><expr><nowait><silent> q reg_recording() isnot# '' ? 'q' : ':<c-u>q<cr>'
 $0
 endsnippet
 
