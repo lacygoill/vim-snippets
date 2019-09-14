@@ -125,11 +125,11 @@ ${6:" make sure s:snr() is defined
 $0
 endsnippet
 
-# Why not using  v =~ '^'.a:base  ?{{{2
+# Why not using  v =~ '^'..a:base  ?{{{2
 #
 # To filter the candidates, we could write this condition:
 #
-#      v =~ '^'.a:base
+#      v =~ '^'..a:base
 #
 # But instead, we write:
 #
@@ -307,29 +307,6 @@ elseif $1
 ${3:else}
 endsnippet
 
-# global !p
-# def complete(t, opts):
-#     if t:
-#         opts = [ m for m in opts if m.startswith(t) ]
-#     if len(opts) == 1:
-#         return opts[0][len(t):]
-#     elif len(opts) == 0:
-#         return ""
-#     return "  (" + " | ".join(opts) + ")"
-# endglobal
-
-
-# snippet al "always/always_comb/always_ff/always_latch"
-# always$1`!p snip.rv = complete( t[1], ['_comb', '_ff', '_latch'] )`
-# endsnippet
-
-# # pre_expand "snip.buffer[snip.line] = 'always'; snip.cursor.preserve()"
-# snippet always "always @( posedge clock ) .."
-# always @(${1:posedge clock}${2: or negedge reset}) begin
-#   ${0}
-# end
-# endsnippet
-
 # let-heredoc {{{1
 
 snippet let-heredoc "" bm
@@ -470,7 +447,7 @@ let [ ${1:z}_reg, $1_type ] = [ getreg('$1'), getregtype('$1') ]
 $0
 endsnippet
 
-# sidebar {{{1
+# scratch {{{1
 
 # Why invoking `tempname()`?{{{
 #
@@ -505,11 +482,11 @@ endsnippet
 # This is probably due to the qfl data structure. You shouldn't be able to change
 # a qf buffer, because it could introduce a discrepancy with the qfl.
 #}}}
-snippet sidebar "" bm
+snippet scratch "" bm
 let tempfile = tempname()..'/${1:buffer name}'
 exe '$2`!p
 snip.rv = complete(t[2], ['leftabove', 'topleft'])
-` '.(&columns/3).'vnew '.tempfile
+` '..(&columns/3)..'vnew '..tempfile
 setl bh=delete bt=nofile nobl noswf wfw nowrap
 
 call setline(1, ${4:put your text})
@@ -555,7 +532,7 @@ endsnippet
 #
 #     $ cat <<'EOF' >~/.vim/autoload/script.vim
 #     fu! script#echo()
-#       echom 'the script number is: '. s:snr()
+#       echom 'the script number is: '..s:snr()
 #     endfu
 #     fu! s:snr()
 #       return matchstr(expand('<sfile>'), '<SNR>\zs\d\+\ze_')
@@ -702,7 +679,7 @@ endsnippet
 #
 # In the past, we used this:
 #
-#     let &rtp = $HOME.'/.vim,'.join(filter(split(&rtp, ','), {_,v -> v isnot# $HOME.'/.vim'}), ',')
+#     let &rtp = $HOME..'/.vim,'..join(filter(split(&rtp, ','), {_,v -> v isnot# $HOME..'/.vim'}), ',')
 #
 # But I find the current solution easier to read:
 #
