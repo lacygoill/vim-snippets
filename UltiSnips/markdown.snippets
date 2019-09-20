@@ -26,7 +26,7 @@ To reproduce, run these shell commands:
 
 ### Required information
 
- - \`$ tmux -V\`: `tmux -V`, commit `git -C ~/GitRepos/tmux rev-parse HEAD`
+ - \`$ tmux -V\`: `tmux -V`, commit `git -C ~/Vcs/tmux rev-parse HEAD`
  - \`$ uname -sp\`: `uname -sp`
  - terminal: xterm
  - \`$TERM\` outside tmux: ${1:xterm-256color}
@@ -35,7 +35,8 @@ To reproduce, run these shell commands:
  - backtrace from \`$ gdb -n -ex 'thread apply all bt full' -batch ./tmux ./core\`:}${4:
  - possible offending commit(s) from \`$ git bisect\`:}${5:
  - \`$ tmux info\`:}${6:
- - \`$ ps aux\`:}
+ - \`$ ps aux\`:
+ - \`$ ~/bin/signals_disposition.sh $(tmux display -p '#\{pid\}')\`:}
 $0
 endsnippet
 
