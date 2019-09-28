@@ -154,7 +154,7 @@ endsnippet
 # function will not return anything. I don't want that. I want all candidates.
 # MWE:
 #
-#                        ┌─ ''
+#                        ┌ ''
 #                        │
 #          v[:strlen(a:base)-1]
 #        → v[:-1]
@@ -186,7 +186,7 @@ snip.rv = complete(t[6], ['if a:cmdline =~# \'\m-mode\s\+\w*$\'',
 ])
 `
 		let ${7:modes} = [${8:'normal', 'visual', 'insert'}]
-		return join($5, "\n")
+		return join($7, "\n")
 
 	elseif ${9:empty(a:$3) || a:$3[0] is# '-'}
 		let ${10:options} = [${11:'-option1', '-option2', '-mode'}]
@@ -738,12 +738,3 @@ while $1 && g < 999
 endwhile
 endsnippet
 
-# window local options {{{1
-
-snippet wlo "autocmd to set window local options" Abm
-augroup my_${1:filetype}
-	au! * <buffer>
-	au BufWinEnter  <buffer>  setl ${2:fdm=marker}
-	$0
-augroup END
-endsnippet

@@ -36,16 +36,12 @@ endsnippet
 #
 #
 #     re.search('(.*)\.', snip.buffer[0]).group(1)
-#     └───────┤  └────┤   └────────────┤  └──────┤
-#             │       │                │         └ and give me the first capturing group
-#             │       │                │
-#             │       │                └ ... inside the first line of the buffer
-#             │       │
-#             │       └ look for this pattern:  some text before a dot ...
-#             │
-#             └ invoke the `search()` method from the `re` module
-#               to look for a pattern in a string
-#
+#     ├───────┘  ├────┘   ├────────────┘  ├──────┘
+#     │          │        │               └ and give me the first capturing group
+#     │          │        └ ... inside the first line of the buffer
+#     │          └ look for this pattern:  some text before a dot ...
+#     └ invoke the `search()` method from the `re` module
+#       to look for a pattern in a string
 #
 #     try:
 #     ...
