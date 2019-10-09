@@ -51,10 +51,10 @@ endsnippet
 #
 # But not this:
 #
-#     getcmdpos() ==# 4
+#     getcmdpos() == 4
 #}}}
 snippet abr "uppercase abbreviation on command-line" bm
-cnorea  <buffer><expr>  ${1:lhs}  getcmdtype() is# ':' && getcmdpos() ==# `!p snip.rv = len(t[1]) + 1`
+cnorea  <buffer><expr>  ${1:lhs}  getcmdtype() is# ':' && getcmdpos() == `!p snip.rv = len(t[1]) + 1`
 \\`!p snip.rv = ' '*(25 + len(t[1]))`?    '`!p snip.rv = '' if not t[1] else (t[1][0]).upper() + t[1][1:]`'
 \\`!p snip.rv = ' '*(25 + len(t[1]))`:    '`!p snip.rv = t[1]`'
 endsnippet
@@ -99,7 +99,7 @@ augroup ${1:test_sth}
 augroup END
 endsnippet
 
-snippet auu  "one shot autocmd" bm
+snippet auu  "one shot autocmd" Abm
 unlet! s:did_shoot
 au ${1:Event1,Event2,...} $2`!p snip.rv = complete(t[2], ['*', '<buffer>'])` ++once
 	\ if !get(s:, 'did_shoot', 0)
@@ -111,12 +111,12 @@ endsnippet
 # completion function (c-x c-u){{{1
 
 snippet ccfu "Completion function for C-x C-u" Abm
-let ${1:s:candidates} = ${2:[]}
+let ${1:s:matches} = ['$2']
 fu! s:${3:complete_words}(findstart, base) abort
 	if a:findstart
-		return searchpos('${4:<}', 'bnW', line('.'))[1] - 1
+		return searchpos('${4:\<}', 'bnW', line('.'))[1] - 1
 	else
-		return filter(copy($1), {_,v -> stridx(v, a:base) ==# 0})
+		return filter(copy($1), {_,v -> stridx(v, a:base) == 0})
 	endif
 endfu
 
@@ -127,13 +127,13 @@ endsnippet
 
 # Why not using  v =~ '^'..a:base  ?{{{2
 #
-# To filter the candidates, we could write this condition:
+# To filter the matches, we could write this condition:
 #
 #      v =~ '^'..a:base
 #
 # But instead, we write:
 #
-#      filter(candidates, {_,v -> stridx(v, a:base) ==# 0})
+#      filter(matches, {_,v -> stridx(v, a:base) == 0})
 #
 # Because `a:base` could contain special characters.
 # If there are, we don't want them to be interpreted by the regex engine.
@@ -143,15 +143,15 @@ endsnippet
 # Yes:
 #
 #     return empty(a:base)
-#         \ ?     candidates
-#         \ :     filter(candidates, {_,v -> v[:strlen(a:base)-1] is? a:base})
-#                                                                   │
-#                                                                   └ ignore case
+#         \ ?     matches
+#         \ :     filter(matches, {_,v -> v[:strlen(a:base)-1] is? a:base})
+#                                                                │
+#                                                                └ ignore case
 #
 # Why treating the case where `a:base` is an empty string separately?
 #
-# If `a:base` is empty, the test will fail for all candidates, and the completion
-# function will not return anything. I don't want that. I want all candidates.
+# If `a:base` is empty,  the test will fail for all  matches, and the completion
+# function will not return anything. I don't want that. I want all matches.
 # MWE:
 #
 #                        ┌ ''
@@ -651,7 +651,7 @@ endsnippet
 # Necessary  if the  plugin we  want to  test has  something inside  an `after/`
 # subdirectory. If we don't add it, none of its file will be sourced.
 #}}}
-# Why ^= instead of +=?{{{
+#   ^= instead of +=?{{{
 #
 # Necessary if  the plugin we  want to test  has something inside  a `ftplugin/`
 # subdirectory.
@@ -661,7 +661,7 @@ endsnippet
 # And if the custom ftplugin contains a  guard, it wouldn't be sourced, while it
 # should.
 #}}}
-# Why `set rtp-=~/.vim`?{{{
+#   `set rtp-=~/.vim`?{{{
 #
 # The next `set  rtp^=` will move `~/.vim` further away  from its original first
 # position.
@@ -687,7 +687,11 @@ endsnippet
 #     ...
 #     set rtp^=~/.vim
 #}}}
-# Why `set vi=`?{{{
+#   `set ic`?{{{
+#
+# To be able to tab-complete a custom command name written in lowercase.
+#}}}
+#   `set vi=`?{{{
 #
 # It's equivalent to `-i NONE` on the shell command-line.
 # The latter is recommended when debugging an issue.
@@ -695,7 +699,7 @@ endsnippet
 # https://github.com/chrisbra/vim_faq
 # /faq-2.5
 #}}}
-# Why `set gcr=`?{{{
+#   `set gcr=`?{{{
 #
 # By default,  Neovim sets  `'gcr'`, which  makes it  send escape  sequences, to
 # set  the  shape  of the  cursor;  those  are  not  understood by  our  current
@@ -717,6 +721,7 @@ set rtp^=~/.vim/plugged/vim-lg-lib
 set rtp^=~/.vim/plugged/vim-readline
 set rtp^=~/.vim
 
+set ic
 set vi=
 $3`!p
 snip.rv = complete(t[3], ['set noloadplugins', 'let [g:no_plugin, g:no_after_plugin] = [1,1]'])``
