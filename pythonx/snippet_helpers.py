@@ -538,7 +538,7 @@ def undo_ftplugin(snip): #{{{1
             '" teardown {{' + '{1'
             '\n'
             "\nlet b:undo_ftplugin = get(b:, 'undo_ftplugin', 'exe')"
-            "\n    \ . \""
+            "\n    \ ..\""
             "\n    \ | ${1:setl ${2:option}<}${3:"
             "\n    \ | unlet! b:${4:variable}}${5:"
             "\n    \ | exe 'au! ${6:group_name} * <buffer>'}${7:"
@@ -554,7 +554,7 @@ def undo_ftplugin(snip): #{{{1
             '" teardown {{' + '{1'
             + '\n'
             + "\nlet b:undo_indent = get(b:, 'undo_indent', 'exe')"
-            + "\n    \ . ' | setl ${1:indk}<'"
+            + "\n    \ ..' | setl ${1:indk}<'"
             + '\n$0'
         )
 
