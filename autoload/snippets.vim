@@ -1,10 +1,10 @@
-fu! snippets#get_autoload_funcname() abort "{{{1
+fu snippets#get_autoload_funcname() abort "{{{1
     return expand('%:p') =~# 'autoload\|plugin'
        \ ?     substitute(matchstr(expand('%:p'), '\%(autoload\|plugin\)/\zs.*\ze.vim'), '/', '#', 'g').'#'
        \ :     ''
 endfu
 
-fu! snippets#get_lg_tag_number() abort "{{{1
+fu snippets#get_lg_tag_number() abort "{{{1
     let lines = reverse(getline(1, line('.')-1))
     call filter(lines, {_,v -> v =~# '^\s*\*lg-lib-\%(\d\+\)\*\s*$'})
     return empty(lines)
@@ -12,7 +12,7 @@ fu! snippets#get_lg_tag_number() abort "{{{1
        \ :     matchstr(lines[0], '^\s*\*lg-lib-\zs\d\+\ze\*\s*$')
 endfu
 
-fu! snippets#get_plugin_name_in_guard() abort "{{{1
+fu snippets#get_plugin_name_in_guard() abort "{{{1
     " Purpose:
     " Try to  guess the name of  the global variable  used (as a guard)  by the
     " plugin we're currently customizing in `~/.vim/after/plugin/foo.vim`.
@@ -23,7 +23,7 @@ fu! snippets#get_plugin_name_in_guard() abort "{{{1
     return guard_name
 endfu
 
-fu! snippets#get_plugin_name_in_rtp() abort "{{{1
+fu snippets#get_plugin_name_in_rtp() abort "{{{1
     " Purpose:
     " Try to  guess the name of  plugin name in the rtp.
     let rtp = split(&rtp, ',')
@@ -32,7 +32,7 @@ fu! snippets#get_plugin_name_in_rtp() abort "{{{1
     return guard_name
 endfu
 
-fu! snippets#remove_tabs_in_global_blocks() abort "{{{1
+fu snippets#remove_tabs_in_global_blocks() abort "{{{1
     let pos = getcurpos()
     let start = '1/^\Cglobal !p$/'
     let end = '/^\Cendglobal$/'

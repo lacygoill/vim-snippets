@@ -112,7 +112,7 @@ endsnippet
 
 snippet ccfu "Completion function for C-x C-u" Abm
 let ${1:s:matches} = ['$2']
-fu! s:${3:complete_words}(findstart, base) abort
+fu s:${3:complete_words}(findstart, base) abort
 	if a:findstart
 		return searchpos('${4:\<}', 'bnW', line('.'))[1] - 1
 	else
@@ -177,7 +177,7 @@ endsnippet
 # https://stackoverflow.com/a/3346295/9780968
 #}}}
 snippet cfu "Completion function for a custom command" Abm
-fu! s:${1:completion_function}(${3:${2:_}arglead}, ${4:_}cmdline, ${5:_}pos) abort
+fu s:${1:completion_function}(${3:${2:_}arglead}, ${4:_}cmdline, ${5:_}pos) abort
 	$6`!p
 snip.rv = complete(t[6], ['if a:cmdline =~# \'\m-mode\s\+\w*$\'',
 'let word_before_cursor = matchstr(a:cmdline, \'.*\s\zs-\S.*\%\'..a:pos..\'c.\')\n'
@@ -231,7 +231,7 @@ endsnippet
 #     foo ${1:bar$2`!p snip.rv = complete(t[2], ['a', 'b', 'c'])` baz}
 #}}}
 snippet com "command" bm
-com! ${1:-bar }`!v
+com ${1:-bar }`!v
 expand('%:p:h:t') is# 'ftplugin' ? '-buffer' : ''
 `${2:-complete=custom$3`!p
 snip.rv = complete(t[3], [',', 'list,'])
@@ -276,7 +276,7 @@ endsnippet
 pre_expand "capture_visual_content(snip)"
 post_expand "trim_ws(snip)"
 snippet fu "function definition" Abm
-fu! $1`!p
+fu $1`!p
 snip.rv = complete(t[1], ['s:func', 'Func', vim.eval("snippets#get_autoload_funcname()")])
 `($2) abort
 	${0:${VISUAL}}
@@ -287,6 +287,14 @@ endsnippet
 
 pre_expand "plugin_guard(snip)"
 snippet gd "plugin guard" Abm
+endsnippet
+
+# hd {{{1
+
+snippet hd "let-heredoc" bm
+let ${1:var} =<< ${2:trim }END
+$0
+END
 endsnippet
 
 # if {{{1
@@ -305,14 +313,6 @@ snippet e "elseif" A
 elseif $1
 	$2
 ${3:else}
-endsnippet
-
-# let-heredoc {{{1
-
-snippet let-heredoc "" bm
-let ${1:var} =<< ${2:trim }$3`!p snip.rv = complete(t[3], ['END', 'EOF'])`
-$0
-$3
 endsnippet
 
 # regular mapping {{{1
@@ -373,9 +373,9 @@ nno <silent> ${1:key} :<c-u>set opfunc=${2:function name}<cr>g@
 nno <silent> $1${1/.(.*)/$1/} :<c-u>set opfunc=$2<bar>exe 'norm! '..v:count1..'g@_'<cr>
 xno <silent> $1 :<c-u>call $2('vis')<cr>
 
-com! -bar -range ${3:MyCom} call ${2/<(sid|SID)>/s:/}('Ex', <line1>, <line2>)
+com -bar -range ${3:MyCom} call ${2/<(sid|SID)>/s:/}('Ex', <line1>, <line2>)
 
-fu! ${2/<(sid|SID)>/s:/}(type, ...) abort
+fu ${2/<(sid|SID)>/s:/}(type, ...) abort
 	let cb_save  = &cb
 	let sel_save = &sel
 	let reg_save = ['"', getreg('"'), getregtype('"')]
@@ -531,16 +531,16 @@ endsnippet
 # MWE:
 #
 #     $ cat <<'EOF' >~/.vim/autoload/script.vim
-#     fu! script#echo()
+#     fu script#echo()
 #       echom 'the script number is: '..s:snr()
 #     endfu
-#     fu! s:snr()
+#     fu s:snr()
 #       return matchstr(expand('<sfile>'), '<SNR>\zs\d\+\ze_')
 #     endfu
 #     EOF
 #
 #     $ cat <<'EOF' >/tmp/vimrc
-#     fu! s:func()
+#     fu s:func()
 #       call script#echo()
 #     endfu
 #     call s:func()
@@ -553,7 +553,7 @@ endsnippet
 # It's the number of the `vimrc`.
 #}}}
 snippet snr "Function to get SNR number" bm
-fu! s:snr() abort
+fu s:snr() abort
 	return matchstr(expand('<sfile>'), '.*\zs<SNR>\d\+_')
 endfu
 $0
@@ -714,17 +714,19 @@ endsnippet
 # }}}
 snippet vimrc "Minimal vimrc to test a plugin" bm
 set rtp-=~/.vim
-set rtp^=~/.vim/plugged/${1:plugin}${2:
-set rtp+=~/.vim/plugged/${1/$/\/after/}}
+set rtp-=~/.vim/after
+set rtp^=${1:~/.vim/plugged/${2:foo}}${3:
+set rtp+=$1/after}
 set rtp^=~/.vim/plugged/vim-debug
 set rtp^=~/.vim/plugged/vim-lg-lib
-set rtp^=~/.vim/plugged/vim-readline
-set rtp^=~/.vim
+set rtp^=~/.vim/plugged/vim-readline${4:
+set rtp^=~/.vim}${5:
+set rtp+=~/.vim/after}
 
 set ic
 set vi=
-$3`!p
-snip.rv = complete(t[3], ['set noloadplugins', 'let [g:no_plugin, g:no_after_plugin] = [1,1]'])``
+$6`!p
+snip.rv = complete(t[6], ['set noloadplugins', 'let [g:no_plugin, g:no_after_plugin] = [1,1]'])``
 !v has('nvim') ? 'set gcr=' : ''`
 
 filetype plugin indent on

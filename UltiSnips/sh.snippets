@@ -158,15 +158,6 @@ else
 fi
 endsnippet
 
-# eof {{{1
-
-post_expand "snip.buffer[snip.line + 2] = 'EOF'"
-snippet eof "here document" Abm
-cat <<EOF${1: >&2}
-$0
-
-endsnippet
-
 # for {{{1
 
 snippet ff "for ... in ... done" Abm
@@ -205,6 +196,15 @@ EOF
 	exit 1
 fi
 $0
+endsnippet
+
+# hd {{{1
+
+post_expand "snip.buffer[snip.line + 2] = 'EOF'"
+snippet hd "here document" bm
+cat <<EOF${1: >&2}
+$0
+
 endsnippet
 
 # if {{{1
