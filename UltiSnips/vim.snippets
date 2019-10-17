@@ -99,15 +99,6 @@ augroup ${1:test_sth}
 augroup END
 endsnippet
 
-snippet auu  "one shot autocmd" Abm
-unlet! s:did_shoot
-au ${1:Event1,Event2,...} $2`!p snip.rv = complete(t[2], ['*', '<buffer>'])` ++once
-	\ if !get(s:, 'did_shoot', 0)
-	\ |     let s:did_shoot = 1
-	\ |     ${3:" do sth just once}
-	\ | endif
-endsnippet
-
 # completion function (c-x c-u){{{1
 
 snippet ccfu "Completion function for C-x C-u" Abm
@@ -160,7 +151,7 @@ endsnippet
 #        → v[:-1]
 #        → v
 #          != a:base ('')
-
+#}}}2
 
 # completion function (custom command) {{{1
 
@@ -177,20 +168,26 @@ endsnippet
 # https://stackoverflow.com/a/3346295/9780968
 #}}}
 snippet cfu "Completion function for a custom command" Abm
-fu s:${1:completion_function}(${3:${2:_}arglead}, ${4:_}cmdline, ${5:_}pos) abort
-	$6`!p
-snip.rv = complete(t[6], ['if a:cmdline =~# \'\m-mode\s\+\w*$\'',
+fu s:${1:completion_function}($2`!p
+snip.rv = complete(t[2], ['_a', 'arglead'])
+`, $3`!p
+snip.rv = complete(t[3], ['_l', 'cmdline'])
+`, $4`!p
+snip.rv = complete(t[4], ['_p', 'pos'])
+`) abort
+	$5`!p
+snip.rv = complete(t[5], ['if a:cmdline =~# \'\m-mode\s\+\w*$\'',
 'let word_before_cursor = matchstr(a:cmdline, \'.*\s\zs-\S.*\%\'..a:pos..\'c.\')\n'
 '\n'
 '    if word_before_cursor =~# \'^-mode\s*\S*$\''
 ])
 `
-		let ${7:modes} = [${8:'normal', 'visual', 'insert'}]
-		return join($7, "\n")
+		let ${6:modes} = [${7:'normal', 'visual', 'insert'}]
+		return join($6, "\n")
 
-	elseif ${9:empty(a:$3) || a:$3[0] is# '-'}
-		let ${10:options} = [${11:'-option1', '-option2', '-mode'}]
-		return join($10, "\n")
+	elseif ${8:empty(a:$2) || a:$2[0] is# '-'}
+		let ${9:options} = [${10:'-option1', '-option2', '-mode'}]
+		return join($9, "\n")
 	endif
 
 	return ''
@@ -292,7 +289,7 @@ endsnippet
 # hd {{{1
 
 snippet hd "let-heredoc" bm
-let ${1:var} =<< ${2:trim }END
+let ${1:list} =<< ${2:trim }END
 $0
 END
 endsnippet
@@ -715,7 +712,7 @@ endsnippet
 snippet vimrc "Minimal vimrc to test a plugin" bm
 set rtp-=~/.vim
 set rtp-=~/.vim/after
-set rtp^=${1:~/.vim/plugged/${2:foo}}${3:
+set rtp^=${1:~/.vim/plugged/vim-${2:foo}}${3:
 set rtp+=$1/after}
 set rtp^=~/.vim/plugged/vim-debug
 set rtp^=~/.vim/plugged/vim-lg-lib
@@ -723,10 +720,10 @@ set rtp^=~/.vim/plugged/vim-readline${4:
 set rtp^=~/.vim}${5:
 set rtp+=~/.vim/after}
 
-set ic
-set vi=
-$6`!p
-snip.rv = complete(t[6], ['set noloadplugins', 'let [g:no_plugin, g:no_after_plugin] = [1,1]'])``
+${6:set vi=
+}set ic
+$7`!p
+snip.rv = complete(t[7], ['set noloadplugins', 'let [g:no_plugin, g:no_after_plugin] = [1,1]'])``
 !v has('nvim') ? 'set gcr=' : ''`
 
 filetype plugin indent on
