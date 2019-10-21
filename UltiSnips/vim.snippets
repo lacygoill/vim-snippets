@@ -373,12 +373,10 @@ xno <silent> $1 :<c-u>call $2('vis')<cr>
 com -bar -range ${3:MyCom} call ${2/<(sid|SID)>/s:/}('Ex', <line1>, <line2>)
 
 fu ${2/<(sid|SID)>/s:/}(type, ...) abort
-	let cb_save  = &cb
-	let sel_save = &sel
+	let [cb_save, sel_save] = [&cb, &sel]
 	let reg_save = ['"', getreg('"'), getregtype('"')]
 	try
-		set cb-=unnamed cb-=unnamedplus
-		set sel=inclusive
+		set cb-=unnamed cb-=unnamedplus sel=inclusive
 
 		if a:type is# 'char'
 			${4:sil norm! \`[v\`]y}
@@ -396,8 +394,7 @@ fu ${2/<(sid|SID)>/s:/}(type, ...) abort
 	catch
 		return lg#catch_error()
 	finally
-		let &cb  = cb_save
-		let &sel = sel_save
+		let [&cb, &sel]  = [cb_save, sel_save]
 		call call('setreg', reg_save)
 	endtry
 
