@@ -26,7 +26,7 @@ To reproduce, run these shell commands:
 
 ### Required information
 
- - \`$ tmux -V\`: `tmux -V`, commit `git -C ~/Vcs/tmux rev-parse HEAD`
+ - \`$ tmux -V\`: `!v g:my_ultisnips_info['tmux -V']`, commit `git -C ~/Vcs/tmux rev-parse HEAD`
  - \`$ uname -sp\`: `uname -sp`
  - terminal: xterm
  - \`$TERM\` outside tmux: ${1:xterm-256color}
@@ -58,8 +58,7 @@ ${1:**Screenshots**
 
 }**Environment**
 
- - Vim version: `!v
-matchstr(substitute(join(split(execute('version'), '\n')[0:1]), '(.\{-})', '', ''), '\d.*')`
+ - Vim version: `!v g:my_ultisnips_info['vim --version']`
  - OS: `!v g:my_ultisnips_info['lsb_release -d']`
  - Terminal: `!v g:my_ultisnips_info['xterm -v']`
 ${2:
@@ -70,26 +69,21 @@ endsnippet
 # bug_nvim {{{1
 
 snippet bug_nvim "filing bug report for Nvim" bm
- - \`nvim --version\`:        `!v
-substitute(join(split(execute('version'), '\n')[0:1]), '(.\{-})', '', '')
-`
- - Vim (version: `!v g:my_ultisnips_info['vim --version'] `) behaves differently? ${1:Yes}
- - Operating system:     `!v g:my_ultisnips_info['lsb_release -d']`
- - Terminal emulator:    `!v g:my_ultisnips_info['xterm -v']``!v
-    !empty($TMUX) ? '
- - Terminal multiplexer: '.. g:my_ultisnips_info['tmux -V'] : ''
-`
- - \`$TERM\`:                `echo $TERM`
- - Shell:                `!v g:my_ultisnips_info['zsh --version']
+ - \`nvim --version\`: `!v g:my_ultisnips_info['nvim --version']`
+ - Vim (version: `!v g:my_ultisnips_info['vim --version']`) behaves differently? ${1:Yes}
+ - Operating system: `!v g:my_ultisnips_info['lsb_release -d']`
+ - Terminal emulator: `!v g:my_ultisnips_info['xterm -v']`
+ - \`$TERM\`: xterm-256color
+ - Shell: `!v g:my_ultisnips_info['zsh --version']
 `
 
-### Steps to reproduce using \`nvim -u NORC\`
-
-	nvim -u NORC
+### Steps to reproduce
 
 ### Actual behaviour
 
 ### Expected behaviour
+
+### Additional information
 $0
 endsnippet
 
