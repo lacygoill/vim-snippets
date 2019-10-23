@@ -36,7 +36,7 @@ To reproduce, run these shell commands:
  - possible offending commit(s) from \`$ git bisect\`:}${5:
  - \`$ tmux info\`:}${6:
  - \`$ ps aux\`:
- - \`$ ~/bin/signals_disposition.sh $(tmux display -p '#\{pid\}')\`:}
+ - \`$ ~/bin/signals-disposition $(tmux display -p '#\{pid\}')\`:}
 $0
 endsnippet
 
@@ -70,12 +70,10 @@ endsnippet
 
 snippet bug_nvim "filing bug report for Nvim" bm
  - \`nvim --version\`: `!v g:my_ultisnips_info['nvim --version']`
- - Vim (version: `!v g:my_ultisnips_info['vim --version']`) behaves differently? ${1:Yes}
- - Operating system: `!v g:my_ultisnips_info['lsb_release -d']`
- - Terminal emulator: `!v g:my_ultisnips_info['xterm -v']`
+ - \`vim -u DEFAULTS\` (version: `!v g:my_ultisnips_info['vim --version']`) behaves differently? ${1:Yes}
+ - Operating system/version: `!v g:my_ultisnips_info['lsb_release -d']`
+ - Terminal name/version: `!v g:my_ultisnips_info['xterm -v']`
  - \`$TERM\`: xterm-256color
- - Shell: `!v g:my_ultisnips_info['zsh --version']
-`
 
 ### Steps to reproduce
 
