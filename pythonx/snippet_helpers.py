@@ -507,7 +507,7 @@ def undo_ftplugin(snip): #{{{1
     path_to_dir = os.path.dirname(path_to_file)
 
     if '/ftplugin' in path_to_dir:
-        # If there are autocmds, do NOT delete their augroup.{{{
+        # If there are autocmds, do *not* delete their augroup.{{{
         #
         # Even if  the autocmds for the  current buffer are no  longer relevant,
         # and should be removed, that doesn't mean that the augroup is empty.
@@ -522,20 +522,20 @@ def undo_ftplugin(snip): #{{{1
         #
         # The empty command before the pipe may have unexpected effect.
         # MWE:
-        #               :|echo 'hello'
-        #                   → prints current line, then echo 'hello'
+        #     :|echo 'hello'
+        #         → prints current line, then echo 'hello'
         #
         # Update:
         # We could use this:
         #
-        #         `!p snip.rv = ' ' if t[1] == '' else '|'`
+        #     `!p snip.rv = ' ' if t[1] == '' else '|'`
         #
-        # But what if we remove `:setl …` and `:unlet! …`.
-        # And what if we remove `:setl …`, and `:unlet! …`, and `:exe 'au! …'`.
+        # But what if we remove `:setl ...` and `:unlet! ...`.
+        # And what if we remove `:setl ...`, and `:unlet! ...`, and `:exe 'au! ...'`.
         # ...}}}
 
         anon_snip_body = (
-            '" teardown {{' + '{1'
+            '" Teardown {{' + '{1'
             '\n'
             "\nlet b:undo_ftplugin = get(b:, 'undo_ftplugin', 'exe')"
             "\n    \ ..\""
@@ -551,10 +551,10 @@ def undo_ftplugin(snip): #{{{1
 
     elif '/indent' in path_to_dir:
         anon_snip_body = (
-            '" teardown {{' + '{1'
+            '" Teardown {{' + '{1'
             + '\n'
             + "\nlet b:undo_indent = get(b:, 'undo_indent', 'exe')"
-            + "\n    \ ..' | setl ${1:indk}<'"
+            + "\n    \ ..'| setl ${1:indk}<'"
             + '\n$0'
         )
 

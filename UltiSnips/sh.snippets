@@ -160,21 +160,6 @@ endsnippet
 
 # hd {{{1
 
-# TODO: Try to support the `<<-` operator.{{{
-#
-# This tells the shell to remove the leading tabs inside a heredoc.
-# As a result,  you can use tabs  to indent the text in  your heredoc (including
-# the final `EOF`), which makes the code more readable.
-#
-# Issue:
-# You need to tell UltiSnips not to replace the leading tabs in your snippet.
-# To do so, you need to define it with the `t` option; see `:h UltiSnips-snippet-options`.
-# Here, it should not cause an issue, because we don't use tabs outside the heredoc.
-#
-# But in the general case, it might cause an issue.
-# How to tell UltiSnips to expand the leading tabs outside a heredoc, but not inside?
-# I guess via a `post_expand` statement, or sth similar...
-#}}}
 post_expand "snip.buffer[snip.line + 2] = 'EOF'"
 snippet hd "here document" bm
 cat <<EOF${1: >&2}

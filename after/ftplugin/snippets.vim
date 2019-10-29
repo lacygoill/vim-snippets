@@ -47,9 +47,5 @@ setl noet sw=4 ts=4
 " Teardown {{{1
 
 let b:undo_ftplugin = get(b:, 'undo_ftplugin', 'exe')
-    \ ..'
-    \ | setl et< isk< sw< ts<
-    \ | exe "au! format_snippets * <buffer>"
-    \ | exe "nunmap <buffer> q"
-    \ '
+    \ ..'| call snippets#undo_ftplugin()'
 
