@@ -2,8 +2,8 @@
 # The previous line  allows us to use unicode characters  in comments (like …){{{
 # without python raising an exception.
 #
-#     https://stackoverflow.com/a/10589674/9110115
-#     https://stackoverflow.com/a/729016/9110115
+# https://stackoverflow.com/a/10589674/9110115
+# https://stackoverflow.com/a/729016/9110115
 #
 # The `-*-` prefix/suffix are not necessary, unless you use Emacs.
 #}}}

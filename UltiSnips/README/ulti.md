@@ -785,19 +785,19 @@ The 1st time, it's applied after `pre_expand` but before `post_expand`.
 
 In a python interpolation, you can use the variables:
 
-        ┌───────────────┬──────────────────────────────────────────┐
-        │ snip.basename │ current filename, with extension removed │
-        ├───────────────┼──────────────────────────────────────────┤
-        │ snip.fn       │ current filename                         │
-        ├───────────────┼──────────────────────────────────────────┤
-        │ snip.ft       │ current filetype                         │
-        ├───────────────┼──────────────────────────────────────────┤
-        │ path          │ complete path to the current file        │
-        ├───────────────┼──────────────────────────────────────────┤
-        │ t             │ The values of the placeholders:          │
-        │               │                                          │
-        │               │         t[1] is the text of ${1}, etc.   │
-        └───────────────┴──────────────────────────────────────────┘
+    ┌───────────────┬──────────────────────────────────────────┐
+    │ snip.basename │ current filename, with extension removed │
+    ├───────────────┼──────────────────────────────────────────┤
+    │ snip.fn       │ current filename                         │
+    ├───────────────┼──────────────────────────────────────────┤
+    │ snip.ft       │ current filetype                         │
+    ├───────────────┼──────────────────────────────────────────┤
+    │ path          │ complete path to the current file        │
+    ├───────────────┼──────────────────────────────────────────┤
+    │ t             │ The values of the placeholders:          │
+    │               │                                          │
+    │               │         t[1] is the text of ${1}, etc.   │
+    └───────────────┴──────────────────────────────────────────┘
 
 The 'snip' object provides a few methods:
 
@@ -2009,9 +2009,7 @@ Add sth like this  for Neovim; it could make neovim  faster (especially if you
 use UltiSnips):
 
     let g:loaded_python_provider = 1
-    let g:python_host_skip_check=1
     let g:python_host_prog = '/usr/bin/python'
-    let g:python3_host_skip_check=1
     let g:python3_host_prog = '/usr/bin/python3'
 
 Also, disable automatic expansion of snippets with this:
@@ -2029,6 +2027,6 @@ MWE:
           1 or 2 without
 
 Also, read this:
-https://github.com/neovim/neovim/issues/5702
-https://github.com/neovim/neovim/issues/7063
+- <https://github.com/neovim/neovim/issues/5702>
+- <https://github.com/neovim/neovim/issues/7063>
 
