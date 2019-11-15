@@ -28,7 +28,7 @@ fu snippets#get_plugin_name_in_rtp() abort "{{{1
     " Try to  guess the name of  plugin name in the rtp.
     let rtp = split(&rtp, ',')
     let guard_name = filter(rtp, {_,v -> v =~# expand('%:t:r')})
-    let guard_name = fnamemodify(get(guard_name, 0, ''), ':h:t')
+    let guard_name = fnamemodify(get(guard_name, 0, ''), ':t')
     return guard_name
 endfu
 

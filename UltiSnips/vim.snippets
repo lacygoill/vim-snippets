@@ -681,6 +681,16 @@ endsnippet
 #     ...
 #     set rtp^=~/.vim
 #}}}
+#   `set rtp-=~/.vim/after`?{{{
+#
+# To disable all the scripts in `~/.vim/after/plugin`.
+# They may interfere while we are debugging.
+# The snippet  re-adds the  directory, in  case you  need to  source one  of the
+# scripts to configure a plugin you're debugging.
+#
+# Same thing with `~/.vim`.
+# It's added back in case you need to source a script in `~/.vim/plugin`.
+# }}}
 #   `set ic`?{{{
 #
 # To be able to tab-complete a custom command name written in lowercase.
@@ -710,22 +720,15 @@ snippet vimrc "Minimal vimrc to test a plugin" bm
 set rtp-=~/.vim
 set rtp-=~/.vim/after
 set rtp^=${1:~/.vim/plugged/vim-${2:foo}}${3:
-set rtp+=$1/after}
-set rtp^=~/.vim/plugged/vim-debug
-set rtp^=~/.vim/plugged/vim-lg-lib
-set rtp^=~/.vim/plugged/vim-readline${4:
+set rtp+=$1/after}${4:
 set rtp^=~/.vim}${5:
 set rtp+=~/.vim/after}
 
-${6:set vi=
-}set ic
-$7`!p
-snip.rv = complete(t[7], ['set noloadplugins', 'let [g:no_plugin, g:no_after_plugin] = [1,1]'])``
-!v has('nvim') ? 'set gcr=' : ''`
+${6:set ic vi=}`!v
+has('nvim') ? "\nset gcr=" : ''`
+${7:filetype plugin indent on
+syntax enable}
 
-filetype plugin indent on
-syntax enable
-set wildmenu showcmd
 $0
 endsnippet
 
