@@ -95,7 +95,7 @@ post_expand "trim_ws(snip)"
 snippet au  "augroup ... autocmd block" bm
 augroup ${1:test_sth}
 	au!${2: * <buffer>}
-	au ${3:BufWinEnter}${2/( \*)|.*/(?1:: \*)/} ${0:${VISUAL}}
+	${4:au ${3:BufWinEnter}${2/( \*)|.*/(?1:: \*)/} }${0:${VISUAL}}
 augroup END
 endsnippet
 
