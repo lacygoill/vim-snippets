@@ -70,7 +70,7 @@ endsnippet
 
 snippet bug_nvim "filing bug report for Nvim" bm
  - \`nvim --version\`: `!v g:my_ultisnips_info['nvim --version']`
- - \`vim -u DEFAULTS\` (version: `!v g:my_ultisnips_info['vim --version']`) behaves differently? ${1:Yes}
+ - \`vim -u DEFAULTS\` (version: `!v g:my_ultisnips_info['vim --version']`) behaves differently? $1`!p snip.rv = complete(t[1], ['Yes', 'Not applicable'])`
  - Operating system/version: `!v g:my_ultisnips_info['lsb_release -d']`
  - Terminal name/version: `!v g:my_ultisnips_info['xterm -v']`
  - \`$TERM\`: xterm-256color
