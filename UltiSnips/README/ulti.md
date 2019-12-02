@@ -1240,26 +1240,14 @@ You must do it yourself.
 
 ## Configuration
 
-    :echo has('python')
     :echo has('python3')
 
-            Tester si Vim a été compilé avec python 2.x ou 3.x
+            Check that Vim has been compiled with the python3 interface.
 
 
-    :py  import sys; print(sys.version)
     :py3 import sys; print(sys.version)
 
-            Déterminer la version de l'interpréteur python 2.x / 3.x contre laquelle Vim a été compilé.
-
-
-   let g:UltiSnipsUsePythonVersion = 2
-   let g:UltiSnipsUsePythonVersion = 3
-
-            Demander à Vim d'utiliser python 2.x ou 3.x
-
-            Cette configuration est généralement inutile, car UltiSnips devrait détecter automatiquement
-            quelle version de l'interpréteur python a été compilé dans Vim.
-            Toutefois, ça peut être nécessaire si cette détection échoue.
+            Déterminer la version de l'interpréteur python 3.x contre laquelle Vim a été compilé.
 
 
 UltiSnips permet de développer un tab trigger en snippet.
@@ -1874,7 +1862,7 @@ in order to avoid increasing Vim's startup time.
 ##
 #
 #
-# TODO
+# Todo
 
 Document the `append()` method of the `snip.buffer` object.
 
@@ -1994,7 +1982,7 @@ Every  time  you've  noted  that  something doesn't  work  in  an  interpolation
 creating a simple helper function.
 That's what is done here:
 
-        https://github.com/SirVer/ultisnips/blob/master/doc/examples/snippets-aliasing/README.md
+<https://github.com/SirVer/ultisnips/blob/master/doc/examples/snippets-aliasing/README.md>
 
 ... to access `vim.current.window.buffer` and `vim.current.window.cursor` inside
 an interpolation.
@@ -2002,31 +1990,4 @@ an interpolation.
 Update:
 In  fact, there's  no  need  of a  helper  function, `vim.current.window`  works
 directly from an interpolation.
-
----
-
-Add sth like this  for Neovim; it could make neovim  faster (especially if you
-use UltiSnips):
-
-    let g:loaded_python_provider = 1
-    let g:python_host_prog = '/usr/bin/python'
-    let g:python3_host_prog = '/usr/bin/python3'
-
-Also, disable automatic expansion of snippets with this:
-
-    augroup ultisnips_no_auto_expansion
-        au!
-        au VimEnter * au! UltiSnips_AutoTrigger
-    augroup END
-
-It has a significant impact in Neovim.
-MWE:
-
-    1000i some text
-        → several seconds with the autocmd
-          1 or 2 without
-
-Also, read this:
-- <https://github.com/neovim/neovim/issues/5702>
-- <https://github.com/neovim/neovim/issues/7063>
 

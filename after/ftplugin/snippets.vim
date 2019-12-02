@@ -7,11 +7,11 @@ augroup format_snippets
     "
     " We do this because:
     "
-    "         1. Tabs  have a  special  meaning  for UltiSnips  (“increase  the level
-    "            of indentation of the line“)
+    "    1. Tabs  have a  special  meaning  for UltiSnips  (“increase  the level
+    "       of indentation of the line“)
     "
-    "         2. we sometimes  forget to  insert a  Tab inside  a snippet  when it's
-    "            needed
+    "    2. we sometimes  forget to  insert a  Tab inside  a snippet  when it's
+    "       needed
     "
     " So whenever you press `Tab` to increase  the indentation of a line, you insert a
     " literal `Tab` character.

@@ -159,7 +159,7 @@ def complete(base, candidates): #{{{1
         # filter the  list, removing the  candidates which don't start  like the
         # text to complete
         candidates = [c[len(base):] for c in candidates if c.startswith(base)]
-        #              ├──────────┘ ├─────────────────┘ ├────────────────────┘
+        #              ├──────────┘ ├─────────────────┘ ├────────────────────┘{{{
         #              │            │                   └ but keep only the ones which start with `base`
         #              │            │                     (filtering)
         #              │            │
