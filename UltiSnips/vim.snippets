@@ -365,6 +365,19 @@ endsnippet
 
 # op {{{1
 
+# Why do you use visual mode to yank the text?{{{
+#
+#     norm! `[y`]    ✘
+#     norm! `[v`]y   ✔
+#
+# Because a motion towards a mark is exclusive, thus the `y` operator won't yank
+# the character which is the nearest from the end of the buffer.
+#
+# OTOH, ``v`]`` makes  this same motion inclusive, thus `y`  will correctly yank
+# all the characters in the text-object.
+# On the condition that `'selection'` includes `inclusive`.
+#}}}
+
 snippet op "Custom Operator" bm
 nno <silent> ${1:key} :<c-u>set opfunc=${2:function name}<cr>g@
 nno <silent> $1${1/.(.*)/$1/} :<c-u>set opfunc=$2<bar>exe 'norm! '..v:count1..'g@_'<cr>
