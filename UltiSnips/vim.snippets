@@ -621,7 +621,7 @@ endsnippet
 # timer {{{1
 
 snippet timer "immediate timer" m
-call timer_start(0, {_ -> ${1:execute('${3:${VISUAL}}'${2:, ''})}})
+call timer_start(0, {-> ${1:execute('${3:${VISUAL}}'${2:, ''})}})
 $0
 endsnippet
 
