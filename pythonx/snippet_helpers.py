@@ -287,6 +287,7 @@ def plugin_guard(snip): #{{{1
     basename = os.path.splitext(os.path.basename(path_to_file))[0]
 
     finish = '\n' + vim.eval("repeat(' ', &l:sw)") + 'finish'
+
     # What's the alternative to the `try` statement?{{{
     # An expression using a ternary operator `a if condition else b`:
     #
@@ -416,8 +417,8 @@ def plugin_guard(snip): #{{{1
             "if exists('b:did_ftplugin')"
             + finish
             + '\nendif'
-            + '\nlet b:did_ftplugin = 1'
             + '\n\n$0'
+            + '\nlet b:did_ftplugin = 1'
         )
 
     elif '/syntax' in path_to_dir:
@@ -427,6 +428,15 @@ def plugin_guard(snip): #{{{1
             + '\nendif'
             + '\n\n$0'
             + "\n\nlet b:current_syntax = '$1'"
+        )
+
+    elif '/indent' in path_to_dir:
+        anon_snip_body = (
+            "if exists('b:did_indent')"
+            + finish
+            + '\nendif'
+            + '\n\n$0'
+            + "\n\nlet b:did_indent = 1"
         )
 
     else:

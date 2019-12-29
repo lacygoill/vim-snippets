@@ -254,7 +254,7 @@ Invoke `UltiSnips#Anon()`.
 This function can expand an anonymous snippet.
 Its signature is:
 
-        UltiSnips#Anon(value, [trigger, description, options])
+    UltiSnips#Anon(value, [trigger, description, options])
 
 If you  pass a trigger  and options as arguments,  the snippet will  be expanded
 only if the word before the cursor matches the trigger, and if the options allow
@@ -265,7 +265,7 @@ position.
 
 Usage example:
 
-        ino <silent>  !!  !!<c-r>=UltiSnips#Anon('hello $1 world $2', '!!')<cr>
+    ino <silent>  !!  !!<c-r>=UltiSnips#Anon('hello $1 world $2', '!!')<cr>
 
 This expands the snippet whenever two bangs are typed.
 
