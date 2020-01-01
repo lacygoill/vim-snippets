@@ -229,7 +229,7 @@ endsnippet
 #}}}
 snippet com "command" bm
 com ${1:-bar }`!v
-expand('%:p:h:t') is# 'ftplugin' ? '-buffer' : ''
+expand('%:p:h:t') is# 'ftplugin' ? '-buffer ' : ''
 `${2:-complete=custom$3`!p
 snip.rv = complete(t[3], [',', 'list,'])
 `$4`!p
