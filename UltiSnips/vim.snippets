@@ -111,8 +111,8 @@ fu s:${3:complete_words}(findstart, base) abort
 	endif
 endfu
 
-${6:" make sure s:snr() is defined
-}let &l:cfu = s:snr()..'$3'
+${6:" make sure s:snr is defined
+}let &l:cfu = s:snr..'$3'
 $0
 endsnippet
 
@@ -559,10 +559,21 @@ endsnippet
 # This output is wrong; `1` is *not* the number of `autoload/script.vim`.
 # It's the number of the `vimrc`.
 #}}}
+# Why saving the output of `s:snr()` inside a variable?{{{
+#
+# First, suppose you write this code in a filetype plugin, there is no reason to
+# re-evaluate `s:snr()` every time you reload a buffer.
+#
+# Second, in  the past,  we had an  issue where the  evaluation was  correct the
+# first time, but not afterward: https://github.com/vim/vim/issues/5425
+# Even if the issue  is now fixed, it could re-appear one way  or another in the
+# future; let's be safe.
+#}}}
 snippet snr "Function to get SNR number" bm
 fu s:snr() abort
 	return matchstr(expand('<sfile>'), '.*\zs<SNR>\d\+_')
 endfu
+let s:snr = get(s:, 'snr', s:snr())
 $0
 endsnippet
 
@@ -747,10 +758,8 @@ endsnippet
 # while {{{1
 
 snippet ww "while loop" Abm
-let g = 0
-while $1 && g < 999
+let g = 0 | while $1 && g < 999 | let g += 1
 	${0:${VISUAL}}
-	let g += 1
 endwhile
 endsnippet
 
