@@ -1864,6 +1864,13 @@ in order to avoid increasing Vim's startup time.
 #
 # Todo
 
+Tweak the ultisnips  statusline indicator so that it displays  the number of the
+current tabstop, and the number of the last tabstop:
+
+    [Ulti] 12/34
+
+---
+
 Document the `append()` method of the `snip.buffer` object.
 
 It's not documented in the help.

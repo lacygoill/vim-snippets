@@ -577,6 +577,16 @@ let s:snr = get(s:, 'snr', s:snr())
 $0
 endsnippet
 
+# stl_flag {{{1
+
+snippet stl_flag "status line flag" bm
+augroup hoist_$1
+	au!
+	au User MyFlags call statusline#hoist('${2:flag}',
+		\ '$3`!p snip.rv = complete(t[3], ['global', 'tabpage', 'buffer', 'window'])`', ${4:123}, expand('<sfile>')..':'..expand('<sflnum>'))
+augroup END
+endsnippet
+
 # syntax cluster, keyword, match, region {{{1
 
 snippet syncl "syntax cluster" Abm
