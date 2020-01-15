@@ -758,7 +758,7 @@ set rtp+=$1/after}${4:
 set rtp^=~/.vim}${5:
 set rtp+=~/.vim/after}
 
-${6:set ic vi=`!v has('nvim') ? ' gcr=' : ''`
+${6:set ic vif=NONE`!v has('nvim') ? ' gcr=' : ''`
 }${7:filetype plugin indent on
 syntax enable}
 
