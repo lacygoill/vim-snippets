@@ -729,7 +729,7 @@ endsnippet
 #
 # To be able to tab-complete a custom command name written in lowercase.
 #}}}
-#   `set vi=`?{{{
+#   `set vif=NONE`?{{{
 #
 # It's equivalent to `-i NONE` on the shell command-line.
 # The latter is recommended when debugging an issue.
@@ -758,7 +758,7 @@ set rtp+=$1/after}${4:
 set rtp^=~/.vim}${5:
 set rtp+=~/.vim/after}
 
-${6:set ic vif=NONE`!v has('nvim') ? ' gcr=' : ''`
+${6:set ic `!v has('nvim') ? 'sdf= gcr=' : 'vif=NONE'`
 }${7:filetype plugin indent on
 syntax enable}
 
