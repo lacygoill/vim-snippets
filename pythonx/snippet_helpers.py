@@ -147,37 +147,36 @@ def clean_first_placeholder(snip): #{{{1
             snip.cursor[1] - 3,
         )
 
-def complete(base, candidates): #{{{1
+def complete(base, matches): #{{{1
     # remove possible empty candidate
-    candidates = [c for c in candidates if c != '']
-    #             ├───────────────────┘ ├────────┘
-    #             │                     └ filtering
-    #             └ list comprehension (python construct)
+    matches = [m for m in matches if m != '']
+    #          ├────────────────┘ ├────────┘
+    #          │                  └ filtering
+    #          └ list comprehension (python construct)
 
     # if the text to complete is not empty
     if base:
-        # filter the  list, removing the  candidates which don't start  like the
-        # text to complete
-        candidates = [c[len(base):] for c in candidates if c.startswith(base)]
-        #              ├──────────┘ ├─────────────────┘ ├────────────────────┘{{{
-        #              │            │                   └ but keep only the ones which start with `base`
-        #              │            │                     (filtering)
-        #              │            │
-        #              │            └ make `c` iterate over the values stored in `candidates`
-        #              │
-        #              └ expression which will be evaluated with a range of values for `c`;
-        #                the set of all the evaluations will populate the list `candidates`
-        #                (list comprehension)
+        # filter the list, removing the matches which don't start like the text to complete
+        matches = [m[len(base):] for m in matches if m.startswith(base)]
+        #           ├──────────┘ ├──────────────┘ ├───────────────────┘{{{
+        #           │            │                └ but keep only the ones which start with `base`
+        #           │            │                  (filtering)
+        #           │            │
+        #           │            └ make `c` iterate over the values stored in `matches`
+        #           │
+        #           └ expression which will be evaluated with a range of values for `m`;
+        #             the set of all the evaluations will populate the list `matches`
+        #             (list comprehension)
         #}}}
 
-    if not candidates:
+    if not matches:
         return ''
     # if there's only 1 candidate left, return it directly
-    elif len(candidates) == 1:
-        return candidates[0]
+    elif len(matches) == 1:
+        return matches[0]
     # if there are more, return all of them (with some formatting)
     else:
-        return '[' + ' | '.join(candidates) + ']'
+        return '[' + ' | '.join(matches) + ']'
 
 def create_table(snip): #{{{1
     # get the dimension of the table (how many rows x how many columns)
