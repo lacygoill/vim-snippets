@@ -294,6 +294,17 @@ ${0:${VISUAL}}
 END
 endsnippet
 
+# hgA2B {{{1
+
+# `filter(split(...))` is  necessary because  the output  of `:hi  ExistingHG` can
+# contain noise in certain circumstances (e.g. `-V15/tmp/log`, `-D`, `$ sudo`...).
+snippet hgA2B "change cterm/gui attribute of HG A to build HG B" bm
+let ${1:ExistingHG} = filter(split(execute('hi $1'), '\n'), {_,v -> v =~# '^$1' })[0]
+exe 'hi '..substitute($1, '^$1\|xxx\|\<\%(term\|cterm\|gui\)=\S*',
+	\ {m -> m[0] is# '$1' ? '${2:NewHG}' : ''}, 'g')
+	\ ..' term=${3:bold} cterm=$3 gui=$3'
+endsnippet
+
 # if {{{1
 
 snippet ii "if statement" Abm
