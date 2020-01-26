@@ -761,10 +761,24 @@ endsnippet
 # Anyway, this is wrong, Neovim shouldn't do that:
 # https://github.com/neovim/neovim/issues/6778#issuecomment-302945056
 # }}}
+
+# TODO: It would be nice to make the snippet suggest 2 leading paths for the plugin to test:{{{
+#
+#     ~/.vim/plugged/
+#     /run/user/1000/tmp/
+#
+# We could write sth like:
+#
+#     $1`!p snip.rq = complete(t[1], ['~/.vim/plugged/', '/run/user/1000/tmp/'])`
+#
+# But it doesn't work as expected; the `$1` mirror does not reflect the match we
+# select; only the first characters that  we manually insert (not the characters
+# which are completed).
+#}}}
 snippet vimrc "Minimal vimrc to test a plugin" bm
 set rtp-=~/.vim
 set rtp-=~/.vim/after
-set rtp^=${1:~/.vim/plugged/vim-${2:foo}}${3:
+set rtp^=${1:/run/user/1000/tmp/vim-${2:foo}}${3:
 set rtp+=$1/after}${4:
 set rtp^=~/.vim}${5:
 set rtp+=~/.vim/after}
