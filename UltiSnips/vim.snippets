@@ -303,6 +303,7 @@ let ${1:ExistingHG} = filter(split(execute('hi $1'), '\n'), {_,v -> v =~# '^$1' 
 exe 'hi '..substitute($1, '^$1\|xxx\|\<\%(term\|cterm\|gui\)=\S*',
 	\ {m -> m[0] is# '$1' ? '${2:NewHG}' : ''}, 'g')
 	\ ..' term=${3:bold} cterm=$3 gui=$3'
+$0
 endsnippet
 
 # if {{{1
