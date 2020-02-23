@@ -14,11 +14,9 @@ Start with a minimal vimrc and a test snippet:
     let g:UltiSnipsSnippetDirectories = ['/tmp/snippets']
     let g:UltiSnipsExpandTrigger = '<tab>'
     set rtp-=$HOME/.vim
+    set rtp-=$HOME/.vim/after
     set rtp^=$HOME/.vim/plugged/ultisnips
     set rtp+=$HOME/.vim/plugged/ultisnips/after
-    set rtp^=$HOME/.vim
-    set vi=
-    let [g:no_plugin, g:no_after_plugin] = [1,1]
     filetype plugin on
     EOF
 
