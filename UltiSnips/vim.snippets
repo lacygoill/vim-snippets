@@ -2,6 +2,20 @@ global !p
 from snippet_helpers import *
 endglobal
 
+# TODO: We should not need `complete()` anymore:
+# https://github.com/SirVer/ultisnips/commit/6f39b0e915a775c83af6499dcc9c36337c2d69ae
+#
+# However I've already noticed 3 issues with this new syntax:
+#
+#    1. you can't include a comma in a match (because it's used as a delimiter)
+#
+#    2. you need to press a number; you can't just type the first characters
+#       and let the plugin reduce the number of matches;
+#
+#    3. if you press the wrong number and undo, you don't get a second chance;
+#       i.e. the menu is not displayed again;
+#       you need to re-expand the whole snippet again
+
 # TODO:
 # Understand how this snippet works.
 # Once you do, use your knowledge to improve `fu` in a non-autoloaded file.
