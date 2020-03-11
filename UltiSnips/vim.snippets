@@ -173,7 +173,7 @@ endsnippet
 #
 # You can split such a string in (here 4) consecutive strings to gain in readibility:
 #
-#     'let word_before_cursor = matchstr(a:cmdline, \'.*\s\zs-\S.*\%\'..a:pos..\'c\')\n'
+#     'let word_before_cursor = matchstr(a:cmdline, \'.*\s\zs-\S.*\%\'..a:pos..\'c.\')\n'
 #     '    let word_before_cursor = matchstr(word_before_cursor, \'\S*\s*$\')\n'
 #     '\n'
 #     '    if word_before_cursor =~# \'^-mode\s*\''
