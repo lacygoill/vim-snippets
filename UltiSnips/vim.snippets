@@ -419,7 +419,7 @@ fu ${2/<(sid|SID)>/s:/}(type, ...) abort
 			return
 		endif
 	catch
-		return lg#catch_error()
+		return lg#catch()
 	finally
 		let [&cb, &sel]  = [cb_save, sel_save]
 		call call('setreg', reg_save)
