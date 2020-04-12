@@ -181,13 +181,10 @@ def complete(base, matches): #{{{1
 def create_table(snip): #{{{1
     # get the dimension of the table (how many rows x how many columns)
 
-    #                                  ┌ remove leading/trailing whitespace
-    #                                  │
-    #                                  │   ┌ remove the first 2 characters (`tb`)
-    #                                  │   │
-    #                                  │   │             ┌ split the rest every `x`
-    #                                  │   │             │ do it only once
-    #                            ┌─────┤┌──┤ ┌───────────┤
+    #                            ┌ remove leading/trailing whitespace
+    #                            │      ┌ remove the first 2 characters (`tb`)
+    #                            │      │    ┌ split the rest every `x` do it only once
+    #                            ├─────┐├──┐ ├───────────┐
     dim = snip.buffer[snip.line].strip()[2:].split('x', 1)
     rows = int(dim[0])
     cols = int(dim[1])
