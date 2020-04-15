@@ -348,7 +348,7 @@ endsnippet
 #    - to get a non-greedy quantifier, you must suffix it with `?`
 #    - in the replacement part, $123 matches the 123th capturing group
 
-snippet mp "plug mapping" bm
+snippet map_plug "plug mapping" bm
 nmap <unique> ${1:lhs} <plug>(${2:plugin_function})
 nno <silent> <plug>($2) :<c-u>call ${2/(.*?)_(.*)/$1#$2/}()<cr>
 $0
@@ -356,7 +356,7 @@ endsnippet
 
 # user mapping {{{1
 
-snippet mu "Install user-respectful mappings" bm
+snippet map_user "Install user-respectful mappings" bm
 if empty(mapcheck('${1:key}', '${3:mode}')) && !hasmapto('<plug>(${2:plugin_some_func})', '$3')
 	$3map <unique> $1 <plug>($2)
 endif
