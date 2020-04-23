@@ -37,7 +37,7 @@ fu snippets#remove_tabs_in_global_blocks() abort "{{{1
     let start = '1/^\Cglobal !p$/'
     let end = '/^\Cendglobal$/'
     " Don't replace `4` with `&l:sw`. Python expects you indent your code with exactly 4 spaces.
-    let substitution = 's/^\t\+/\=repeat(" ", len(submatch(0)) * 4)/'
+    let substitution = 's/^\t\+/\=repeat(" ", strlen(submatch(0)) * 4)/'
     sil! exe 'keepj keepp '..start..';'..end..'g/^/'..substitution
     call setpos('.', pos)
 endfu
