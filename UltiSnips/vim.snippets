@@ -739,6 +739,34 @@ endsnippet
 # Same thing with `~/.vim`.
 # It's added back in case you need to source a script in `~/.vim/plugin`.
 # }}}
+#   `set rtp^=~/Vcs/vim/runtime`?{{{
+#
+# You may be  debugging some issue for  which you need to run  a binary compiled
+# from an old  version.  And the issue  may require some file  in the vimruntime
+# (e.g. it may need some filetype plugin to be sourced).
+#
+# When starting Vim with `./src/vim -Nu NORC`, the rtp may contain this path:
+#
+#     /usr/local/share/vim/vimXY
+#
+# Or this one:
+#
+#     /usr/local/share/vim
+#
+# I think it depends on whether `/usr/local/share/vimXY` exists.
+# For example,  if you're testing an  8.1 binary, the latter  will probably look
+# for `/usr/local/share/vim/vim81`.  But if your *installed* binary is 8.2, then
+# this directory won't exist; I think in that case, the 8.1 binary falls back on
+# `/usr/local/share/vim`.
+#
+# The first path is wrong; it doesn't  contain the files that Vim may need (e.g.
+# `filetype.vim`).  The  second one is  better, but  it's still wrong;  using it
+# entails that you  may mix a given  binary with a runtime  intended for another
+# binary.
+#
+# For a binary  compiled from an old  version, the only right  vimruntime is the
+# one in the git repo.
+#}}}
 #   `set ic`?{{{
 #
 # To be able to tab-complete a custom command name written in lowercase.
@@ -780,14 +808,15 @@ endsnippet
 #}}}
 snippet vimrc "Minimal vimrc to test a plugin" bm
 set rtp-=~/.vim
-set rtp-=~/.vim/after
-set rtp^=${1:/run/user/1000/tmp/vim-${2:foo}}${3:
-set rtp+=$1/after}${4:
-set rtp^=~/.vim}${5:
+set rtp-=~/.vim/after${1:
+set rtp^=~/Vcs/vim/runtime}
+set rtp^=${2:/run/user/1000/tmp/vim-${3:foo}}${4:
+set rtp+=$2/after}${5:
+set rtp^=~/.vim}${6:
 set rtp+=~/.vim/after}
 
-${6:set ic `!v has('nvim') ? 'sdf= gcr=' : 'vif=NONE'`
-}${7:filetype plugin indent on
+${7:set ic `!v has('nvim') ? 'sdf= gcr=' : 'vif=NONE'`
+}${8:filetype plugin indent on
 syntax enable}
 
 $0
