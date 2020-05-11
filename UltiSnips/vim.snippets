@@ -594,8 +594,7 @@ endsnippet
 # stl_flag {{{1
 
 snippet stl_flag "status line flag" bm
-augroup hoist_$1
-	au!
+augroup hoist_$1 | au!
 	au User MyFlags call statusline#hoist('${2:flag}',
 		\ '$3`!p snip.rv = complete(t[3], ['global', 'tabpage', 'buffer', 'window'])`', ${4:123}, expand('<sfile>')..':'..expand('<sflnum>'))
 augroup END
