@@ -382,13 +382,13 @@ From a context statement, you could also use:
 
 ## What are the three variables which can be used in a `post_jump` statement?
 
-    ┌─────────────────────────────────┬─────────────────────────────────────────┐
-    │ snip.jump_direction             │ 1: forwards, -1: backwards              │
-    ├─────────────────────────────────┼─────────────────────────────────────────┤
-    │ snip.tabstop                    │ number of tabstop jumped unto           │
-    ├─────────────────────────────────┼─────────────────────────────────────────┤
-    │ snip.tabstops                   │ list of tabstops objects                │
-    └─────────────────────────────────┴─────────────────────────────────────────┘
+    ┌─────────────────────┬───────────────────────────────┐
+    │ snip.jump_direction │ 1: forwards, -1: backwards    │
+    ├─────────────────────┼───────────────────────────────┤
+    │ snip.tabstop        │ number of tabstop jumped unto │
+    ├─────────────────────┼───────────────────────────────┤
+    │ snip.tabstops       │ list of tabstops objects      │
+    └─────────────────────┴───────────────────────────────┘
 
 ## What are the three properties of the `snip.tabstops` variable?
 
