@@ -105,17 +105,17 @@ For example, all completion plugins that integrate UltiSnips use this function.
 
 Usage example:
 
-        fu! Expand_possible_shorter_snippet()
-            "only one candidate...
-            if len(UltiSnips#SnippetsInCurrentScope()) == 1
-                let curr_key = keys(UltiSnips#SnippetsInCurrentScope())[0]
-                norm! diw
-                exe 'norm! a'.curr_key.' '
-                return 1
-            endif
-            return 0
-        endfu
-        ino <silent>  <c-l>  <c-r>=Expand_possible_shorter_snippet() == 0 ? '' : UltiSnips#ExpandSnippet()<cr>
+    fu Expand_possible_shorter_snippet() abort
+        "only one candidate...
+        if len(UltiSnips#SnippetsInCurrentScope()) == 1
+            let curr_key = keys(UltiSnips#SnippetsInCurrentScope())[0]
+            norm! diw
+            exe 'norm! a'.curr_key.' '
+            return 1
+        endif
+        return 0
+    endfu
+    ino <silent> <c-l> <c-r>=Expand_possible_shorter_snippet() == 0 ? '' : UltiSnips#ExpandSnippet()<cr>
 
 This  code installs  a  `C-l` mapping  which completes  a  possible partial  tab
 trigger, and automatically expands it.
@@ -124,20 +124,20 @@ trigger, and automatically expands it.
 
 One last example:
 
-        fu! GetAllSnippets()
-            call UltiSnips#SnippetsInCurrentScope(1)
-            let list = []
-            for [key, info] in items(g:current_ulti_dict_info)
-                let parts = split(info.location, ':')
-                call add(list, {
-                \ 'key':         key,
-                \ 'path':        parts[0],
-                \ 'linenr':      parts[1],
-                \ 'description': info.description,
-                \ })
-            endfor
-            return list
-        endfu
+    fu GetAllSnippets() abort
+        call UltiSnips#SnippetsInCurrentScope(1)
+        let list = []
+        for [key, info] in items(g:current_ulti_dict_info)
+            let parts = split(info.location, ':')
+            call add(list, {
+            \ 'key':         key,
+            \ 'path':        parts[0],
+            \ 'linenr':      parts[1],
+            \ 'description': info.description,
+            \ })
+        endfor
+        return list
+    endfu
 
 Here,  we define  a custom  function to  extract all  snippets available  in the
 current buffer.
@@ -263,7 +263,7 @@ position.
 
 Usage example:
 
-    ino <silent>  !!  !!<c-r>=UltiSnips#Anon('hello $1 world $2', '!!')<cr>
+    ino <silent> !! !!<c-r>=UltiSnips#Anon('hello $1 world $2', '!!')<cr>
 
 This expands the snippet whenever two bangs are typed.
 
@@ -271,9 +271,9 @@ This expands the snippet whenever two bangs are typed.
 
 Invoke the `snip.expand_anon()` method:
 
-        snip.expand_anon(my_snippet)
-                         │
-                         └ variable in which you've saved the body of our anonymous snippet
+    snip.expand_anon(my_snippet)
+                     │
+                     └ variable in which you've saved the body of our anonymous snippet
 
 ## When should I use an autotriggered snippet vs an anonymous snippet?
 
@@ -285,6 +285,243 @@ If you  don't need the snippet  permanently, only in a  particular circumstance,
 then use an anonymous snippet.
 
 #
+# Substitution
+## What's a mirror?
+
+A tabstop can be repeated several times in the same snippet.
+You can write an  arbitrary text for the first occurrence, but  not the text for
+the next ones.  Those will always be identical to the first one.
+They are called "mirrors".
+
+Example:
+
+    snippet fmatter
+    ---
+    title: ${1:my placeholder}
+    ---
+    # $1
+    $0
+    endsnippet
+
+Here `$1` on line 5 is a mirror of `${1:my placeholder}` on line 3.
+
+##
+## How to substitute a pattern in a mirror?
+
+Use this syntax:
+
+    ${123/pat/rep/}
+
+### What are the rules which govern which text is replaced and by what?
+
+Each time you change the original tabstop (insert/remove characters), the mirror
+is updated.
+
+Whenever  the mirror  is  updated,  UltiSnips matches  the  pattern against  the
+original tabstop.
+
+If there is a match, the latter is replaced.
+
+If there are several matches, only the first one is replaced.
+
+### How to refer to a sub-expression in the replacement?
+
+Capture it inside parentheses in the pattern field, then you can refer to it via `$123`.
+
+### How to refer to the whole matched text?
+
+    $0
+
+### I can't write a backslash in the replacement!
+
+This is a known issue: <https://github.com/SirVer/ultisnips/issues/998>
+
+    snippet broken "" bm
+    ${1:text}
+    ${1/./\b/}
+    endsnippet
+
+    broken
+
+    →
+
+    text
+    ^Hext
+    ^^
+    ✘
+
+As a workaround, use a python interpolation.
+
+    snippet fixed "" bm
+    ${1:text}
+    `!p snip.rv = re.sub(t[1], r'.', r'\b')`
+    endsnippet
+
+    fixed
+
+    →
+
+    text
+    \b
+    ^^
+    ✔
+
+There is no need to import the `re` module.  UltiSnips does it automatically.
+
+### Is python regex engine greedy, lazy or ordered?
+
+Ordered (like  Vim's one); so, if  the regex contains alternations,  and several
+alternatives match *at the same position*, the first one is used.
+
+    snippet ordered "" bm
+    ${1:three tournaments won}
+    ${1/tour|to|tournament//}
+    endsnippet
+
+    ordered
+
+    →
+
+    three tournaments won
+    three naments won
+
+In the last example, notice how `tour` has been removed.
+If the  engine was lazy,  `to` would  have been removed;  and if it  was greedy,
+`tournament` would have been removed.
+
+---
+
+But remember  that if several  alternatives match *at different  positions*, the
+first one  is always used  (regardless of whether the  corresponding alternative
+comes first).
+
+Another way  of saying it: the  engine first iterates over  character positions,
+*then* it iterates over alternatives.
+
+##
+## What's a conditional replacement?
+
+It's used to replace a sub-expression with some arbitrary text.
+
+You can write one with this syntax:
+
+    (?123:text:other text)
+
+This reads as follows:  if the group `123` has matched,  replace it with `text`,
+otherwise just insert `other text`.
+
+The latter is optional  and if not provided defaults to an  empty string, so you
+can write:
+
+    (?123:text)
+
+For more info, see: `:h UltiSnips-replacement-string`.
+
+### Consider this snippet
+
+    snippet cond
+    ${1:text}
+    ${1/(a)|.*/(?1:foo:bar)/}
+    endsnippet
+
+#### How is the mirror expanded when the tabstop is:
+##### empty?
+
+    bar
+
+That's because `.*` can match an empty string; so the empty tabstop is replaced with:
+
+    (?1:foo:bar)
+
+And `(a)` did not match, so `?1` is false, and the replacement is `bar`.
+
+##### `a`?
+
+    foo
+
+This time, `(a)` matched, `?1` is true, and the replacement is `foo`.
+
+##### `b`?
+
+    bar
+
+`.*` matched, `?1` is false, and the replacement is `bar`.
+
+###
+### Consider this snippet
+
+    snippet cond
+    ${1:text}
+    ${1/(a)|.../(?1:foo:bar)/}
+    endsnippet
+
+#### How is the mirror expanded when the tabstop is:
+##### empty?
+
+The mirror is empty.
+That's because there is no match; nor `(a)`, nor `...` can match an empty string
+(`.*` could).  So, no replacement is performed.
+
+##### `ba`?
+
+    bfoo
+
+`...` does not match `ba`, but `(a)` does.
+`?1` is true, so `a` is replaced with `foo`.
+
+##### `bba`?
+
+    bar
+
+Both `(a)` and `...` match `bba`, but the first (leftmost) match is `bba`, not `a`.
+And when using `...`,  `(a)` does not match anything, thus  `bba` is replaced by
+`bar`.
+
+####
+### Consider this snippet
+
+    snippet cond
+    ${1:text}
+    ${1/(a)|(b)|.*/X(?1:foo:bar)(?2:baz:qux)Y/}
+    endsnippet
+
+#### How is the mirror expanded when the tabstop is:
+##### `a`?
+
+    XfooquxY
+
+`(a)` matches `a`, so it's replaced.
+
+`X` and `Y` are literal, they are not inside a `(?123:text:other text)` construct.
+`?1` is true, so the first `(...)` is replaced by `foo`.
+`?2` is false, so the second `(...)` is replaced by `qux`.
+The final replacement is the concatenation of all these strings.
+
+##### `b`?
+
+    XbarbazY
+
+The explanation is similar as in the previous answer.
+The only difference is that this time, `?1` is false while `?2` is true.
+
+##### `c`?
+
+    XbarquxY
+
+Again, the explanation is similar.
+This time, both `?1` and `?2` are false.
+
+##### `ca`?
+
+    XbarquxY
+
+`(a)` matches `a` in  `ca`, while `.*` matches `ca`.  But  the leftmost match is
+`ca`, not `a`.  So, `ca` is replaced.
+
+When using  the alternative `.*`, both  `?1` and `?2` are  false, which explains
+why `barqux` is used.
+
+##
 # Interpolation
 ## What's the scope of a variable in a python interpolation?
 
@@ -294,19 +531,19 @@ The whole snippet.
 
 Yes.
 
-        snippet foo "" bm
-        `!p var = 'hello'`
-        `!p snip.rv = var`
-        endsnippet
+    snippet foo "" bm
+    `!p var = 'hello'`
+    `!p snip.rv = var`
+    endsnippet
 
 ---
 
 Note that the order matters, so you can't write that:
 
-        snippet foo "" bm
-        `!p snip.rv = var`
-        `!p var = 'hello'`
-        endsnippet
+    snippet foo "" bm
+    `!p snip.rv = var`
+    `!p var = 'hello'`
+    endsnippet
 
 #
 # Statements
@@ -797,7 +1034,7 @@ In a python interpolation, you can use the variables:
     │               │         t[1] is the text of ${1}, etc.   │
     └───────────────┴──────────────────────────────────────────┘
 
-The 'snip' object provides a few methods:
+The `snip` object provides a few methods:
 
     snip.rv = "foo\n"
     snip.rv += snip.mkline("bar\n")
@@ -856,7 +1093,7 @@ The 'snip' object provides a few methods:
     snip.unshift(2)
     snip.rv += snip.mkline("i0\n")
     snip.shift(3)
-    snip.rv += snip.mkline("i3")`
+    snip.rv += snip.mkline("i3")
 
             Returns:
 
@@ -872,7 +1109,7 @@ The 'snip' object provides a few methods:
             Returns the value of `var` (can be a variable or an option).
             If it doesn't exist, returns `default`.
 
-The 'snip' object provides some properties as well:
+The `snip` object provides some properties as well:
 
     snip.rv
 
@@ -1001,122 +1238,6 @@ The 'snip' object provides some properties as well:
             `r`, l'interpolation est mise à jour.
             Ça  peut donner  l'impression  de travailler  avec  un tableur  (pgm
             manipulant des feuilles de calcul).
-
-## Substitution
-
-On  peut  réinsérer  automatiquement  un  tabstop où  l'on  veut,  on  parle  de
-“mirroring“.
-On peut également effectuer une substitution au sein du tabstop miroir.
-
-
-    snippet fmatter
-    ---
-    title: ${1:my placeholder}
-    ---
-    # $1
-    $0
-    endsnippet
-
-            Le 1er tabstop ($1) est répété 2 fois.
-            Cela implique que lorsqu'on lui donne  une valeur, le même texte est
-            inséré automatiquement une 2e fois, là où se trouve sa 2e occurrence
-            (ici: `# $1`).
-
-            On dit que le tabstop est “mirrored“ (reflété).
-
-
-    snippet t "A simple HTML tag" bm
-    <${1:div}>
-    </${1/(\w+).*/$1/}>
-    endsnippet
-
-            On applique une transformation sur le miroir.
-            Il s'agit de la substitution:    :s/(\w+).*/$1/
-
-            Le $1 au  sein de la substitution ne correspond  pas au 1er tabstop,
-            mais à la 1e sous-expression capturée dans le pattern (\w+).
-            L'expression régulière est gérée par python et non par Vim.
-
-
-                                               NOTE:
-
-            La chaîne de remplacement peut contenir des variables `$i`, qui font
-            référence au sous-expressions capturées dans le pattern.
-            Ici, `$1` fait référence au 1er mot capturé dans le 1er tabstop.
-
-            `$0` est spéciale: elle fait référence à l'ensemble du match (équivaut à `&` ou `\0` dans Vim).
-
-
-    snippet cond
-    ${1:some_text}
-    ${1/(a)|.*/(?1:foo:bar)/}
-    endsnippet
-
-            Le miroir subit une substitution conditionnelle, qui:
-
-                    1. cherche et capture le pattern `a`:
-
-                    2. pour le remplacer par:    (?1:foo:bar)
-
-            Ça  signifie  que si  le  texte  inséré  dans le  tabstop  d'origine
-            commence par  un `a`,  il sera  remplacé par  `foo` dans  le miroir,
-            autrement il sera totalement (`|.*`) remplacé par `bar`.
-
-
-            Section de l'aide pertinente:  :h Ultisnips-replacement-string
-
-
-                                               NOTE:
-
-            Le token `?1` permet de tester si le groupe 1 a capturé qch ou pas.
-            Le  token  `()`  permet  de  demander  à  Ultisnips  de  traiter  le
-            remplacement comme une expression à évaluer.
-            Similaire à `\=` pour la commande `:s` dans Vim.
-
-
-    ${1/(a)|(b)|.*/(?1:foo)(?2:bar)/}
-
-            Ici, la substitution:
-
-                    1. cherche le pattern:       (a)|(b)|.*
-                       en capturant `a` ou `b` si le caractère est trouvé
-
-                    2. pour le remplacer par:    (?1:foo)(?2:bar)
-
-            Ce qui  signifie que si  le texte  inséré dans le  tabstop d'origine
-            commence par un:
-
-                    - `a`, le miroir commencera par `foo`
-                    - `b`, "                        `bar`
-                    - ni `a`, ni `b`, le miroir sera vide
-
-
-                                               NOTE:
-
-            On   remarque   au   passage   qu'il  semble   que   python   ajoute
-            automatiquement l'ancre `^` au début du pattern.
-
-                                               NOTE:
-
-            On   pourrait   omettre  la   dernière   branche   `|.*`;  le   code
-            fonctionnerait pratiquement à l'identique.
-            À ceci près que le texte  inséré dans le tabstop d'origine ne serait
-            pas supprimé  dans le miroir  lorsqu'il ne  commence pas par  `a` ou
-            `b`.
-
-
-    ${1/(a)|(b)|.*/(?1:foo:bar)(?2:baz:qux)/}
-
-            Si le texte inséré dans le tabstop d'origine commence par un:
-
-                    - `a`, le miroir commencera par `fooqux`
-                    - `b`, "                        `barbaz`
-                    - ni `a`, ni `b`, le miroir commencera par `barqux`
-
-            Illustre qu'un miroir peut être aussi intelligent qu'on veut; i.e.
-            être capable d'effectuer autant  de substitutions que nécessaire, et
-            choisir  la  bonne  en  fonction d'une  caractéristique  du  tabstop
-            d'origine.
 
 ## Misc
 

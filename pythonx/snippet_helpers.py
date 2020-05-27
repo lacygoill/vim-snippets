@@ -481,7 +481,7 @@ def trim_ws(snip): #{{{1
     # snip.buffer = lines in buffer{{{
     #
     # When you want to modify the buffer, use this variable.
-    # From `:h Ultisnips-buffer-proxy`:
+    # From `:h UltiSnips-buffer-proxy`:
     #
     #     Note:   special  variable   called   'snip.buffer'   should  be   used
     #     for  all   buffer  modifications. Not  'vim.current.buffer'   and  not
