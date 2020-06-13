@@ -42,7 +42,7 @@ endsnippet
 
 # bug_vim {{{1
 
-snippet bug_vim "filing bug report for Nvim" bm
+snippet bug_vim "filing bug report for Vim" bm
 **Describe the bug**
 
 **To Reproduce**
@@ -65,25 +65,6 @@ ${2:
 $0
 endsnippet
 
-# bug_nvim {{{1
-
-snippet bug_nvim "filing bug report for Nvim" bm
- - \`nvim --version\`: `!v g:my_ultisnips_info['nvim --version']`
- - \`vim -u DEFAULTS\` (version: `!v g:my_ultisnips_info['vim --version']`) behaves differently? $1`!p snip.rv = complete(t[1], ['Yes', 'N/A'])`
- - Operating system/version: `!v g:my_ultisnips_info['lsb_release -d']`
- - Terminal name/version: `!v g:my_ultisnips_info['xterm -v']`
- - \`$TERM\`: xterm-256color
-
-### Steps to reproduce
-
-### Actual behaviour
-
-### Expected behaviour
-
-### Additional information
-$0
-endsnippet
-
 # details {{{1
 
 # Source:{{{
@@ -102,12 +83,19 @@ ${0:${VISUAL}}
 </details>
 endsnippet
 
-# hd {{{1
+# here document {{{1
 
 snippet hd "here-document" bm
 $ cat <<'EOF' >${2:/tmp/${1:file}}
 ${0:${VISUAL}}
 EOF
+endsnippet
+
+snippet vhd "vim here-document" bm
+$ vim -Nu NONE -S <(cat <<'EOF'
+	${0:${VISUAL}}
+EOF
+)
 endsnippet
 
 # note {{{1

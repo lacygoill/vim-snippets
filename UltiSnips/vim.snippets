@@ -787,19 +787,6 @@ endsnippet
 # https://github.com/chrisbra/vim_faq
 # /faq-2.5
 #}}}
-#   `set gcr=`?{{{
-#
-# By default,  Neovim sets  `'gcr'`, which  makes it  send escape  sequences, to
-# set  the  shape  of the  cursor;  those  are  not  understood by  our  current
-# xfce4-terminal.
-#
-# This is  not an issue  when we start  `nvim(1)` with `vim-xterm`,  because the
-# latter correctly makes `'gcr'` empty when we're in xfce4-terminal.
-# But it does become an issue when we start `$ nvim -Nu NONE`.
-#
-# Anyway, this is wrong, Neovim shouldn't do that:
-# https://github.com/neovim/neovim/issues/6778#issuecomment-302945056
-# }}}
 
 # TODO: It would be nice to make the snippet suggest 2 leading paths for the plugin to test:{{{
 #
@@ -823,7 +810,7 @@ set rtp+=$2/after}${5:
 set rtp^=~/.vim}${6:
 set rtp+=~/.vim/after}
 
-${7:set ic `!v has('nvim') ? 'sdf= gcr=' : 'vif=NONE'`
+${7:set ic vif=NONE
 }${8:filetype plugin indent on
 syntax enable}
 

@@ -11,13 +11,13 @@ Start with a minimal vimrc and a test snippet:
     EOF
 
     $ cat <<'EOF' >/tmp/vimrc
-    let g:UltiSnipsSnippetDirectories = ['/tmp/snippets']
-    let g:UltiSnipsExpandTrigger = '<tab>'
-    set rtp-=$HOME/.vim
-    set rtp-=$HOME/.vim/after
-    set rtp^=$HOME/.vim/plugged/ultisnips
-    set rtp+=$HOME/.vim/plugged/ultisnips/after
-    filetype plugin on
+        let g:UltiSnipsSnippetDirectories = ['/tmp/snippets']
+        let g:UltiSnipsExpandTrigger = '<tab>'
+        set rtp-=$HOME/.vim
+        set rtp-=$HOME/.vim/after
+        set rtp^=$HOME/.vim/plugged/ultisnips
+        set rtp+=$HOME/.vim/plugged/ultisnips/after
+        filetype plugin on
     EOF
 
     $ vim -Nu /tmp/vimrc +"put ='trigger'" +'startinsert!' /tmp/vim.vim
