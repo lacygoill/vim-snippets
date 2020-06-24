@@ -1995,7 +1995,7 @@ Document the `append()` method of the `snip.buffer` object.
 It's not documented in the help.
 It's just used in a single example:
 
-                                                        vvvvvvvvvv
+                                                        v--------v
     pre_expand "del snip.buffer[snip.line]; snip.buffer.append(''); snip.cursor.set(len(snip.buffer)-1, 0)"
     snippet x
     def $1():

@@ -409,7 +409,7 @@ fu ${2/<(sid|SID)>/s:/}(...) abort
 	endif
 	`!p snip.rv = "let type = a:1" if t[3] == '' else "let type = a:0 == 1 ? a:1 : 'Ex'"`
 	let [cb_save, sel_save] = [&cb, &sel]
-	let reg_save = ['"', getreg('"'), getregtype('"')]
+	let reg_save = getreginfo('"')
 	try
 		set cb-=unnamed cb-=unnamedplus sel=inclusive
 		if type is# 'char'
@@ -432,8 +432,8 @@ else:
 	catch
 		return lg#catch()
 	finally
-		let [&cb, &sel]  = [cb_save, sel_save]
-		call call('setreg', reg_save)
+		let [&cb, &sel] = [cb_save, sel_save]
+		call setreg('"', reg_save)
 	endtry
 endfu
 endsnippet
@@ -462,20 +462,6 @@ endsnippet
 # The previous syntax is a bit more complex, but also more flexible.
 # It allows us to set the title even outside the qf window, for example inside
 # a function which is building the qf list.
-
-# restore register {{{1
-
-snippet reg_restore "Restore the contents and type of registers" bm
-call setreg('${1:z}', $1_reg, $1_type)
-$0
-endsnippet
-
-# save register {{{1
-
-snippet reg_save "Temporarily save the contents and type of registers" bm
-let [ ${1:z}_reg, $1_type ] = [ getreg('$1'), getregtype('$1') ]
-$0
-endsnippet
 
 # scratch {{{1
 
@@ -781,7 +767,7 @@ endsnippet
 # And you really need `$HOME`, not `~`.
 #
 #     let $VIMRUNTIME = $HOME . '/Vcs/vim/runtime'
-#                       ^^^^^
+#                       ^---^
 #
 # To avoid this error:
 #
@@ -822,7 +808,8 @@ set rtp-=~/.vim
 set rtp-=~/.vim/after${1:
 set rtp^=~/Vcs/vim/runtime
 let $VIMRUNTIME = $HOME . '/Vcs/vim/runtime'
-let $VIM = $VIMRUNTIME}
+let $VIM = $VIMRUNTIME
+set hf=~/Vcs/vim/runtime/doc/help.txt}
 set rtp^=${2:/run/user/1000/tmp/vim-${3:foo}}${4:
 set rtp+=$2/after}${5:
 set rtp^=~/.vim}${6:
