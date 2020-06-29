@@ -57,7 +57,7 @@ endsnippet
 # the macro to mess up the syntax highlighting.
 #}}}
 snippet macro "" bm
-	let @q = ''
+	call setreg('q', {})
 	nno <buffer> <cr> @q
 	nunmap <buffer> <cr>
 $0
