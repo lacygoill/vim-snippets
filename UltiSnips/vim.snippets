@@ -94,14 +94,14 @@ endsnippet
 #}}}
 # Also, from :h UltiSnips-replacement-string:{{{
 #
-# > Finally, the  replacement string can contain  conditional replacements
-# > using the syntax (?123:foo:bar). This  reads as follows:
+# >		Finally, the  replacement string can contain  conditional replacements
+# >		using the syntax (?123:foo:bar). This  reads as follows:
 # >
-# >     if the group 123 has matched, replace it with "foo", otherwise insert "bar"
+# >			if the group 123 has matched, replace it with "foo", otherwise insert "bar"
 # >
-# > "bar"  is  optional  and  if   not  provided  defaults  to  the  empty
-# > string. This feature is  very powerful. It allows you  to add OPTIONAL
-# > text into snippets.
+# >		"bar"  is  optional  and  if   not  provided  defaults  to  the  empty
+# >		string. This feature is  very powerful. It allows you  to add OPTIONAL
+# >		text into snippets.
 #}}}
 
 pre_expand "capture_visual_content(snip)"
@@ -294,6 +294,16 @@ snip.rv = complete(t[1], ['s:func', 'Func', vim.eval("snippets#get_autoload_func
 endfu
 endsnippet
 
+pre_expand "capture_visual_content(snip)"
+post_expand "trim_ws(snip)"
+snippet def "Vim9 function definition" bm
+def $1`!p
+snip.rv = complete(t[1], ['Func', vim.eval("snippets#get_autoload_funcname()")])
+`()
+	${0:${VISUAL}}
+enddef
+endsnippet
+
 # guard {{{1
 
 pre_expand "plugin_guard(snip)"
@@ -379,23 +389,10 @@ endsnippet
 
 # op {{{1
 
-# Why do you use visual mode to yank the text?{{{
-#
-#     norm! `[y`]    ✘
-#     norm! `[v`]y   ✔
-#
-# Because a motion towards a mark is exclusive, thus the `y` operator won't yank
-# the character which is the nearest from the end of the buffer.
-#
-# OTOH, ``v`]`` makes  this same motion inclusive, thus `y`  will correctly yank
-# all the characters in the text-object.
-# On the condition that `'selection'` includes `inclusive`.
-#}}}
-
-snippet op "Custom Operator" bm
+snippet op "custom operator" bm
 nno <expr> ${1:key} ${2:MyOp}()
 xno <expr> $1 $2()
-nno <expr> $1${1/.(.*)/$1/} $2()..'_'
+nno <expr> $1`!p snip.rv = t[1] if t[1].endswith('>') else re.sub('.*(.)$', '\\1', t[1])` $2()..'_'
 ${3:
 com -bar -range ${4:MyOpCmd} call ${2/<(sid|SID)>/s:/}(<line1>, <line2>)
 }
@@ -408,33 +405,42 @@ fu ${2/<(sid|SID)>/s:/}(...) abort
 		return 'g@'
 	endif
 	`!p snip.rv = "let type = a:1" if t[3] == '' else "let type = a:0 == 1 ? a:1 : 'Ex'"`
-	let [cb_save, sel_save] = [&cb, &sel]
-	let reg_save = getreginfo('"')
-	try
-		set cb= sel=inclusive
-		if type is# 'char'
-			${5:sil norm! \`[v\`]y}
-		elseif type is# 'line'
-			${6:sil norm! '[V']y}
-		elseif type is# 'block'
-			${7:sil exe "norm! \`[\<c-v>\`]y"}`!p
+	$0
+endfu
+endsnippet
+
+snippet opp "custom operator (yank text inside change marks)" bm
+nno <expr> ${1:key} ${2:MyOp}()
+xno <expr> $1 $2()
+nno <expr> $1`!p snip.rv = t[1] if t[1].endswith('>') else re.sub('.*(.)$', '\\1', t[1])` $2()..'_'
+${3:
+com -bar -range ${4:MyOpCmd} call ${2/<(sid|SID)>/s:/}_core(<line1>, <line2>)
+}
+fu ${2/<(sid|SID)>/s:/}() abort
+	let &opfunc = 'lg#opfunc'
+	let g:opfunc_core = `!p
+opfunc_core = \
+		"matchstr(expand('<sfile>'), '<SNR>\\w*$')..'_core'" \
+		if re.search(r'<sid>', t[2], re.IGNORECASE) \
+		else "'" + t[2] + "_core'"
+snip.rv = opfunc_core
+`
+	return 'g@'
+endfu
+
+fu `!p snip.rv = \
+		opfunc_core.strip("'") \
+		if opfunc_core[0] == "'" \
+		else re.sub('<sid>', 's:', t[2], flags=re.IGNORECASE) + '_core'
+`(`!p snip.rv = 'type' if t[3] == '' else '...'`) abort
+	`!p
 if t[3] == '':
 	snip.rv = ''
 else:
-	snip.rv = '\n'
-	snip.shift(2)
-	snip.rv += snip.mkline("elseif type is# 'Ex'\n")
+	snip.rv = "let type = a:0 == 1 ? a:1 : 'Ex'\n"
 	snip.shift(1)
-	# TODO: find a way to add a tabstop here
-	snip.rv += snip.mkline("sil exe a:1..','..a:2..'y'")`
-		endif
-		$0
-	catch
-		return lg#catch()
-	finally
-		let [&cb, &sel] = [cb_save, sel_save]
-		call setreg('"', reg_save)
-	endtry
+	snip.rv += snip.mkline('')
+`$0
 endfu
 endsnippet
 
