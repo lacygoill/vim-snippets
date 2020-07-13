@@ -125,8 +125,8 @@ fu s:${3:complete_words}(findstart, base) abort
 	endif
 endfu
 
-${6:" make sure s:snr is defined
-}let &l:cfu = s:snr..'$3'
+${6:" make sure s:SID is defined
+}let &l:cfu = s:SID .. '$3'
 $0
 endsnippet
 
@@ -296,7 +296,7 @@ endsnippet
 
 pre_expand "capture_visual_content(snip)"
 post_expand "trim_ws(snip)"
-snippet def "Vim9 function definition" bm
+snippet df "Vim9 function definition" Abm
 def $1`!p
 snip.rv = complete(t[1], ['Func', vim.eval("snippets#get_autoload_funcname()")])
 `()
@@ -399,7 +399,7 @@ com -bar -range ${4:MyOpCmd} call ${2/<(sid|SID)>/s:/}(<line1>, <line2>)
 fu ${2/<(sid|SID)>/s:/}(...) abort
 	if !a:0
 		let &opfunc = `!p snip.rv = \
-			"matchstr(expand('<sfile>'), '<SNR>\\w*$')" \
+			"expand('<sfile>')->matchstr('<SNR>\\w*$')" \
 			if re.search(r'<sid>', t[2], re.IGNORECASE) \
 			else "'" + t[2] + "'"`
 		return 'g@'
@@ -420,7 +420,7 @@ fu ${2/<(sid|SID)>/s:/}() abort
 	let &opfunc = 'lg#opfunc'
 	let g:opfunc_core = `!p
 opfunc_core = \
-		"matchstr(expand('<sfile>'), '<SNR>\\w*$')..'_core'" \
+		"expand('<sfile>')->matchstr('<SNR>\\w*$')..'_core'" \
 		if re.search(r'<sid>', t[2], re.IGNORECASE) \
 		else "'" + t[2] + "_core'"
 snip.rv = opfunc_core
@@ -527,37 +527,36 @@ endsnippet
 #    - with `<sid>`  in a mapping
 #
 # But there's no built-in way to call it outside of its script/mapping.
-# `s:snr()` to the rescue.
+# `s:SID()` to the rescue.
 #}}}
-# Could we use `expand('<sfile>')` outside the function?{{{
+# Could I use `expand('<sfile>')` at the script level?{{{
 #
-# No.
-# It would give  us the path to the  script file, while we want the  name of the
-# function.
+# No.  It would give you the path to  the script file, while we want the name of
+# the function.
 #}}}
-# Why `.*\zs`?{{{
+# Why the `$` anchor in the regex?{{{
 #
-# Suppose `s:snr()` is called indirectly from another script.
+# Suppose `s:SID()` is called indirectly from another script.
 # `expand('<sfile>')` will contain 2 script numbers.
 #
 # This is because of the call nesting.
 # From `:h <sfile>`:
 #
-# > function call nesting is indicated like this:
+# >		function call nesting is indicated like this:
 # >
-# >		"function {function-name1}[{lnum}]..{function-name2}[{lnum}]"
+# >			"function {function-name1}[{lnum}]..{function-name2}[{lnum}]"
 #
 # You want the *last* number, because  it matches the last script-local function
-# where `s:snr()` is defined.
+# where `s:SID()` is defined.
 #
 # MWE:
 #
 #     $ cat <<'EOF' >~/.vim/autoload/script.vim
 #     fu script#echo()
-#       echom 'the script number is: '..s:snr()
+#       echom 'the script number is: ' .. s:SID()
 #     endfu
-#     fu s:snr()
-#       return matchstr(expand('<sfile>'), '<SNR>\zs\d\+\ze_')
+#     fu s:SID()
+#       return expand('<sfile>')->matchstr('<SNR>\zs\d\+\ze_')
 #     endfu
 #     EOF
 #
@@ -574,21 +573,25 @@ endsnippet
 # This output is wrong; `1` is *not* the number of `autoload/script.vim`.
 # It's the number of the vimrc.
 #}}}
-# Why saving the output of `s:snr()` inside a variable?{{{
+# Why saving the output of `s:SID()` inside a variable, and why the `if` guard?{{{
 #
 # First, suppose you write this code in a filetype plugin, there is no reason to
-# re-evaluate `s:snr()` every time you reload a buffer.
+# re-evaluate `s:SID()` every time you reload a buffer.
 #
 # Second, in  the past,  we had an  issue where the  evaluation was  correct the
 # first time, but not afterward: https://github.com/vim/vim/issues/5425
 # Even if the issue  is now fixed, it could re-appear one way  or another in the
 # future; let's be safe.
 #}}}
-snippet snr "Function to get SNR number" bm
-fu s:snr() abort
-	return matchstr(expand('<sfile>'), '.*\zs<SNR>\d\+_')
-endfu
-let s:snr = get(s:, 'snr', s:snr())
+snippet sid "Function to manually translate function scope s: or pseudo-key <SID>" bm
+" you can remove this guard if the script contains a reinclusion guard
+if !exists('s:SID')
+	fu s:SID() abort
+		return expand('<sfile>')->matchstr('<SNR>\zs\d\+\ze_SID$')->str2nr()
+	endfu
+	let s:SID = s:SID()->printf('<SNR>%d_')
+	delfu s:SID
+endif
 $0
 endsnippet
 
