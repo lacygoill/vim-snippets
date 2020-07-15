@@ -35,3 +35,25 @@ endsnippet
 # $5 = beginning of the region to highlight
 # $6 = end       "
 
+# vim + heredoc {{{1
+
+# Useful after pressing `C-x C-e`.{{{
+#
+# Suppose you've copied some code from a Vim bug report.
+# To test it, you can:
+#
+#    - press `C-x C-e`
+#    - put the clipboard
+#    - visually select the code
+#    - press `Tab`
+#    - insert `vhd`
+#    - press `Tab`
+#    - press `Esc` + `ZZ`
+#}}}
+context "vim.eval('expand(\"%:t\") =~# \"^zsh\\\w*$\" ? v:true : v:false')"
+snippet vhd "vim + heredoc" bm
+vim -Nu NONE -S <(cat <<'EOF'
+${0:${VISUAL}}
+EOF
+)
+endsnippet
