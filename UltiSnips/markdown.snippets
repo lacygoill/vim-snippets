@@ -57,7 +57,7 @@ ${1:**Screenshots**
 
 }**Environment**
 
- - Vim version: `!v g:my_ultisnips_info['vim --version']`
+ - Vim version:`!v g:my_ultisnips_info['vim --version']`
  - OS: `!v g:my_ultisnips_info['lsb_release -d']`
  - Terminal: `!v g:my_ultisnips_info['xterm -v']`
 ${2:
@@ -96,6 +96,15 @@ $ vim -Nu NONE -S <(cat <<'EOF'
 	${0:${VISUAL}}
 EOF
 )
+endsnippet
+
+# Vim fenced code block {{{1
+
+context "vim.eval('getline(\".\") !~# \"^\\\s" ? v:true : v:false')"
+snippet vf "Vim fenced code block" bm
+\`\`\`vim
+${0:${VISUAL}}
+\`\`\`
 endsnippet
 
 # note {{{1

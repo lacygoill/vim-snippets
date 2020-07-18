@@ -418,13 +418,18 @@ com -bar -range ${4:MyOpCmd} call ${2/<(sid|SID)>/s:/}_core(<line1>, <line2>)
 }
 fu ${2/<(sid|SID)>/s:/}() abort
 	let &opfunc = 'lg#opfunc'
-	let g:opfunc_core = `!p
+	let g:opfunc = {
+		\ 'core': `!p
 opfunc_core = \
 		"expand('<sfile>')->matchstr('<SNR>\\w*$')..'_core'" \
 		if re.search(r'<sid>', t[2], re.IGNORECASE) \
 		else "'" + t[2] + "_core'"
 snip.rv = opfunc_core
-`
+`,${5:
+		\ 'register': v:register,
+		\ 'count': v:count,
+		\ 'yank': v:true,}
+		\ }
 	return 'g@'
 endfu
 
@@ -589,7 +594,7 @@ if !exists('s:SID')
 	fu s:SID() abort
 		return expand('<sfile>')->matchstr('<SNR>\zs\d\+\ze_SID$')->str2nr()
 	endfu
-	let s:SID = s:SID()->printf('<SNR>%d_')
+	const s:SID = s:SID()->printf('<SNR>%d_')
 	delfu s:SID
 endif
 $0
