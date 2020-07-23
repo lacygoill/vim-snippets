@@ -91,7 +91,7 @@ ${0:${VISUAL}}
 EOF
 endsnippet
 
-snippet vhd "vim here-document" bm
+snippet vh "vim here-document" bm
 $ vim -Nu NONE -S <(cat <<'EOF'
 	${0:${VISUAL}}
 EOF
@@ -103,6 +103,7 @@ endsnippet
 context "vim.eval('getline(\".\") !~# \"^\\\s" ? v:true : v:false')"
 snippet vf "Vim fenced code block" bm
 \`\`\`vim
+vim9script
 ${0:${VISUAL}}
 \`\`\`
 endsnippet
