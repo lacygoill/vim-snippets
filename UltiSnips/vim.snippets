@@ -68,7 +68,7 @@ endsnippet
 #     getcmdpos() == 4
 #}}}
 snippet abr "uppercase abbreviation on command-line" bm
-cnorea  <buffer><expr>  ${1:lhs}  getcmdtype() is# ':' && getcmdpos() == `!p snip.rv = len(t[1]) + 1`
+cnorea <buffer><expr> ${1:lhs} getcmdtype() is# ':' && getcmdpos() == `!p snip.rv = len(t[1]) + 1`
 \\`!p snip.rv = ' '*(25 + len(t[1]))`?    '`!p snip.rv = '' if not t[1] else (t[1][0]).upper() + t[1][1:]`'
 \\`!p snip.rv = ' '*(25 + len(t[1]))`:    '`!p snip.rv = t[1]`'
 endsnippet
@@ -100,7 +100,7 @@ endsnippet
 # >			if the group 123 has matched, replace it with "foo", otherwise insert "bar"
 # >
 # >		"bar"  is  optional  and  if   not  provided  defaults  to  the  empty
-# >		string. This feature is  very powerful. It allows you  to add OPTIONAL
+# >		string. This feature is  very powerful. It lets you add OPTIONAL
 # >		text into snippets.
 #}}}
 
@@ -471,8 +471,8 @@ endsnippet
 # Works, but only if we're inside the qf window.
 #
 # The previous syntax is a bit more complex, but also more flexible.
-# It allows us to set the title even outside the qf window, for example inside
-# a function which is building the qf list.
+# It lets  us set the  title even  outside the qf  window, for example  inside a
+# function which is building the qf list.
 
 # scratch {{{1
 
