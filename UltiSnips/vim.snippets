@@ -39,17 +39,17 @@ endsnippet
 
 # abbreviation {{{1
 
-#                   ┌ if the 1st tabstop is empty, the interpolation should be too;
-#                   │ we need to handle this special case,
-#                   │ to avoid an error if we delete an inserted tabstop
-#                   │ (because in this case `t[1][0]` won't exist)
-#                   │
-#                   │                    ┌ text of 1st placeholder $1
-#                   ├────────────┐       ├──┐
+#                  ┌ if the 1st tabstop is empty, the interpolation should be too;
+#                  │ we need to handle this special case,
+#                  │ to avoid an error if we delete an inserted tabstop
+#                  │ (because in this case `t[1][0]` won't exist)
+#                  │
+#                  │                    ┌ text of 1st placeholder $1
+#                  ├────────────┐       ├──┐
 #     !p snip.rv = '' if not t[1] else (t[1][0]).upper() + t[1][1:]
-#                                             │                  ├┘
-#                                             │                  └ remaining characters
-#                                             └ first character
+#                                            │                  ├┘
+#                                            │                  └ remaining characters
+#                                            └ first character
 
 # Why do you use `getcmdpos()`?  Why not `getcmdline() is# '$1'`?{{{
 #
@@ -121,24 +121,23 @@ fu s:${3:complete_words}(findstart, base) abort
 	if a:findstart
 		return searchpos('${4:\<}', 'bnW', line('.'))[1] - 1
 	else
-		return filter(copy($1), {_,v -> stridx(v, a:base) == 0})
+		return copy($1)->filter({_, v -> stridx(v, a:base) == 0})
 	endif
 endfu
 
-${6:" make sure s:SID is defined
-}let &l:cfu = s:SID .. '$3'
+let &l:cfu = expand('<SID>') .. '$3'
 $0
 endsnippet
 
-# Why not using  v =~ '^'..a:base  ?{{{2
+# Why not using `v =~ '^' .. a:base`?{{{2
 #
 # To filter the matches, we could write this condition:
 #
-#      v =~ '^'..a:base
+#      v =~ '^' .. a:base
 #
 # But instead, we write:
 #
-#      filter(matches, {_,v -> stridx(v, a:base) == 0})
+#      filter(matches, {_, v -> stridx(v, a:base) == 0})
 #
 # Because `a:base` could contain special characters.
 # If there are, we don't want them to be interpreted by the regex engine.
@@ -149,19 +148,17 @@ endsnippet
 #
 #     return empty(a:base)
 #         \ ?     matches
-#         \ :     filter(matches, {_,v -> v[:strlen(a:base)-1] is? a:base})
-#                                                                │
-#                                                                └ ignore case
+#         \ :     filter(matches, {_, v -> v[:strlen(a:base) - 1] is? a:base})
 #
 # Why treating the case where `a:base` is an empty string separately?
 #
 # If `a:base` is empty,  the test will fail for all  matches, and the completion
-# function will not return anything. I don't want that. I want all matches.
+# function will not return anything.  I don't want that.  I want all matches.
 # MWE:
 #
 #                        ┌ ''
 #                        │
-#          v[:strlen(a:base)-1]
+#          v[:strlen(a:base) - 1]
 #        → v[:-1]
 #        → v
 #          != a:base ('')
@@ -173,7 +170,7 @@ endsnippet
 #
 # You can split such a string in (here 4) consecutive strings to gain in readibility:
 #
-#     'let word_before_cursor = matchstr(a:cmdline, \'.*\s\zs-\S.*\%\'..a:pos..\'c.\')\n'
+#     'let word_before_cursor = matchstr(a:cmdline, \'.*\s\zs-\S.*\%\' .. a:pos .. \'c.\')\n'
 #     '    let word_before_cursor = matchstr(word_before_cursor, \'\S*\s*$\')\n'
 #     '\n'
 #     '    if word_before_cursor =~# \'^-mode\s*\''
@@ -191,7 +188,7 @@ snip.rv = complete(t[4], ['_p', 'pos'])
 `) abort
 	$5`!p
 snip.rv = complete(t[5], ['if a:cmdline =~# \'\m-mode\s\+\w*$\'',
-'let word_before_cursor = matchstr(a:cmdline, \'.*\s\zs-\S.*\%\'..a:pos..\'c.\')\n'
+'let word_before_cursor = matchstr(a:cmdline, \'.*\s\zs-\S.*\%\' .. a:pos .. \'c.\')\n'
 '\n'
 '    if word_before_cursor =~# \'^-mode\s*\S*$\''
 ])
@@ -281,7 +278,7 @@ endsnippet
 #
 # When the visual selection contains an  empty line, and our snippet inserts the
 # `${VISUAL}` placeholder, UltiSnips inserts 4 spaces on the line.
-# We need to trim it. The `m` option doesn't work.
+# We need to trim it.  The `m` option doesn't work.
 # So, we use a python function invoked via a `post_expand` statement.
 #}}}
 pre_expand "capture_visual_content(snip)"
@@ -367,7 +364,7 @@ endsnippet
 # user mapping {{{1
 
 snippet map_user "Install user-respectful mappings" bm
-if empty(mapcheck('${1:key}', '${3:mode}')) && !hasmapto('<plug>(${2:plugin_some_func})', '$3')
+if mapcheck('${1:key}', '${3:mode}')->empty() && !hasmapto('<plug>(${2:plugin_some_func})', '$3')
 	$3map <unique> $1 <plug>($2)
 endif
 $3no <silent> <plug>($2) :<c-u>call ${2/_/#/}()<cr>
@@ -377,12 +374,12 @@ endsnippet
 # q mapping {{{1
 
 snippet mq "local mapping to end recording without closing window" bm
-nno <buffer><expr><nowait><silent> q reg_recording() isnot# '' ? 'q' : ':<c-u>q<cr>'
+nno <buffer><expr><nowait><silent> q reg_recording() != '' ? 'q' : ':<c-u>q<cr>'
 $0
 endsnippet
 
 snippet mqq "end recording without closing window" bm
-if reg_recording() isnot# ''
+if reg_recording() != ''
 	return feedkeys('q', 'in')[-1]
 endif
 endsnippet
@@ -392,7 +389,7 @@ endsnippet
 snippet op "custom operator" bm
 nno <expr> ${1:key} ${2:MyOp}()
 xno <expr> $1 $2()
-nno <expr> $1`!p snip.rv = t[1] if t[1].endswith('>') else re.sub('.*(.)$', '\\1', t[1])` $2()..'_'
+nno <expr> $1`!p snip.rv = t[1] if t[1].endswith('>') else re.sub('.*(.)$', '\\1', t[1])` $2() .. '_'
 ${3:
 com -bar -range ${4:MyOpCmd} call ${2/<(sid|SID)>/s:/}(<line1>, <line2>)
 }
@@ -412,16 +409,18 @@ endsnippet
 snippet opp "custom operator (yank text inside change marks)" bm
 nno <expr> ${1:key} ${2:MyOp}()
 xno <expr> $1 $2()
-nno <expr> $1`!p snip.rv = t[1] if t[1].endswith('>') else re.sub('.*(.)$', '\\1', t[1])` $2()..'_'
+nno <expr> $1`!p snip.rv = t[1] if t[1].endswith('>') else re.sub('.*(.)$', '\\1', t[1])` $2() .. '_'
 ${3:
 com -bar -range ${4:MyOpCmd} call ${2/<(sid|SID)>/s:/}_core(<line1>, <line2>)
 }
+import Opfunc from 'lg.vim' | const s:SID = execute('fu s:Opfunc')->matchstr('\C\<def\s\+\zs<SNR>\d\+_')
+
 fu ${2/<(sid|SID)>/s:/}() abort
-	let &opfunc = 'lg#opfunc'
+	let &opfunc = s:SID .. 'Opfunc'
 	let g:opfunc = {
 		\ 'core': `!p
 opfunc_core = \
-		"expand('<sfile>')->matchstr('<SNR>\\w*$')..'_core'" \
+		"expand('<sfile>')->matchstr('<SNR>\\w*$') .. '_core'" \
 		if re.search(r'<sid>', t[2], re.IGNORECASE) \
 		else "'" + t[2] + "_core'"
 snip.rv = opfunc_core
@@ -506,97 +505,19 @@ endsnippet
 # Those are sufficient conditions, but not necessary.
 # For example, `qf` buffers are not tied to  any file, and yet they are made non
 # modifiable.
-# This is probably due to the qfl data structure. You shouldn't be able to change
-# a qf buffer, because it could introduce a discrepancy with the qfl.
+# This is  probably due  to the qfl  data structure.  You  shouldn't be  able to
+# change a qf buffer, because it could introduce a discrepancy with the qfl.
 #}}}
 snippet scratch "" bm
-let tempfile = tempname()..'/${1:buffer name}'
+let tempfile = tempname() .. '/${1:buffer name}'
 exe '$2`!p
 snip.rv = complete(t[2], ['leftabove', 'topleft'])
-` '..(&columns/3)..'vnew '..tempfile
+` ' .. (&columns/3) .. 'vnew ' .. tempfile
 setl bh=delete bt=nofile nobl noswf wfw nowrap
 
 call setline(1, ${4:put your text})
 
-nno <buffer><expr><nowait><silent> q reg_recording() isnot# '' ? 'q' : ':<c-u>q<cr>'
-$0
-endsnippet
-
-# snr {{{1
-
-# Purpose:{{{
-#
-# We can call a script-local function:
-#
-#    - with `s:`     in its script
-#    - with `<sid>`  in a mapping
-#
-# But there's no built-in way to call it outside of its script/mapping.
-# `s:SID()` to the rescue.
-#}}}
-# Could I use `expand('<sfile>')` at the script level?{{{
-#
-# No.  It would give you the path to  the script file, while we want the name of
-# the function.
-#}}}
-# Why the `$` anchor in the regex?{{{
-#
-# Suppose `s:SID()` is called indirectly from another script.
-# `expand('<sfile>')` will contain 2 script numbers.
-#
-# This is because of the call nesting.
-# From `:h <sfile>`:
-#
-# >		function call nesting is indicated like this:
-# >
-# >			"function {function-name1}[{lnum}]..{function-name2}[{lnum}]"
-#
-# You want the *last* number, because  it matches the last script-local function
-# where `s:SID()` is defined.
-#
-# MWE:
-#
-#     $ cat <<'EOF' >~/.vim/autoload/script.vim
-#     fu script#echo()
-#       echom 'the script number is: ' .. s:SID()
-#     endfu
-#     fu s:SID()
-#       return expand('<sfile>')->matchstr('<SNR>\zs\d\+\ze_')
-#     endfu
-#     EOF
-#
-#     $ cat <<'EOF' >/tmp/vimrc
-#     fu s:func()
-#       call script#echo()
-#     endfu
-#     call s:func()
-#     EOF
-#
-#     $ vim -Nu /tmp/vimrc
-#     1~
-#
-# This output is wrong; `1` is *not* the number of `autoload/script.vim`.
-# It's the number of the vimrc.
-#}}}
-# Why saving the output of `s:SID()` inside a variable, and why the `if` guard?{{{
-#
-# First, suppose you write this code in a filetype plugin, there is no reason to
-# re-evaluate `s:SID()` every time you reload a buffer.
-#
-# Second, in  the past,  we had an  issue where the  evaluation was  correct the
-# first time, but not afterward: https://github.com/vim/vim/issues/5425
-# Even if the issue  is now fixed, it could re-appear one way  or another in the
-# future; let's be safe.
-#}}}
-snippet sid "Function to manually translate function scope s: or pseudo-key <SID>" bm
-" you can remove this guard if the script contains a reinclusion guard
-if !exists('s:SID')
-	fu s:SID() abort
-		return expand('<sfile>')->matchstr('<SNR>\zs\d\+\ze_SID$')->str2nr()
-	endfu
-	const s:SID = s:SID()->printf('<SNR>%d_')
-	delfu s:SID
-endif
+nno <buffer><expr><nowait><silent> q reg_recording() != '' ? 'q' : ':<c-u>q<cr>'
 $0
 endsnippet
 
@@ -605,7 +526,7 @@ endsnippet
 snippet stl_flag "status line flag" bm
 augroup hoist_$1 | au!
 	au User MyFlags call statusline#hoist('${2:flag}',
-		\ '$3`!p snip.rv = complete(t[3], ['global', 'tabpage', 'buffer', 'window'])`', ${4:123}, expand('<sfile>')..':'..expand('<sflnum>'))
+		\ '$3`!p snip.rv = complete(t[3], ['global', 'tabpage', 'buffer', 'window'])`', ${4:123}, expand('<sfile>') .. ':' .. expand('<sflnum>'))
 augroup END
 endsnippet
 
@@ -699,7 +620,7 @@ endsnippet
 # Why `after/`?{{{
 #
 # Necessary  if the  plugin we  want to  test has  something inside  an `after/`
-# subdirectory. If we don't add it, none of its file will be sourced.
+# subdirectory.  If we don't add it, none of its file will be sourced.
 #}}}
 #   ^= instead of +=?{{{
 #
@@ -729,7 +650,7 @@ endsnippet
 #
 # In the past, we used this:
 #
-#     let &rtp = $HOME..'/.vim,'..join(filter(split(&rtp, ','), {_,v -> v isnot# $HOME..'/.vim'}), ',')
+#     let &rtp = $HOME .. '/.vim,' .. split(&rtp, ',')->filter({_, v -> v isnot# $HOME .. '/.vim'})->join(',')
 #
 # But I find the current solution easier to read:
 #

@@ -50,7 +50,7 @@ endsnippet
 #
 #             If,  unexpectedly, the  pattern `(.*)\.`  doesn't match  the first
 #             line of  the buffer,  the first capturing  group won't  exist, and
-#             `.group(1)`  will  raise  an `AttributeError`  exception. We  must
+#             `.group(1)`  will  raise  an `AttributeError`  exception.  We  must
 #             catch it.
 #}}}
 snippet hl "" Abm
@@ -75,7 +75,7 @@ endsnippet
 snippet toc "Table Of Contents" Abm
 ${1:file}.txt    $1    Last change: `date +%B\ %d\ %Y`
 ${1/.*/\U$0\E/} - TABLE OF CONTENTS `!p
-snip.rv = ' ' * (78 - 3*len(t[1]) - 27)
+snip.rv = ' ' * (78 - 3 * len(t[1]) - 27)
 ` *$1* *$1-toc*
 ==============================================================================
 $0

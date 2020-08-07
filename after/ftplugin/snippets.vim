@@ -46,5 +46,5 @@ setl noet sw=4 ts=4
 " Teardown {{{1
 
 let b:undo_ftplugin = get(b:, 'undo_ftplugin', 'exe')
-    \ ..'| call snippets#undo_ftplugin()'
+    \ .. '| call snippets#undo_ftplugin()'
 
