@@ -45,7 +45,7 @@ fu snippets#remove_tabs_in_global_blocks() abort "{{{1
 endfu
 
 fu snippets#undo_ftplugin() abort "{{{1
-    setl et< isk< sw< ts<
+    set et< isk< sw< ts<
     au! format_snippets * <buffer>
     nunmap <buffer> q
 endfu

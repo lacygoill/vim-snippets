@@ -570,9 +570,11 @@ def undo_ftplugin(snip): #{{{1
     snip.expand_anon(anon_snip_body)
 
 def why(snip): #{{{1
-    cml = vim.eval("matchstr(get(split(&l:cms, '%s'), 0, ''), '\S\+')")
-    cml_r = vim.eval("matchstr(get(split(&l:cms, '%s'), 1, ''), '\S\+')")
-    indent = vim.eval("matchstr(getline('.'), '^\s*')")
+    # TODO: `cml`  should be `#`  when we're in a  `:def` function, even  if the
+    # first line of the script is not `vim9script`
+    cml = vim.eval("getline(1) == 'vim9script' ? '#' : split(&l:cms, '%s')->get(0, '')->matchstr('\S\+')")
+    cml_r = vim.eval("split(&l:cms, '%s')->get(1, '')->matchstr('\S\+')")
+    indent = vim.eval("getline('.')->matchstr('^\s*')")
     if cml_r == '':
         # Why don't you add a space before the fold markers?{{{
         #

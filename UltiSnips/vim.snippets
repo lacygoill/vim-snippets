@@ -94,14 +94,14 @@ endsnippet
 #}}}
 # Also, from :h UltiSnips-replacement-string:{{{
 #
-# >		Finally, the  replacement string can contain  conditional replacements
-# >		using the syntax (?123:foo:bar). This  reads as follows:
-# >
-# >			if the group 123 has matched, replace it with "foo", otherwise insert "bar"
-# >
-# >		"bar"  is  optional  and  if   not  provided  defaults  to  the  empty
-# >		string. This feature is  very powerful. It lets you add OPTIONAL
-# >		text into snippets.
+#    > Finally, the  replacement string can contain  conditional replacements
+#    > using the syntax (?123:foo:bar). This  reads as follows:
+#    >
+#    >      if the group 123 has matched, replace it with "foo", otherwise insert "bar"
+#    >
+#    > "bar"  is  optional  and  if   not  provided  defaults  to  the  empty
+#    > string. This feature is  very powerful. It lets you add OPTIONAL
+#    > text into snippets.
 #}}}
 
 pre_expand "capture_visual_content(snip)"
@@ -148,20 +148,7 @@ endsnippet
 #
 #     return empty(a:base)
 #         \ ?     matches
-#         \ :     filter(matches, {_, v -> v[:strlen(a:base) - 1] is? a:base})
-#
-# Why treating the case where `a:base` is an empty string separately?
-#
-# If `a:base` is empty,  the test will fail for all  matches, and the completion
-# function will not return anything.  I don't want that.  I want all matches.
-# MWE:
-#
-#                        ┌ ''
-#                        │
-#          v[:strlen(a:base) - 1]
-#        → v[:-1]
-#        → v
-#          != a:base ('')
+#         \ :     filter(matches, {_, v -> v[: strlen(a:base) - 1] is? a:base})
 #}}}2
 
 # completion function (custom command) {{{1
@@ -170,10 +157,10 @@ endsnippet
 #
 # You can split such a string in (here 4) consecutive strings to gain in readibility:
 #
-#     'let word_before_cursor = matchstr(a:cmdline, \'.*\s\zs-\S.*\%\' .. a:pos .. \'c.\')\n'
-#     '    let word_before_cursor = matchstr(word_before_cursor, \'\S*\s*$\')\n'
+#     'let from_dash_to_cursor = matchstr(a:cmdline, \'.*\s\zs-.*\%\' .. (a:pos + 1) .. \'c\')\n'
+#     '    let from_dash_to_cursor = matchstr(from_dash_to_cursor, \'\S*\s*$\')\n'
 #     '\n'
-#     '    if word_before_cursor =~# \'^-mode\s*\''
+#     '    if from_dash_to_cursor =~# \'^-mode\s*\''
 #
 # They will be concatenated at compile time:
 # https://stackoverflow.com/a/3346295/9780968
@@ -188,9 +175,9 @@ snip.rv = complete(t[4], ['_p', 'pos'])
 `) abort
 	$5`!p
 snip.rv = complete(t[5], ['if a:cmdline =~# \'\m-mode\s\+\w*$\'',
-'let word_before_cursor = matchstr(a:cmdline, \'.*\s\zs-\S.*\%\' .. a:pos .. \'c.\')\n'
+'let from_dash_to_cursor = matchstr(a:cmdline, \'.*\s\zs-.*\%\' .. (a:pos + 1) .. \'c\')\n'
 '\n'
-'    if word_before_cursor =~# \'^-mode\s*\S*$\''
+'    if from_dash_to_cursor =~# \'^-mode\s*\S*$\''
 ])
 `
 		let ${6:modes} = [${7:'normal', 'visual', 'insert'}]
