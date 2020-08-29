@@ -270,7 +270,7 @@ endsnippet
 #}}}
 pre_expand "capture_visual_content(snip)"
 post_expand "trim_ws(snip)"
-snippet fu "function definition" Abm
+snippet fuu "function definition" Abm
 fu $1`!p
 snip.rv = complete(t[1], ['s:func', 'Func', vim.eval("snippets#get_autoload_funcname()")])
 `($2) abort
