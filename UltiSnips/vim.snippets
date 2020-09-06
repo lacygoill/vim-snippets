@@ -206,7 +206,7 @@ endsnippet
 #}}}
 snippet conceal "conceal using `matchadd()`" bm
 setl cocu=nc cole=3
-call matchadd('Conceal', ${2:'${1:pat}'}, 0, -1, {'conceal': '${3:x}'})
+call matchadd('Conceal', ${2:'${1:pat}'}, 0, -1, #{conceal: '${3:x}'})
 $0
 endsnippet
 

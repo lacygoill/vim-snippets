@@ -112,6 +112,5 @@ the line to suppress the newline.
 >          open('/path/to/some/file/being/written', 'w') as file_2:
 >         file_2.write(file_1.read())
 
-Source:
-        https://www.python.org/dev/peps/pep-0008/#maximum-line-length
+Source: <https://www.python.org/dev/peps/pep-0008/#maximum-line-length>
 
