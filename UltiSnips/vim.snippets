@@ -383,7 +383,7 @@ com -bar -range ${4:MyOpCmd} call ${2/<(sid|SID)>/s:/}(<line1>, <line2>)
 fu ${2/<(sid|SID)>/s:/}(...) abort
 	if !a:0
 		let &opfunc = `!p snip.rv = \
-			"expand('<sfile>')->matchstr('<SNR>\\w*$')" \
+			"expand('<stack>')->matchstr('.*\\zs<SNR>\\w*')" \
 			if re.search(r'<sid>', t[2], re.IGNORECASE) \
 			else "'" + t[2] + "'"`
 		return 'g@'
@@ -407,7 +407,7 @@ fu ${2/<(sid|SID)>/s:/}() abort
 	let g:opfunc = {
 		\ 'core': `!p
 opfunc_core = \
-		"expand('<sfile>')->matchstr('<SNR>\\w*$') .. '_core'" \
+		"expand('<stack>')->matchstr('.*\\zs<SNR>\\w*') .. '_core'" \
 		if re.search(r'<sid>', t[2], re.IGNORECASE) \
 		else "'" + t[2] + "_core'"
 snip.rv = opfunc_core
@@ -513,7 +513,7 @@ endsnippet
 snippet stl_flag "status line flag" bm
 augroup hoist_$1 | au!
 	au User MyFlags call statusline#hoist('${2:flag}',
-		\ '$3`!p snip.rv = complete(t[3], ['global', 'tabpage', 'buffer', 'window'])`', ${4:123}, expand('<sfile>') .. ':' .. expand('<sflnum>'))
+		\ '$3`!p snip.rv = complete(t[3], ['global', 'tabpage', 'buffer', 'window'])`', ${4:123}, expand('<sfile>:p') .. ':' .. expand('<sflnum>'))
 augroup END
 endsnippet
 
