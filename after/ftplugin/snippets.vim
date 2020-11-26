@@ -31,7 +31,7 @@ augroup END
 
 " Mappings {{{1
 
-nmap <buffer><nowait><silent> q <plug>(my_quit)
+nmap <buffer><nowait> q <plug>(my_quit)
 
 " Options "{{{1
 
