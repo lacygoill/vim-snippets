@@ -366,7 +366,7 @@ endsnippet
 # q mapping {{{1
 
 snippet mq "local mapping to end recording without closing window" bm
-nno <buffer><expr><nowait><silent> q reg_recording() != '' ? 'q' : ':<c-u>q<cr>'
+nno <buffer><expr><nowait> q reg_recording() != '' ? 'q' : '<cmd>q<cr>'
 $0
 endsnippet
 
@@ -509,7 +509,7 @@ setl bh=delete bt=nofile nobl noswf wfw nowrap
 
 call setline(1, ${4:put your text})
 
-nno <buffer><expr><nowait><silent> q reg_recording() != '' ? 'q' : ':<c-u>q<cr>'
+nno <buffer><expr><nowait> q reg_recording() != '' ? 'q' : '<cmd>q<cr>'
 $0
 endsnippet
 
