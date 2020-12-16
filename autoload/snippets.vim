@@ -46,7 +46,7 @@ endfu
 
 fu snippets#undo_ftplugin() abort "{{{1
     set et< isk< sw< ts<
-    au! format_snippets * <buffer>
+    au! FormatSnippets * <buffer>
     nunmap <buffer> q
 endfu
 

@@ -1,6 +1,6 @@
 " Autocmds {{{1
 
-augroup format_snippets
+augroup FormatSnippets
     au! * <buffer>
     " What does it do?{{{
     " In a snippet file, we reset `'expandtab'`:

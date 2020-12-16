@@ -111,7 +111,7 @@ endsnippet
 pre_expand "capture_visual_content(snip)"
 post_expand "trim_ws(snip)"
 snippet au  "augroup ... autocmd block" bm
-augroup ${1:test_sth}
+augroup ${1:TestSth}
 	au!${2: * <buffer>}
 	${4:au ${3:BufWinEnter}${2/( \*)|.*/(?1:: \*)/} }${0:${VISUAL}}
 augroup END
@@ -516,7 +516,7 @@ endsnippet
 # stl_flag {{{1
 
 snippet stl_flag "status line flag" bm
-augroup hoist_$1 | au!
+augroup Hoist_$1 | au!
 	au User MyFlags call statusline#hoist('${2:flag}',
 		\ '$3`!p snip.rv = complete(t[3], ['global', 'tabpage', 'buffer', 'window'])`', ${4:123}, expand('<sfile>:p') .. ':' .. expand('<sflnum>'))
 augroup END
