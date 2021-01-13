@@ -284,7 +284,7 @@ endsnippet
 
 pre_expand "capture_visual_content(snip)"
 post_expand "trim_ws(snip)"
-snippet df "Vim9 function definition" Abm
+snippet dff "Vim9 function definition" Abm
 def $1`!p
 snip.rv = complete(t[1], ['Func', vim.eval("snippets#get_autoload_funcname()")])
 `()
