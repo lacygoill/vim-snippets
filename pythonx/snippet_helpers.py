@@ -330,7 +330,7 @@ def plugin_guard(snip): #{{{1
         )
 
     elif '/autoload/slow_call' in path_to_dir:
-        rtp_name = vim.eval('snippets#get_plugin_name_in_rtp()')
+        rtp_name = vim.eval('snippets#getPluginNameInGuard()')
         anon_snip_body = (
             "if stridx(&rtp, '${1:" + rtp_name + "}') == -1"
             + finish
@@ -371,7 +371,7 @@ def plugin_guard(snip): #{{{1
     # It shouldnt'be sourced if the plugin has been temporarily disabled.
     #}}}
     elif '/.vim/after/plugin' in path_to_dir:
-        guard_name = vim.eval('snippets#get_plugin_name_in_guard()')
+        guard_name = vim.eval('snippets#getPluginNameInGuard()')
 
         anon_snip_body = (
               "if !exists('${2:g:loaded_${1:" + basename + "}}')"
@@ -388,8 +388,8 @@ def plugin_guard(snip): #{{{1
     #    - the plugin has been temporarily disabled
     #}}}
     elif '/.vim/plugin' in path_to_dir:
-        guard_name = vim.eval('snippets#get_plugin_name_in_guard()')
-        rtp_name = vim.eval('snippets#get_plugin_name_in_rtp()')
+        guard_name = vim.eval('snippets#getPluginNameInGuard()')
+        rtp_name = vim.eval('snippets#getPluginNameInRtp()')
 
         anon_snip_body = (
               "if exists('${2:g:loaded_${1:" + basename + "}}')"

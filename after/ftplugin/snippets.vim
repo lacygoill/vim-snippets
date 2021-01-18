@@ -26,7 +26,7 @@ augroup FormatSnippets
     "
     " To fix this, we execute `:RemoveTabs` on the global block.
     "}}}
-    au BufWritePost <buffer> call snippets#remove_tabs_in_global_blocks()
+    au BufWritePost <buffer> call snippets#removeTabsInGlobalBlocks()
 augroup END
 
 " Mappings {{{1
@@ -46,5 +46,5 @@ setl noet sw=4 ts=4
 " Teardown {{{1
 
 let b:undo_ftplugin = get(b:, 'undo_ftplugin', 'exe')
-    \ .. '| call snippets#undo_ftplugin()'
+    \ .. '| call snippets#undoFtplugin()'
 

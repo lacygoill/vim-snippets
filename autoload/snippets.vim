@@ -1,52 +1,56 @@
-fu snippets#get_autoload_funcname() abort "{{{1
-    return expand('%:p') =~# 'autoload\|plugin'
-        \ ?     expand('%:p')
-        \     ->matchstr('\%(autoload\|plugin\)/\zs.*\ze.vim')
-        \     ->substitute('/', '#', 'g') .. '#'
-        \ :     ''
-endfu
+vim9 noclear
 
-fu snippets#get_lg_tag_number() abort "{{{1
-    let lines = getline(1, line('.') - 1)->reverse()
-    call filter(lines, {_, v -> v =~# '^\s*\*lg-lib-\%(\d\+\)\*\s*$'})
+if exists('loaded') | finish | endif
+var loaded = true
+
+def snippets#getAutoloadFuncname(): string #{{{1
+    return expand('%:p') =~ 'autoload\|plugin'
+        ?     expand('%:p')
+            ->matchstr('\%(autoload\|plugin\)/\zs.*\ze.vim')
+            ->substitute('/', '#', 'g') .. '#'
+        :     ''
+enddef
+
+def snippets#getLgTagNumber(): string #{{{1
+    var lines: list<string> = getline(1, line('.') - 1)->reverse()
+    filter(lines, (_, v) => v =~ '^\s*\*lg-lib-\%(\d\+\)\*\s*$')
     return empty(lines)
-        \ ?     ''
-        \ :     matchstr(lines[0], '^\s*\*lg-lib-\zs\d\+\ze\*\s*$')
-endfu
+        ?     ''
+        :     matchstr(lines[0], '^\s*\*lg-lib-\zs\d\+\ze\*\s*$')
+enddef
 
-fu snippets#get_plugin_name_in_guard() abort "{{{1
-    " Purpose:
-    " Try to  guess the name of  the global variable  used (as a guard)  by the
-    " plugin we're currently customizing in `~/.vim/after/plugin/foo.vim`.
-    let guard_name = getcompletion('g:loaded_*', 'var')
-    let guard_name = filter(guard_name, {_, v -> v =~# expand('%:t:r')})
-    let guard_name = get(guard_name, 0, '')
-    let guard_name = matchstr(guard_name, 'g:loaded_\zs.*')
-    return guard_name
-endfu
+def snippets#getPluginNameInGuard(): string #{{{1
+    # Purpose:
+    # Try to  guess the name of  the global variable  used (as a guard)  by the
+    # plugin we're currently customizing in `~/.vim/after/plugin/foo.vim`.
+    return getcompletion('g:loaded_*', 'var')
+        ->filter(guard_name, (_, v) => v =~ expand('%:t:r'))
+        ->get(guard_name, 0, '')
+        ->matchstr(guard_name, 'g:loaded_\zs.*')
+enddef
 
-fu snippets#get_plugin_name_in_rtp() abort "{{{1
-    " Purpose:
-    " Try to  guess the name of  plugin name in the rtp.
-    let rtp = split(&rtp, ',')
-    let guard_name = filter(rtp, {_, v -> v =~# expand('%:t:r')})
-    let guard_name = get(guard_name, 0, '')->fnamemodify(':t')
-    return guard_name
-endfu
+def snippets#getPluginNameInRtp(): string #{{{1
+    # Purpose:
+    # Try to  guess the name of  plugin name in the rtp.
+    return split(&rtp, ',')
+        ->filter(rtp, (_, v) => v =~ expand('%:t:r'))
+        ->get(guard_name, 0, '')
+        ->fnamemodify(':t')
+enddef
 
-fu snippets#remove_tabs_in_global_blocks() abort "{{{1
-    let pos = getcurpos()
-    let start = '1/^\Cglobal !p$/'
-    let end = '/^\Cendglobal$/'
-    " Don't replace `4` with `&l:sw`.  Python expects you indent your code with exactly 4 spaces.
-    let substitution = 's/^\t\+/\=repeat(" ", submatch(0)->strlen() * 4)/'
+def snippets#removeTabsInGlobalBlocks() #{{{1
+    var pos: list<number> = getcurpos()
+    var start: string = ':1/^\Cglobal !p$/'
+    var end: string = '/^\Cendglobal$/'
+    # Don't replace `4` with `&l:sw`.  Python expects you indent your code with exactly 4 spaces.
+    var substitution: string = 's/^\t\+/\=repeat(" ", submatch(0)->strlen() * 4)/'
     sil! exe 'keepj keepp ' .. start .. ';' .. end .. 'g/^/' .. substitution
-    call setpos('.', pos)
-endfu
+    setpos('.', pos)
+enddef
 
-fu snippets#undo_ftplugin() abort "{{{1
+def snippets#undoFtplugin() #{{{1
     set et< isk< sw< ts<
     au! FormatSnippets * <buffer>
     nunmap <buffer> q
-endfu
+enddef
 

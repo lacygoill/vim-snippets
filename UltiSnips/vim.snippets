@@ -235,7 +235,7 @@ expand('%:p:h:t') is# 'ftplugin' ? '-buffer ' : ''
 `${2:-complete=custom$3`!p
 snip.rv = complete(t[3], [',', 'list,'])
 `$4`!p
-snip.rv = complete(t[4], ['s:func', vim.eval("snippets#get_autoload_funcname()")])
+snip.rv = complete(t[4], ['s:func', vim.eval("snippets#getAutoloadFuncname()")])
 ` }${5:-nargs=$6`!p
 snip.rv = complete(t[6], ['0', '1', '*', '?', '+'])
 ` }${7:-range=% }${8:Cmd} ${9:call s:${10:func}()}
@@ -276,7 +276,7 @@ pre_expand "capture_visual_content(snip)"
 post_expand "trim_ws(snip)"
 snippet fuu "function definition" Abm
 fu $1`!p
-snip.rv = complete(t[1], ['s:func', 'Func', vim.eval("snippets#get_autoload_funcname()")])
+snip.rv = complete(t[1], ['s:func', 'Func', vim.eval("snippets#getAutoloadFuncname()")])
 `($2) abort
 	${0:${VISUAL}}
 endfu
@@ -286,7 +286,7 @@ pre_expand "capture_visual_content(snip)"
 post_expand "trim_ws(snip)"
 snippet dff "Vim9 function definition" Abm
 def $1`!p
-snip.rv = complete(t[1], ['Func', vim.eval("snippets#get_autoload_funcname()")])
+snip.rv = complete(t[1], ['Func', vim.eval("snippets#getAutoloadFuncname()")])
 `()
 	${0:${VISUAL}}
 enddef
