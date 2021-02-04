@@ -210,7 +210,7 @@ endsnippet
 #}}}
 snippet conceal "conceal using `matchadd()`" bm
 setl cocu=nc cole=3
-call matchadd('Conceal', ${2:'${1:pat}'}, 0, -1, #{conceal: '${3:x}'})
+call matchadd('Conceal', ${2:'${1:pat}'}, 0, -1, {'conceal': '${3:x}'})
 $0
 endsnippet
 
@@ -314,6 +314,14 @@ snippet e "elseif" A
 elseif $1
 	$2
 ${3:else}
+endsnippet
+
+# log {{{1
+
+snippet log "log some Vim expression" bm
+delete('/tmp/log')
+var msg: string = $0
+writefile([msg, '---'], '/tmp/log', 'a')
 endsnippet
 
 # regular mapping {{{1
