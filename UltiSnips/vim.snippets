@@ -298,6 +298,14 @@ pre_expand "plugin_guard(snip)"
 snippet gd "plugin guard" Abm
 endsnippet
 
+# hd {{{1
+
+snippet hd "heredoc" bm
+var ${1:lines}: list<string> =<< ${2:trim }END
+	${0:${VISUAL}}
+END
+endsnippet
+
 # if {{{1
 
 snippet ii "if statement" Abm
@@ -598,15 +606,6 @@ endsnippet
 
 pre_expand "undo_ftplugin(snip)"
 snippet undo "undo filetype/indent settings" Abm
-endsnippet
-
-# vh {{{1
-
-# TODO: We should use `:let` instead of `:var` in a legacy script.
-snippet vh "vim-heredoc" bm
-var ${1:lines}: list<string> =<< ${2:trim }END
-	${0:${VISUAL}}
-END
 endsnippet
 
 # vim_plug {{{1
