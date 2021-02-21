@@ -13,28 +13,28 @@ enddef
 
 def snippets#getLgTagNumber(): string #{{{1
     var lines: list<string> = getline(1, line('.') - 1)->reverse()
-    filter(lines, (_, v) => v =~ '^\s*\*lg-lib-\%(\d\+\)\*\s*$')
+        ->filter((_, v: string): bool => v =~ '^\s*\*lg-lib-\%(\d\+\)\*\s*$')
     return empty(lines)
         ?     ''
         :     matchstr(lines[0], '^\s*\*lg-lib-\zs\d\+\ze\*\s*$')
 enddef
 
 def snippets#getPluginNameInGuard(): string #{{{1
-    # Purpose:
-    # Try to  guess the name of  the global variable  used (as a guard)  by the
-    # plugin we're currently customizing in `~/.vim/after/plugin/foo.vim`.
+# Purpose:
+# Try to guess the  name of the global variable used (as a  guard) by the plugin
+# we're currently customizing in `~/.vim/after/plugin/foo.vim`.
     return getcompletion('g:loaded_*', 'var')
-        ->filter(guard_name, (_, v) => v =~ expand('%:t:r'))
-        ->get(guard_name, 0, '')
-        ->matchstr(guard_name, 'g:loaded_\zs.*')
+        ->filter((_, v): bool => v =~ expand('%:t:r'))
+        ->get(0, '')
+        ->matchstr('g:loaded_\zs.*')
 enddef
 
 def snippets#getPluginNameInRtp(): string #{{{1
-    # Purpose:
-    # Try to  guess the name of  plugin name in the rtp.
+# Purpose:
+# Try to  guess the name of  plugin name in the rtp.
     return split(&rtp, ',')
-        ->filter(rtp, (_, v) => v =~ expand('%:t:r'))
-        ->get(guard_name, 0, '')
+        ->filter((_, v: string): bool => v =~ expand('%:t:r'))
+        ->get(0, '')
         ->fnamemodify(':t')
 enddef
 
