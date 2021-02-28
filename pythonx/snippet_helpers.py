@@ -74,13 +74,12 @@ def clean_first_placeholder(snip): #{{{1
     #             replace the current line with the modified copy
     #}}}
 
-    #                                                ┌  Don't remove anything
-    #                                                │  if the 1st tabstop hasn't been emptied.
-    #                                                │  Alternative:
-    #                                                │      snip.tabstops[1].current_text == ''
-    #                        ┌───────────────────────┤
     if snip.tabstop == 2 and not get_jumper_text(snip):
-    #
+    #                        ├───────────────────────┘
+    #                        └ Don't remove anything
+    #                          if the 1st tabstop hasn't been emptied.
+    #                          Alternative:
+    #                              snip.tabstops[1].current_text == ''
     #
         line = snip.buffer[snip.cursor[0]]
         # remove parentheses
@@ -138,9 +137,9 @@ def clean_first_placeholder(snip): #{{{1
         #
         # We must go back 1 character to the left to make up for:
         #
-        #     1. the closing parenthesis
-        #     2. the opening parenthesis
-        #     3. the space
+        #    1. the closing parenthesis
+        #    2. the opening parenthesis
+        #    3. the space
         #}}}
         snip.cursor.set(
             snip.cursor[0],
@@ -221,9 +220,9 @@ def get_jumper_text(snip): #{{{1
         return None
 
     return snip.context['jumper']['snip'].tabstops[pos].current_text
-    #      └────────────────────────────┤
-    #                                   └ FIXME: why all of this?
-    #                                     why not just `snip.tabstops[pos].current_text`?
+    #      ├────────────────────────────┘
+    #      └ FIXME: Why all of this?
+    #        Why not just `snip.tabstops[pos].current_text`?
 
 def jump_to_second_when_first_is_empty(snip): #{{{1
     if get_jumper_position(snip) == 1:
@@ -239,7 +238,7 @@ def make_context(snip): #{{{1
     # Otherwise `'jumper' not in snip.context` would raise an error.
     # Same thing for:
     #
-    #     snip.context.update(…)
+    #     snip.context.update(...)
     return {'__dummy': None}
 
 def make_jumper(snip): #{{{1
@@ -249,9 +248,9 @@ def make_jumper(snip): #{{{1
     # `update()` is a method of the standard library.
     # It allows to merge 2 dictionaries (like `extend()` in VimL).
     snip.context.update({'jumper': {'enabled': True, 'snip': snip}})
-    # └────────┤        └─────────────────────────────────────────┤
-    #          │                                                  └ 2nd dictionary
-    #          └ 1st dictionary
+    # ├────────┘        ├─────────────────────────────────────────┘
+    # │                 └ 2nd dictionary
+    # └ 1st dictionary
 
 def _make_jumper_jump(snip, direction): #{{{1
     if not snip.context or 'jumper' not in snip.context:
@@ -313,14 +312,16 @@ def plugin_guard(snip): #{{{1
         # TODO: add a tabstop and make the snippet complete it,{{{
         # so that we can choose between `break` and `return`.
         # I tried to replace this line:
+        #
         #     + '\nbreak | return'
         #
         # with:
+        #
         #     + "\n$1`!p snip.rv = complete(t[1], ['break', 'return'])`"
         #
         # But it raises an error, because `complete()` is not recognized.
-        # The code doesn't contain any syntax error, so I think the issue
-        # comes from the fact that the snippet is anonymous.
+        # The code doesn't contain any syntax  error, so I think the issue comes
+        # from the fact that the snippet is anonymous.
         #}}}
         anon_snip_body = (
               'if g > 999'
@@ -337,33 +338,6 @@ def plugin_guard(snip): #{{{1
             + '\nendif'
             + '\n$0'
         )
-
-    # Why the slash before 'autoload'?{{{
-    #
-    # It can be useful to avoid an ambiguity.
-    # For example between `ftplugin` and `plugin`.
-    #}}}
-    # Why not a slash after 'autoload'?{{{
-    #
-    # `dirname()` has removed the ending slash from the path.
-    #}}}
-    # TODO: When can we omit the `+` operator?{{{
-    #
-    # We can after and before a string.
-    # But we can't after nor before a variable containing a string.
-    # So, here,  we could remove  most `+` except  the ones around  the variable
-    # `finish`.
-    # Are there other cases where we cannot?
-    # What are the rules regarding the omission of operators?
-    #}}}
-    elif '/autoload' in path_to_dir:
-            anon_snip_body = (
-                "if exists('${2:g:autoloaded_${1:" + relative_path.replace('/', '#') + "}}')"
-                + finish
-                + '\nendif'
-                + '\nlet $2 = 1'
-                + '\n$0'
-            )
 
     # This block deals with a file such as `~/.vim/after/plugin/foo.vim`.{{{
     #
@@ -399,14 +373,31 @@ def plugin_guard(snip): #{{{1
             + '\n$0'
         )
 
-    elif '/plugin' in path_to_dir:
-        anon_snip_body = (
-            "if exists('${2:g:loaded_${1:" + basename + "}}')"
-            + finish
-            + '\nendif'
-            + '\nlet $2 = 1'
-            + '\n$0'
-        )
+    # Why the slash before 'autoload'?{{{
+    #
+    # It can be useful to avoid an ambiguity.
+    # For example between `ftplugin` and `plugin`.
+    #}}}
+    # Why not a slash after 'autoload'?{{{
+    #
+    # `dirname()` has removed the ending slash from the path.
+    #}}}
+    # TODO: When can we omit the `+` operator?{{{
+    #
+    # We can after and before a string.
+    # But we can't after nor before a variable containing a string.
+    # So, here,  we could remove  most `+` except  the ones around  the variable
+    # `finish`.
+    # Are there other cases where we cannot?
+    # What are the rules regarding the omission of operators?
+    #}}}
+    elif '/plugin' in path_to_dir or '/autoload' in path_to_dir:
+            anon_snip_body = (
+                'vim9script noclear'
+                + "\n\nif exists('loaded') | finish | endif"
+                + '\nvar loaded = true'
+                + '\n\n$0'
+            )
 
     elif '/ftplugin' in path_to_dir:
         anon_snip_body = (
@@ -414,7 +405,7 @@ def plugin_guard(snip): #{{{1
             + finish
             + '\nendif'
             + '\n\n$0'
-            + '\nlet b:did_ftplugin = 1'
+            + '\nlet b:did_ftplugin = v:true'
         )
 
     elif '/syntax' in path_to_dir:
@@ -432,7 +423,7 @@ def plugin_guard(snip): #{{{1
             + finish
             + '\nendif'
             + '\n\n$0'
-            + "\n\nlet b:did_indent = 1"
+            + "\n\nlet b:did_indent = v:true"
         )
 
     else:
@@ -463,13 +454,13 @@ def trim_ws(snip): #{{{1
     #}}}
     if not snip.context['visual']:
         return
-    #                                                    ┌ address of first line in snippet{{{
-    #                                                    │ the tuple `snip.snippet_start` contains 2 numbers:
-    #                                                    │
-    #                                                    │     (line, column)
-    #                                                    │
-    #                                                    │                   ┌ address of last line in snippet
-    #                                ┌───────────────────┤ ┌─────────────────┤}}}
+    #                                ┌ address of first line in snippet{{{
+    #                                │ the tuple `snip.snippet_start` contains 2 numbers:
+    #                                │
+    #                                │     (line, column)
+    #                                │                     ┌ address of last line in snippet
+    #                                ├───────────────────┐ ├─────────────────┐
+    #}}}
     for i, l in enumerate(snip.buffer[snip.snippet_start[0]:snip.snippet_end[0]]):
     #   └─┤    └───────┤{{{
     #     │            │
@@ -519,12 +510,12 @@ def undo_ftplugin(snip): #{{{1
         # autocmds in this augroup.
         # }}}
         # FIXME: When you  expand this snippet,  if you remove the  `setl` line,{{{
-        # make sure to remove the first pipe on the next line.
-        # Otherwise, the value of `b:undo_ftplugin` may begin with a pipe:
+        # make sure to remove the first bar on the next line.
+        # Otherwise, the value of `b:undo_ftplugin` may begin with a bar:
         #
         #     | some commands
         #
-        # The empty command before the pipe may have unexpected effect.
+        # The empty command before the bar might have unexpected effect.
         # MWE:
         #     :|echo 'hello'
         #         → prints current line, then echo 'hello'

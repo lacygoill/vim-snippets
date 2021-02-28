@@ -65,14 +65,14 @@ endsnippet
 #
 # The command-line won't contain just the abbreviation, so this will fail:
 #
-#     getcmdline() is# 'lhs'
+#     getcmdline() ==# 'lhs'
 #
 # But not this:
 #
 #     getcmdpos() == 4
 #}}}
 snippet abr "uppercase abbreviation on command-line" bm
-cnorea <buffer><expr> ${1:lhs} getcmdtype() is# ':' && getcmdpos() == `!p snip.rv = len(t[1]) + 1`
+cnorea <buffer><expr> ${1:lhs} getcmdtype() == ':' && getcmdpos() == `!p snip.rv = len(t[1]) + 1`
 \\`!p snip.rv = ' '*(25 + len(t[1]))`?    '`!p snip.rv = '' if not t[1] else (t[1][0]).upper() + t[1][1:]`'
 \\`!p snip.rv = ' '*(25 + len(t[1]))`:    '`!p snip.rv = t[1]`'
 endsnippet
@@ -120,80 +120,77 @@ endsnippet
 # completion function (c-x c-u){{{1
 
 snippet ccfu "Completion function for C-x C-u" Abm
-let ${1:s:matches} = ['$2']
-fu s:${3:complete_words}(findstart, base) abort
-	if a:findstart
+var ${1:matches}: list<string> = ['$2']
+def ${3:CompleteWords}(findstart: number, base: string)
+	if findstart
 		return searchpos('${4:\<}', 'bnW', line('.'))[1] - 1
 	else
-		return copy($1)->filter({_, v -> stridx(v, a:base) == 0})
+		return copy($1)->filter((_, v: string): bool => stridx(v, base) == 0)
 	endif
-endfu
+enddef
 
-let &l:cfu = expand('<SID>') .. '$3'
+&l:cfu = expand('<SID>') .. '$3'
 $0
 endsnippet
 
-# Why not using `v =~ '^' .. a:base`?{{{2
+# Why not using `v =~ '^' .. base`?{{{2
 #
 # To filter the matches, we could write this condition:
 #
-#      v =~ '^' .. a:base
+#      v =~ '^' .. base
 #
 # But instead, we write:
 #
-#      filter(matches, {_, v -> stridx(v, a:base) == 0})
+#      filter(matches, (_, v: string): bool => stridx(v, base) == 0)
 #
-# Because `a:base` could contain special characters.
+# Because `base` could contain special characters.
 # If there are, we don't want them to be interpreted by the regex engine.
 
 # Is there a case-insensitive alternative?{{{2
 #
 # Yes:
 #
-#     return empty(a:base)
-#         \ ?     matches
-#         \ :     filter(matches, {_, v -> v[: strlen(a:base) - 1] is? a:base})
+#     return empty(base)
+#         ?     matches
+#         :     filter(matches, (_, v: string): bool => v[: strlen(base) - 1] ==? base)
 #}}}2
 
 # completion function (custom command) {{{1
 
 # There's a very long string in the python interpolation.{{{
 #
-# You can split such a string in (here 4) consecutive strings to gain in readibility:
+# You can split such a string in (here 3) consecutive strings to gain in readibility:
 #
-#     'let from_dash_to_cursor = matchstr(a:cmdline, \'.*\s\zs-.*\%\' .. (a:pos + 1) .. \'c\')\n'
-#     '    let from_dash_to_cursor = matchstr(from_dash_to_cursor, \'\S*\s*$\')\n'
+#     'var from_dash_to_cursor: string = matchstr(cmdline, \'.*\s\zs-.*\%\' .. (pos + 1) .. \'c\')\n'
 #     '\n'
-#     '    if from_dash_to_cursor =~# \'^-mode\s*\''
+#     '    if from_dash_to_cursor =~ \'^-mode\s*\S*$\''
 #
 # They will be concatenated at compile time:
 # https://stackoverflow.com/a/3346295/9780968
 #}}}
 snippet cfu "Completion function for a custom command" Abm
-fu s:${1:completion_function}($2`!p
+def ${1:CompletionFunction}($2`!p
 snip.rv = complete(t[2], ['_a', 'arglead'])
-`, $3`!p
+`: string, $3`!p
 snip.rv = complete(t[3], ['_l', 'cmdline'])
-`, $4`!p
+`: string, $4`!p
 snip.rv = complete(t[4], ['_p', 'pos'])
-`) abort
+`: number): string
 	$5`!p
-snip.rv = complete(t[5], ['if a:cmdline =~# \'\m-mode\s\+\w*$\'',
-'let from_dash_to_cursor = matchstr(a:cmdline, \'.*\s\zs-.*\%\' .. (a:pos + 1) .. \'c\')\n'
+snip.rv = complete(t[5], ['if cmdline =~ \'\m-mode\s\+\w*$\'',
+'var from_dash_to_cursor: string = matchstr(cmdline, \'.*\s\zs-.*\%\' .. (pos + 1) .. \'c\')\n'
 '\n'
-'    if from_dash_to_cursor =~# \'^-mode\s*\S*$\''
+'    if from_dash_to_cursor =~ \'^-mode\s*\S*$\''
 ])
 `
-		let ${6:modes} = [${7:'normal', 'visual', 'insert'}]
-		return join($6, "\n")
+		return [${6:'normal', 'visual', 'insert'}]->join("\n")
 
-	elseif ${8:empty(a:$2) || a:$2[0] is# '-'}
-		let ${9:options} = [${10:'-option1', '-option2', '-mode'}]
-		return join($9, "\n")
+	elseif ${7:empty($2) || $2[0] == '-'}
+		return [${8:'-option1', '-option2', '-mode'}]->join("\n")
 	endif
 
 	return ''
-endfu
+enddef
 $0
 endsnippet
 
@@ -208,9 +205,9 @@ endsnippet
 #
 # https://github.com/vim/vim/commit/ab62c19ea034d76632bbbf4265a9fc17e7508541
 #}}}
-snippet conceal "conceal using `matchadd()`" bm
+snippet conceal "conceal using matchadd()" bm
 setl cocu=nc cole=3
-call matchadd('Conceal', ${2:'${1:pat}'}, 0, -1, {'conceal': '${3:x}'})
+matchadd('Conceal', ${2:'${1:pat}'}, 0, -1, {conceal: '${3:x}'})
 $0
 endsnippet
 
@@ -231,14 +228,14 @@ endsnippet
 #}}}
 snippet com "command" bm
 com ${1:-bar }`!v
-expand('%:p:h:t') is# 'ftplugin' ? '-buffer ' : ''
+expand('%:p:h:t') ==# 'ftplugin' ? '-buffer ' : ''
 `${2:-complete=custom$3`!p
 snip.rv = complete(t[3], [',', 'list,'])
 `$4`!p
-snip.rv = complete(t[4], ['s:func', vim.eval("snippets#getAutoloadFuncname()")])
+snip.rv = complete(t[4], ['Foo', vim.eval("snippets#getAutoloadFuncname()")])
 ` }${5:-nargs=$6`!p
 snip.rv = complete(t[6], ['0', '1', '*', '?', '+'])
-` }${7:-range=% }${8:Cmd} ${9:call s:${10:func}()}
+` }${7:-range=% }${8:Cmd} ${9:${10:Bar}()}
 endsnippet
 
 # doautocmd User {{{1
@@ -339,7 +336,7 @@ endsnippet
 # And only in a plugin file (not in vimrc or temp file)?
 snippet map "regular mapping" bm
 nno `!v
-expand('%:p:h:t') is# 'ftplugin' ? '<buffer><nowait>' : ''
+expand('%:p:h:t') ==# 'ftplugin' ? '<buffer><nowait>' : ''
 ` ${1:cd} <cmd>call $2`!p
 snip.rv = complete(t[2], ['<sid>func', 'Func'])
 `()<cr>
@@ -379,7 +376,8 @@ endsnippet
 
 snippet mqq "end recording without closing window" bm
 if reg_recording() != ''
-	return feedkeys('q', 'in')[-1]
+	feedkeys('q', 'in')
+	return
 endif
 endsnippet
 
@@ -389,62 +387,51 @@ snippet op "custom operator" bm
 nno <expr> ${1:key} ${2:MyOp}()
 xno <expr> $1 $2()
 nno <expr> $1`!p snip.rv = t[1] if t[1].endswith('>') else re.sub('.*(.)$', '\\1', t[1])` $2() .. '_'
-${3:
-com -bar -range ${4:MyOpCmd} call ${2/<(sid|SID)>/s:/}(<line1>, <line2>)
-}
-fu ${2/<(sid|SID)>/s:/}(...) abort
-	if !a:0
-		let &opfunc = `!p snip.rv = \
+
+def ${2/<(sid|SID)>//}(type = '')
+	if type == ''
+		&opfunc = `!p snip.rv = \
 			"expand('<stack>')->matchstr('.*\\zs<SNR>\\w*')" \
 			if re.search(r'<sid>', t[2], re.IGNORECASE) \
 			else "'" + t[2] + "'"`
 		return 'g@'
 	endif
-	`!p snip.rv = "let type = a:1" if t[3] == '' else "let type = a:0 == 1 ? a:1 : 'Ex'"`
 	$0
-endfu
+enddef
 endsnippet
 
 snippet opp "custom operator (yank text inside change marks)" bm
 nno <expr> ${1:key} ${2:MyOp}()
 xno <expr> $1 $2()
 nno <expr> $1`!p snip.rv = t[1] if t[1].endswith('>') else re.sub('.*(.)$', '\\1', t[1])` $2() .. '_'
-${3:
-com -bar -range ${4:MyOpCmd} call ${2/<(sid|SID)>/s:/}_core(<line1>, <line2>)
-}
-import Opfunc from 'lg.vim' | const s:SID = execute('fu s:Opfunc')->matchstr('\C\<def\s\+\zs<SNR>\d\+_')
 
-fu ${2/<(sid|SID)>/s:/}() abort
-	let &opfunc = s:SID .. 'Opfunc'
-	let g:opfunc = {
-		\ 'core': `!p
+import Opfunc from 'lg.vim'
+const SID = execute('fu Opfunc')->matchstr('\C\<def\s\+\zs<SNR>\d\+_')
+
+def ${2/<(sid|SID)>//}(): string
+	&opfunc = SID .. 'Opfunc'
+	g:opfunc = {
+		core: `!p
 opfunc_core = \
 		"expand('<stack>')->matchstr('.*\\zs<SNR>\\w*') .. '_core'" \
 		if re.search(r'<sid>', t[2], re.IGNORECASE) \
 		else "'" + t[2] + "_core'"
 snip.rv = opfunc_core
 `,${5:
-		\ 'register': v:register,
-		\ 'count': v:count,
-		\ 'yank': v:true,}
-		\ }
+		register: v:register,
+		count: v:count,
+		yank: true,}
+		}
 	return 'g@'
-endfu
+enddef
 
-fu `!p snip.rv = \
+def `!p snip.rv = \
 		opfunc_core.strip("'") \
 		if opfunc_core[0] == "'" \
 		else re.sub('<sid>', 's:', t[2], flags=re.IGNORECASE) + '_core'
-`(`!p snip.rv = 'type' if t[3] == '' else '...'`) abort
-	`!p
-if t[3] == '':
-	snip.rv = ''
-else:
-	snip.rv = "let type = a:0 == 1 ? a:1 : 'Ex'\n"
-	snip.shift(1)
-	snip.rv += snip.mkline('')
-`$0
-endfu
+`(type: string)
+$0
+enddef
 endsnippet
 
 # printf {{{1
@@ -456,15 +443,15 @@ endsnippet
 # qf title {{{1
 
 snippet qf_title "set the title of the qf window" bm
-call set$1`!p
+set$1`!p
 snip.rv = complete(t[1], ['qf', 'loc'])
-`list(${1/(l)|.*/(?1:0, :)/}[], 'a', {'title': '${2:my title}'})
+`list(${1/(l)|.*/(?1:0, :)/}[], 'a', {title: '${2:my title}'})
 $0
 endsnippet
 
 # Alternative:
 #
-#     let w:quickfix_title = '$1'
+#     w:quickfix_title = '$1'
 #
 # Works, but only if we're inside the qf window.
 #
@@ -508,13 +495,13 @@ endsnippet
 # change a qf buffer, because it could introduce a discrepancy with the qfl.
 #}}}
 snippet scratch "" bm
-let tempfile = tempname() .. '/${1:buffer name}'
+tempfile: string = tempname() .. '/${1:buffer name}'
 exe '$2`!p
 snip.rv = complete(t[2], ['leftabove', 'topleft'])
 ` ' .. (&columns/3) .. 'vnew ' .. tempfile
 setl bh=delete bt=nofile nobl noswf wfw nowrap
 
-call setline(1, ${4:put your text})
+setline(1, ${4:put your text})
 
 nno <buffer><expr><nowait> q reg_recording() != '' ? 'q' : '<cmd>q<cr>'
 $0
@@ -524,7 +511,7 @@ endsnippet
 
 snippet stl_flag "status line flag" bm
 augroup Hoist_$1 | au!
-	au User MyFlags call statusline#hoist('${2:flag}',
+	au User MyFlags statusline#hoist('${2:flag}',
 		\ '$3`!p snip.rv = complete(t[3], ['global', 'tabpage', 'buffer', 'window'])`', ${4:123}, expand('<sfile>:p') .. ':' .. expand('<sflnum>'))
 augroup END
 endsnippet
@@ -584,7 +571,7 @@ endsnippet
 # timer {{{1
 
 snippet timer "immediate timer" m
-call timer_start(0, {-> ${1:execute('${3:${VISUAL}}'${2:, ''})}})
+timer_start(0, () => ${1:execute('${3:${VISUAL}}'${2:, ''})})
 $0
 endsnippet
 
@@ -645,11 +632,11 @@ endsnippet
 # That's  the case  with the  `fzf.vim` plugin;  we need  this assignment  to be
 # sourced before the plugin:
 #
-#     let g:fzf_command_prefix = 'Fz'
+#     g:fzf_command_prefix = 'Fz'
 #
 # In the past, we used this:
 #
-#     let &rtp = $HOME .. '/.vim,' .. split(&rtp, ',')->filter({_, v -> v isnot# $HOME .. '/.vim'})->join(',')
+#     &rtp = $HOME .. '/.vim,' .. split(&rtp, ',')->filter((_, v) => v != $HOME .. '/.vim')->join(',')
 #
 # But I find the current solution easier to read:
 #
@@ -759,7 +746,7 @@ endsnippet
 # while {{{1
 
 snippet ww "while loop" Abm
-let g = 0 | while $1 && g < 1000 | let g += 1
+var g: number = 0 | while $1 && g < 1000 | g += 1
 	${0:${VISUAL}}
 endwhile
 endsnippet
