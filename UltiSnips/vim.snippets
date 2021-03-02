@@ -141,7 +141,7 @@ endsnippet
 #
 # But instead, we write:
 #
-#      filter(matches, (_, v: string): bool => stridx(v, base) == 0)
+#      copy(matches)->filter((_, v: string): bool => stridx(v, base) == 0)
 #
 # Because `base` could contain special characters.
 # If there are, we don't want them to be interpreted by the regex engine.
@@ -152,7 +152,7 @@ endsnippet
 #
 #     return empty(base)
 #         ?     matches
-#         :     filter(matches, (_, v: string): bool => v[: strlen(base) - 1] ==? base)
+#         :     matches->filter((_, v: string): bool => v[: strlen(base) - 1] ==? base)
 #}}}2
 
 # completion function (custom command) {{{1
@@ -177,7 +177,7 @@ snip.rv = complete(t[3], ['_l', 'cmdline'])
 snip.rv = complete(t[4], ['_p', 'pos'])
 `: number): string
 	$5`!p
-snip.rv = complete(t[5], ['if cmdline =~ \'\m-mode\s\+\w*$\'',
+snip.rv = complete(t[5], ['if cmdline =~ \'-mode\s\+\w*$\'',
 'var from_dash_to_cursor: string = matchstr(cmdline, \'.*\s\zs-.*\%\' .. (pos + 1) .. \'c\')\n'
 '\n'
 '    if from_dash_to_cursor =~ \'^-mode\s*\S*$\''

@@ -12,7 +12,8 @@ def snippets#getAutoloadFuncname(): string #{{{1
 enddef
 
 def snippets#getLgTagNumber(): string #{{{1
-    var lines: list<string> = getline(1, line('.') - 1)->reverse()
+    var lines: list<string> = getline(1, line('.') - 1)
+        ->reverse()
         ->filter((_, v: string): bool => v =~ '^\s*\*lg-lib-\%(\d\+\)\*\s*$')
     return empty(lines)
         ?     ''
@@ -24,7 +25,7 @@ def snippets#getPluginNameInGuard(): string #{{{1
 # Try to guess the  name of the global variable used (as a  guard) by the plugin
 # we're currently customizing in `~/.vim/after/plugin/foo.vim`.
     return getcompletion('g:loaded_*', 'var')
-        ->filter((_, v): bool => v =~ expand('%:t:r'))
+        ->filter((_, v: string): bool => v =~ expand('%:t:r'))
         ->get(0, '')
         ->matchstr('g:loaded_\zs.*')
 enddef
