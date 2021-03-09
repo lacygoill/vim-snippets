@@ -152,7 +152,7 @@ endsnippet
 #
 #     return empty(base)
 #         ?     matches
-#         :     matches->filter((_, v: string): bool => v[: strlen(base) - 1] ==? base)
+#         :     matches->filter((_, v: string): bool => v[: strchars(base, true) - 1] ==? base)
 #}}}2
 
 # completion function (custom command) {{{1
