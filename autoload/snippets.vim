@@ -44,7 +44,7 @@ def snippets#removeTabsInGlobalBlocks() #{{{1
     var start: string = ':1/^\Cglobal !p$/'
     var end: string = '/^\Cendglobal$/'
     # Don't replace `4` with `&l:sw`.  Python expects you indent your code with exactly 4 spaces.
-    var substitution: string = 's/^\t\+/\=repeat(" ", submatch(0)->strchars(true) * 4)/'
+    var substitution: string = 's/^\t\+/\=repeat(" ", submatch(0)->strcharlen() * 4)/'
     sil! exe 'keepj keepp ' .. start .. ';' .. end .. 'g/^/' .. substitution
     setpos('.', pos)
 enddef
