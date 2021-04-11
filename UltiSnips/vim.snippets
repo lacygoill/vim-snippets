@@ -421,7 +421,7 @@ snip.rv = opfunc_core
 		register: v:register,
 		count: v:count,
 		yank: true,}
-		}
+	}
 	return 'g@'
 enddef
 
@@ -571,7 +571,9 @@ endsnippet
 # timer {{{1
 
 snippet timer "immediate timer" m
-timer_start(0, () => ${1:execute('${3:${VISUAL}}'${2:, ''})})
+timer_start(0, (_) => {
+	${1:${VISUAL}}
+})
 $0
 endsnippet
 
