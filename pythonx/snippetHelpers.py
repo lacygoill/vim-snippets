@@ -339,21 +339,6 @@ def plugin_guard(snip): #{{{1
             + '\n$0'
         )
 
-    # This block deals with a file such as `~/.vim/after/plugin/foo.vim`.{{{
-    #
-    # Yes, we should put a guard in it.
-    # It shouldnt'be sourced if the plugin has been temporarily disabled.
-    #}}}
-    elif '/.vim/after/plugin' in path_to_dir:
-        guard_name = vim.eval('snippets#getPluginNameInGuard()')
-
-        anon_snip_body = (
-              "if !exists('${2:g:loaded_${1:" + basename + "}}')"
-            + finish
-            + '\nendif'
-            + '\n$0'
-        )
-
     # This block deals with a file such as ~/.vim/plugin/foo.vim.{{{
     #
     # It shouldnt'be sourced if:

@@ -408,7 +408,7 @@ You can write one with this syntax:
     (?123:text:other text)
 
 This reads as follows:  if the group `123` has matched,  replace it with `text`,
-otherwise just insert `other text`.
+otherwise replace whatever has matched with `other text`.
 
 The latter is optional  and if not provided defaults to an  empty string, so you
 can write:

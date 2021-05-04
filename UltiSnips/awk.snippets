@@ -53,7 +53,7 @@ endsnippet
 snippet gd "prevent infinite loop or recursion" Am
 if (g > 999)
 	$1`!p snip.rv = complete(t[1], ['break', 'return'])`
-g += 1
+++g
 endsnippet
 
 # Do not initialize `g` to 1, and, do not make `g` a local variable.

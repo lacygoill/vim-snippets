@@ -19,8 +19,8 @@
 "                                          ^
 "
 " This setting comes from `$VIMRUNTIME/syntax/sh.vim`.
-" `~/.vim/plugged/ultisnips/syntax/snippets.vim`  loads  the   `sh`  syntax,  to
-" correctly highlight a shell interpolation.
+" `~/.vim/pack/minpac/opt/ultisnips/syntax/snippets.vim` loads  the `sh` syntax,
+" to correctly highlight a shell interpolation.
 "
 "     syntax include @Shell syntax/sh.vim
 "
