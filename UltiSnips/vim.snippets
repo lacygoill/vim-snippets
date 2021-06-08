@@ -55,7 +55,7 @@ endsnippet
 #                                            │                  └ remaining characters
 #                                            └ first character
 
-# Why do you use `getcmdpos()`?  Why not `getcmdline() is# '$1'`?{{{
+# Why do you use `getcmdpos()`?  Why not `getcmdline() ==# '$1'`?{{{
 #
 # `getcmdpos()` is more reliable.
 #
@@ -129,7 +129,7 @@ def ${3:CompleteWords}(findstart: number, base: string)
 	endif
 enddef
 
-&l:cfu = expand('<SID>') .. '$3'
+&l:completefunc = expand('<SID>') .. '$3'
 $0
 endsnippet
 
@@ -206,7 +206,8 @@ endsnippet
 # https://github.com/vim/vim/commit/ab62c19ea034d76632bbbf4265a9fc17e7508541
 #}}}
 snippet conceal "conceal using matchadd()" bm
-setl cocu=nc cole=3
+&l:concealcursor = 'nc'
+&l:conceallevel = 3
 matchadd('Conceal', ${2:'${1:pat}'}, 0, -1, {conceal: '${3:x}'})
 $0
 endsnippet
@@ -390,7 +391,7 @@ nno <expr> $1`!p snip.rv = t[1] if t[1].endswith('>') else re.sub('.*(.)$', '\\1
 
 def ${2/(^<sid>)|^/(?1::g\:)//i}(type = '')
 	if type == ''
-		&opfunc = `!p snip.rv = \
+		&operatorfunc = `!p snip.rv = \
 			"expand('<SID>') .. '" + re.sub('^<sid>', '', t[2], flags = re.IGNORECASE) + "'" \
 			if re.search(r'<sid>', t[2], re.IGNORECASE) \
 			else "'" + t[2] + "'"`
@@ -409,8 +410,8 @@ import Opfunc from 'lg.vim'
 const SID = execute('fu Opfunc')->matchstr('\C\<def\s\+\zs<SNR>\d\+_')
 
 def ${2/(^<sid>)|^/(?1::g\:)/i}(): string
-	&opfunc = SID .. 'Opfunc'
-	g:opfunc = {
+	&operatorfunc = SID .. 'Opfunc'
+	g:operatorfunc = {
 		core: ${2/^<sid>//i}Core,${3:
 		register: v:register,
 		count: v:count,
@@ -459,15 +460,15 @@ endsnippet
 #    Besides, if the buffer is non-modifiable, `setline()` will fail.
 #
 # 2. To avoid saving the buffer in a file in the working directory by accident.
-#    It shouldn't happen because of `bt=nofile`, but better be safe.
+#    It shouldn't happen because of `buftype=nofile`, but better be safe.
 #}}}
-# Why don't you execute `:setl noma ro` at the end?{{{
+# Why don't you execute `&l:modifiable = false | &l:readonly = true` at the end?{{{
 #
 # Generally, you don't want to.
 # `dirvish` doesn't do it, for example.
 # It's good to be able to edit information.
 #
-# However, you DO need to make a buffer non-modifiable when:
+# However, you *do* need to make a buffer non-modifiable when:
 #
 #    - its only purpose is to be read
 #
@@ -489,9 +490,14 @@ tempfile: string = tempname() .. '/${1:buffer name}'
 exe '$2`!p
 snip.rv = complete(t[2], ['leftabove', 'topleft'])
 ` ' .. (&columns/3) .. 'vnew ' .. tempfile
-setl bh=delete bt=nofile nobl noswf wfw nowrap
+&l:bufhidden = 'delete'
+&l:buftype = 'nofile'
+&l:buflisted = false
+&l:swapfile = false
+&l:winfixwidth = true
+&l:wrap = false
 
-setline(1, ${4:put your text})
+${4:put your text}->setline(1)
 
 nno <buffer><expr><nowait> q reg_recording() != '' ? 'q' : '<cmd>q<cr>'
 $0
@@ -563,7 +569,7 @@ endsnippet
 snippet time "measure how slow Func() is" bm
 var time = reltime()
 ${1:Func}()
-setline(1, reltime(time)->reltimestr()->matchstr('.*\..\\{,3}') .. ' seconds to run $1()')
+(reltime(time)->reltimestr()->matchstr('.*\..\\{,3}') .. ' seconds to run $1()')->setline(1)
 endsnippet
 
 # timer {{{1
@@ -612,12 +618,12 @@ endsnippet
 # And if the custom ftplugin contains a  guard, it wouldn't be sourced, while it
 # should.
 #}}}
-#   `set rtp-=~/.vim`?{{{
+#   `set runtimepath-=~/.vim`?{{{
 #
-# The next `set  rtp^=` will move `~/.vim` further away  from its original first
-# position.
+# The next `set runtimepath^=` will move `~/.vim` further away from its original
+# first position.
 #
-# We need to reposition it at the very beginning of the rtp.
+# We need to reposition it at the very beginning of the runtimepath.
 # Otherwise,  the  interface  of  the   custom  plugin  we're  trying  to  debug
 # (`~/.vim/pack/*/*/vim-buggy-plugin/plugin`) would be  sourced before our local
 # customizations (`~/.vim/plugin/vim-buggy-plugin`).
@@ -630,15 +636,15 @@ endsnippet
 #
 # In the past, we used this:
 #
-#     &rtp = $HOME .. '/.vim,' .. split(&rtp, ',')->filter((_, v) => v != $HOME .. '/.vim')->join(',')
+#     &runtimepath = $HOME .. '/.vim,' .. split(&runtimepath, ',')->filter((_, v) => v != $HOME .. '/.vim')->join(',')
 #
 # But I find the current solution easier to read:
 #
-#     set rtp-=~/.vim
+#     set runtimepath-=~/.vim
 #     ...
-#     set rtp^=~/.vim
+#     set runtimepath^=~/.vim
 #}}}
-#   `set rtp-=~/.vim/after`?{{{
+#   `set runtimepath-=~/.vim/after`?{{{
 #
 # To disable all the scripts in `~/.vim/after/plugin`.
 # They may interfere while we are debugging.
@@ -648,13 +654,13 @@ endsnippet
 # Same thing with `~/.vim`.
 # It's added back in case you need to source a script in `~/.vim/plugin`.
 # }}}
-#   `set rtp^=~/Vcs/vim/runtime`?{{{
+#   `set runtimepath^=~/Vcs/vim/runtime`?{{{
 #
 # You may be  debugging some issue for  which you need to run  a binary compiled
 # from an old  version.  And the issue  may require some file  in the vimruntime
 # (e.g. it may need some filetype plugin to be sourced).
 #
-# When starting Vim with `./src/vim -Nu NORC`, the rtp may contain this path:
+# When starting Vim with `./src/vim -Nu NORC`, the runtimepath may contain this path:
 #
 #     /usr/local/share/vim/vimXY
 #
@@ -692,11 +698,11 @@ endsnippet
 #
 # And let's also set `$VIM` just in case.
 #}}}
-#   `set ic`?{{{
+#   `set ignorecase`?{{{
 #
 # To be able to tab-complete a custom command name written in lowercase.
 #}}}
-#   `set vif=NONE`?{{{
+#   `set viminfofile=NONE`?{{{
 #
 # It's equivalent to `-i NONE` on the shell command-line.
 # The latter is recommended when debugging an issue.
@@ -719,18 +725,18 @@ endsnippet
 # which are completed).
 #}}}
 snippet vimrc "Minimal vimrc to test a plugin" bm
-set rtp-=~/.vim
-set rtp-=~/.vim/after${1:
-set rtp^=~/Vcs/vim/runtime
+set runtimepath-=~/.vim
+set runtimepath-=~/.vim/after${1:
+set runtimepath^=~/Vcs/vim/runtime
 let $VIMRUNTIME = $HOME . '/Vcs/vim/runtime'
 let $VIM = $VIMRUNTIME
-set hf=~/Vcs/vim/runtime/doc/help.txt}
-set rtp^=${2:/run/user/1000/tmp/vim-${3:foo}}${4:
-set rtp+=$2/after}${5:
-set rtp^=~/.vim}${6:
-set rtp+=~/.vim/after}
+set helpfile=~/Vcs/vim/runtime/doc/help.txt}
+set runtimepath^=${2:/run/user/1000/tmp/vim-${3:foo}}${4:
+set runtimepath+=$2/after}${5:
+set runtimepath^=~/.vim}${6:
+set runtimepath+=~/.vim/after}
 
-${7:set ic vif=NONE
+${7:set ignorecase viminfofile=NONE
 }${8:filetype plugin indent on
 syntax enable}
 

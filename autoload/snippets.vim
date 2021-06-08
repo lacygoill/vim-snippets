@@ -32,8 +32,8 @@ enddef
 
 def snippets#getPluginNameInRtp(): string #{{{1
 # Purpose:
-# Try to  guess the name of  plugin name in the rtp.
-    return split(&rtp, ',')
+# Try to  guess the name of  plugin name in the runtimepath.
+    return split(&runtimepath, ',')
         ->filter((_, v: string): bool => v =~ expand('%:t:r'))
         ->get(0, '')
         ->fnamemodify(':t')
@@ -43,7 +43,8 @@ def snippets#removeTabsInGlobalBlocks() #{{{1
     var pos: list<number> = getcurpos()
     var start: string = ':1/^\Cglobal !p$/'
     var end: string = '/^\Cendglobal$/'
-    # Don't replace `4` with `&l:sw`.  Python expects you indent your code with exactly 4 spaces.
+    # Don't replace `4` with `&l:shiftwidth`.
+    # Python expects you indent your code with exactly 4 spaces.
     Rep = (m: list<string>): string => repeat(' ', m[0]->strcharlen() * 4)
     var substitution: string = 's/^\t\+/\=Rep()/'
     exe 'sil! keepj keepp ' .. start .. ';' .. end .. 'g/^/' .. substitution
@@ -53,7 +54,7 @@ enddef
 var Rep: func
 
 def snippets#undoFtplugin() #{{{1
-    set et< isk< sw< ts<
+    set expandtab< iskeyword< shiftwidth< tabstop<
     au! FormatSnippets * <buffer>
     nunmap <buffer> q
 enddef

@@ -51,9 +51,9 @@ endsnippet
 
 # Executing bash via:
 #
-#         #!/usr/bin/env bash
+#     #!/usr/bin/env bash
 #
-# … would make scripts more portable, but the Shell Style Guide from Google
+# ... would  make scripts more portable,  but the Shell Style  Guide from Google
 # recommends to use `#!/bin/bash`, because it's more secure.
 # We know exactly which binary is going to be executed.
 # `#!/usr/bin/env bash` could execute another `bash` binary from a directory
@@ -342,11 +342,11 @@ snippet usage "print usage message" bm
 if [[ $# $1`!p snip.rv = complete(t[1], ['-ne 12', '-lt 34'])` ]]; then
 	cat <<EOF >&2
 usage: `!v
-  expand('%:e') is# 'sh' ? '$(basename "$0")' : '$0'
+  expand('%:e') ==# 'sh' ? '$(basename "$0")' : '$0'
 ` ${2:command arguments}
 
 	`!v
-  expand('%:e') is# 'sh' ? 'exit 64' : 'return 64'
+  expand('%:e') ==# 'sh' ? 'exit 64' : 'return 64'
 `
 fi
 $0

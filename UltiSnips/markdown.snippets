@@ -121,7 +121,7 @@ endsnippet
 #         variable's value; otherwise, it returns the value of 'default'.
 
 # snippet note "NOTE header" m
-# `!p snip.rv = ' ' * int((int(snip.opt('&l:tw', 0)) / 2 - 3))`NOTE:
+# `!p snip.rv = ' ' * int((int(snip.opt('&l:textwidth', 0)) / 2 - 3))`NOTE:
 
 # $0
 # endsnippet
@@ -133,7 +133,7 @@ endsnippet
 #
 #    - how to access the contents of a tabstop (`t[1]`, `t[2]`)
 #
-#    - we can use any python function (ex: `float()`)
+#    - we can use any python function (e.g.: `float()`)
 #
 #    - newlines inside an interpolation are ignored;
 #      allow to write the code on several lines to make it more readable
