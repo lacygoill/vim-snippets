@@ -22,7 +22,7 @@ endglobal
 
 # TODO:
 # Understand how this snippet works.
-# Once you do, use your knowledge to improve `fu` in a non-autoloaded file.
+# Once you do, use your knowledge to improve `fuu` in a non-autoloaded file.
 # The cursor should automatically jump, so that we don't have to press Tab
 # twice to jump to the arguments.
 
@@ -72,7 +72,7 @@ endsnippet
 #     getcmdpos() == 4
 #}}}
 snippet abr "uppercase abbreviation on command-line" bm
-cnorea <buffer><expr> ${1:lhs} getcmdtype() == ':' && getcmdpos() == `!p snip.rv = len(t[1]) + 1`
+cnoreabbrev <buffer><expr> ${1:lhs} getcmdtype() == ':' && getcmdpos() == `!p snip.rv = len(t[1]) + 1`
 \\`!p snip.rv = ' '*(25 + len(t[1]))`?    '`!p snip.rv = '' if not t[1] else (t[1][0]).upper() + t[1][1:]`'
 \\`!p snip.rv = ' '*(25 + len(t[1]))`:    '`!p snip.rv = t[1]`'
 endsnippet
@@ -96,7 +96,7 @@ endsnippet
 #                       │
 #                       └ if the 1st capturing group is not empty (SPC *)
 #}}}
-# Also, from :h UltiSnips-replacement-string:{{{
+# Also, from `:help UltiSnips-replacement-string`:{{{
 #
 #    > Finally, the  replacement string can contain  conditional replacements
 #    > using the syntax (?123:foo:bar). This  reads as follows:
@@ -112,12 +112,12 @@ pre_expand "capture_visual_content(snip)"
 post_expand "trim_ws(snip)"
 snippet au  "augroup ... autocmd block" bm
 augroup ${1:TestSth}
-	au!${2: * <buffer>}
-	${4:au ${3:BufWinEnter}${2/( \*)|.*/(?1:: \*)/} }${0:${VISUAL}}
+	autocmd!${2: * <buffer>}
+	${4:autocmd ${3:BufWinEnter}${2/( \*)|.*/(?1:: \*)/} }${0:${VISUAL}}
 augroup END
 endsnippet
 
-# completion function (c-x c-u){{{1
+# completion function (C-x C-u){{{1
 
 snippet ccfu "Completion function for C-x C-u" Abm
 var ${1:matches}: list<string> = ['$2']
@@ -217,7 +217,7 @@ endsnippet
 # FIXME:{{{
 # We need  to add  a tabstop, iff,  the user chooses  the public  function right
 # after the 4th tabstop.
-# We have the same issue in the `fu` snippet.
+# We have the same issue in the `fuu` snippet.
 #
 # Also, why does  the cursor jump when  we insert a comma right  after the third
 # tabstop?
@@ -228,7 +228,7 @@ endsnippet
 #     foo ${1:bar$2`!p snip.rv = complete(t[2], ['a', 'b', 'c'])` baz}
 #}}}
 snippet com "command" bm
-com ${1:-bar }`!v
+command ${1:-bar }`!v
 expand('%:p:h:t') ==# 'ftplugin' ? '-buffer ' : ''
 `${2:-complete=custom$3`!p
 snip.rv = complete(t[3], [',', 'list,'])
@@ -273,11 +273,11 @@ endsnippet
 pre_expand "capture_visual_content(snip)"
 post_expand "trim_ws(snip)"
 snippet fuu "function definition" Abm
-fu $1`!p
+function $1`!p
 snip.rv = complete(t[1], ['s:func', 'Func', vim.eval("snippets#getAutoloadFuncname()")])
 `($2) abort
 	${0:${VISUAL}}
-endfu
+endfunction
 endsnippet
 
 pre_expand "capture_visual_content(snip)"
@@ -336,11 +336,11 @@ endsnippet
 # We should add `<unique>`, but maybe only for non-plug mappings?
 # And only in a plugin file (not in vimrc or temp file)?
 snippet map "regular mapping" bm
-nno `!v
+nnoremap `!v
 expand('%:p:h:t') ==# 'ftplugin' ? '<buffer><nowait>' : ''
-` ${1:cd} <cmd>call $2`!p
-snip.rv = complete(t[2], ['<sid>func', 'Func'])
-`()<cr>
+` ${1:cd} <Cmd>call $2`!p
+snip.rv = complete(t[2], ['<SID>func', 'Func'])
+`()<CR>
 $0
 endsnippet
 
@@ -353,25 +353,25 @@ endsnippet
 #    - in the replacement part, $123 matches the 123th capturing group
 
 snippet map_plug "plug mapping" bm
-nmap <unique> ${1:lhs} <plug>(${2:plugin_function})
-nno <plug>($2) <cmd>call ${2/(.*?)_(.*)/$1#$2/}()<cr>
+nmap <unique> ${1:lhs} <Plug>(${2:plugin_function})
+nnoremap <Plug>($2) <Cmd>call ${2/(.*?)_(.*)/$1#$2/}()<CR>
 $0
 endsnippet
 
 # user mapping {{{1
 
 snippet map_user "Install user-respectful mappings" bm
-if mapcheck('${1:key}', '${3:mode}')->empty() && !hasmapto('<plug>(${2:plugin_some_func})', '$3')
-	$3map <unique> $1 <plug>($2)
+if mapcheck('${1:key}', '${3:mode}')->empty() && !hasmapto('<Plug>(${2:plugin_some_func})', '$3')
+	$3map <unique> $1 <Plug>($2)
 endif
-$3no <plug>($2) <cmd>call ${2/_/#/}()<cr>
+$3no <Plug>($2) <Cmd>call ${2/_/#/}()<CR>
 $0
 endsnippet
 
 # q mapping {{{1
 
 snippet mq "local mapping to end recording without closing window" bm
-nno <buffer><expr><nowait> q reg_recording() != '' ? 'q' : '<cmd>q<cr>'
+nnoremap <buffer><expr><nowait> q reg_recording() != '' ? 'q' : '<Cmd>quit<CR>'
 $0
 endsnippet
 
@@ -385,15 +385,15 @@ endsnippet
 # op {{{1
 
 snippet op "custom operator" bm
-nno <expr> ${1:key} ${2:MyOp}()
-xno <expr> $1 $2()
-nno <expr> $1`!p snip.rv = t[1] if t[1].endswith('>') else re.sub('.*(.)$', '\\1', t[1])` $2() .. '_'
+nnoremap <expr> ${1:key} ${2:MyOp}()
+xnoremap <expr> $1 $2()
+nnoremap <expr> $1`!p snip.rv = t[1] if t[1].endswith('>') else re.sub('.*(.)$', '\\1', t[1])` $2() .. '_'
 
-def ${2/(^<sid>)|^/(?1::g\:)//i}(type = '')
+def ${2/(^<SID>)|^/(?1::g\:)//i}(type = '')
 	if type == ''
 		&operatorfunc = `!p snip.rv = \
 			"expand('<SID>') .. '" + re.sub('^<sid>', '', t[2], flags = re.IGNORECASE) + "'" \
-			if re.search(r'<sid>', t[2], re.IGNORECASE) \
+			if re.search(r'<SID>', t[2], re.IGNORECASE) \
 			else "'" + t[2] + "'"`
 		return 'g@'
 	endif
@@ -402,17 +402,17 @@ enddef
 endsnippet
 
 snippet opp "custom operator (yank text inside change marks)" bm
-nno <expr> ${1:key} ${2:MyOp}()
-xno <expr> $1 $2()
-nno <expr> $1`!p snip.rv = t[1] if t[1].endswith('>') else re.sub('.*(.)$', '\\1', t[1])` $2() .. '_'
+nnoremap <expr> ${1:key} ${2:MyOp}()
+xnoremap <expr> $1 $2()
+nnoremap <expr> $1`!p snip.rv = t[1] if t[1].endswith('>') else re.sub('.*(.)$', '\\1', t[1])` $2() .. '_'
 
 import Opfunc from 'lg.vim'
-const SID = execute('fu Opfunc')->matchstr('\C\<def\s\+\zs<SNR>\d\+_')
+const SID = execute('function Opfunc')->matchstr('\C\<def\s\+\zs<SNR>\d\+_')
 
-def ${2/(^<sid>)|^/(?1::g\:)/i}(): string
+def ${2/(^<SID>)|^/(?1::g\:)/i}(): string
 	&operatorfunc = SID .. 'Opfunc'
 	g:operatorfunc = {
-		core: ${2/^<sid>//i}Core,${3:
+		core: ${2/^<SID>//i}Core,${3:
 		register: v:register,
 		count: v:count,
 		yank: true,}
@@ -420,7 +420,7 @@ def ${2/(^<sid>)|^/(?1::g\:)/i}(): string
 	return 'g@'
 enddef
 
-def ${2/^<sid>//i}Core(type: string)
+def ${2/^<SID>//i}Core(type: string)
 	$0
 enddef
 endsnippet
@@ -428,7 +428,7 @@ endsnippet
 # printf {{{1
 
 snippet printf "execute printf()" m
-exe printf('$1', $0)
+execute printf('$1', $0)
 endsnippet
 
 # qf title {{{1
@@ -487,7 +487,7 @@ endsnippet
 #}}}
 snippet scratch "" bm
 tempfile: string = tempname() .. '/${1:buffer name}'
-exe '$2`!p
+execute '$2`!p
 snip.rv = complete(t[2], ['leftabove', 'topleft'])
 ` ' .. (&columns/3) .. 'vnew ' .. tempfile
 &l:bufhidden = 'delete'
@@ -499,15 +499,15 @@ snip.rv = complete(t[2], ['leftabove', 'topleft'])
 
 ${4:put your text}->setline(1)
 
-nno <buffer><expr><nowait> q reg_recording() != '' ? 'q' : '<cmd>q<cr>'
+nnoremap <buffer><expr><nowait> q reg_recording() != '' ? 'q' : '<Cmd>quit<CR>'
 $0
 endsnippet
 
 # stl_flag {{{1
 
 snippet stl_flag "status line flag" bm
-augroup Hoist_$1 | au!
-	au User MyFlags statusline#hoist('${2:flag}',
+augroup Hoist_$1 | autocmd!
+	autocmd User MyFlags statusline#hoist('${2:flag}',
 		\ '$3`!p snip.rv = complete(t[3], ['global', 'tabpage', 'buffer', 'window'])`', ${4:123}, expand('<sfile>:p') .. ':' .. expand('<sflnum>'))
 augroup END
 endsnippet
@@ -515,7 +515,7 @@ endsnippet
 # syntax cluster, keyword, match, region {{{1
 
 snippet syncl "syntax cluster" Abm
-syn cluster ${1:MyCluster} contains=${2:Group1,Group2}
+syntax cluster ${1:MyCluster} contains=${2:Group1,Group2}
 $0
 endsnippet
 
@@ -523,7 +523,7 @@ endsnippet
 #
 # They are never used in the default syntax plugins:
 #
-#     noa vim /\<syn.*\<keyword\>.*\<\%(cchar\|conceal\)\>/gj $VIMRUNTIME/syntax/*.vim | cw
+#     noautocmd vimgrep /\<syn.*\<keyword\>.*\<\%(cchar\|conceal\)\>/gj $VIMRUNTIME/syntax/*.vim | cwindow
 #}}}
 # Why `!v ''`? It doesn't add anything!{{{
 #
@@ -531,7 +531,7 @@ endsnippet
 # Otherwise, it's hard to read, and it breaks the syntax highlighting in this file.
 #}}}
 snippet synk "syntax keyword" Abm
-syn keyword ${1:xGroup} ${2:myword} `!v ''
+syntax keyword ${1:xGroup} ${2:myword} `!v ''
 `${3:contained }${5:containedin=${4:xContainedIn} }`!v ''
 `${8:nextgroup=${6:xNextGroup} skip$7`!p
 snip.rv = complete(t[7], ['white', 'nl', 'empty'])
@@ -540,7 +540,7 @@ $0
 endsnippet
 
 snippet synm "syntax match" Abm
-syn match ${1:xGroup} ${2:excludenl }${3:keepend }/${4:pat}/ ${6:cchar=${5:❭} }${7:conceal }`!v ''
+syntax match ${1:xGroup} ${2:excludenl }${3:keepend }/${4:pat}/ ${6:cchar=${5:❭} }${7:conceal }`!v ''
 `${8:contained }${10:containedin=${9:xContainedIn} }${12:contains=${11:xContains} }`!v ''
 `${13:display }${14:extend }${15:fold }${18:nextgroup=${16:xNextGroup} skip$17`!p
 snip.rv = complete(t[17], ['white', 'nl', 'empty'])
@@ -552,10 +552,10 @@ endsnippet
 #
 # They are never used in the default syntax plugins:
 #
-#     noa vim /\<syn.*\<region\>.*\<\%(cchar\|conceal\)\>/gj $VIMRUNTIME/syntax/*.vim | cw
+#     noautocmd vimgrep /\<syn.*\<region\>.*\<\%(cchar\|conceal\)\>/gj $VIMRUNTIME/syntax/*.vim | cwindow
 #}}}
 snippet synr "syntax region" Abm
-syn region ${1:xGroup} ${3:matchgroup=${2:xMatchGroup} }${4:excludenl }${5:extend }${6:keepend }`!v ''
+syntax region ${1:xGroup} ${3:matchgroup=${2:xMatchGroup} }${4:excludenl }${5:extend }${6:keepend }`!v ''
 `start=/${7:pat}/ ${9:skip=/${8:pat}/ }end=/${10:pat}/ `!v ''
 `${11:concealends }${12:contained }${14:containedin=${13:xContainedIn} }${16:contains=${15:xContains} }`!v ''
 `${17:display }${18:fold }${21:nextgroup=${19:xNextGroup} skip$20`!p
@@ -588,7 +588,7 @@ try
 	${1:${VISUAL}}
 ${5:catch${2: /^Vim\%((\a\+)\)\=:E${3:123}:/}
 	${4:echohl ErrorMsg
-	echom v:exception
+	echomsg v:exception
 	echohl NONE}
 }finally
 	$0

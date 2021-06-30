@@ -3,7 +3,7 @@ vim9script
 # Autocmds {{{1
 
 augroup FormatSnippets
-    au! * <buffer>
+    autocmd! * <buffer>
     # What does it do?{{{
     # In a snippet file, we reset `'expandtab'`:
     #
@@ -28,16 +28,16 @@ augroup FormatSnippets
     #
     # To fix this, we execute `:RemoveTabs` on the global block.
     #}}}
-    au BufWritePost <buffer> snippets#removeTabsInGlobalBlocks()
+    autocmd BufWritePost <buffer> snippets#removeTabsInGlobalBlocks()
 augroup END
 
 # Mappings {{{1
 
-nmap <buffer><nowait> q <plug>(my_quit)
+nmap <buffer><nowait> q <Plug>(my_quit)
 
 # Options {{{1
 
-setl iskeyword+=#
+setlocal iskeyword+=#
 
 # We want real tabs  in a snippet file, because they have  a special meaning for
 # UltiSnips (“increase the level of indentation of the line“).
@@ -47,6 +47,6 @@ setl iskeyword+=#
 
 # Teardown {{{1
 
-b:undo_ftplugin = get(b:, 'undo_ftplugin', 'exe')
+b:undo_ftplugin = get(b:, 'undo_ftplugin', 'execute')
     .. '| call snippets#undoFtplugin()'
 

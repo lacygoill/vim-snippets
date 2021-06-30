@@ -14,7 +14,7 @@ endglobal
 #         after the tab_trigger  of the second snippet, and you  test the number
 #         of the tabstop before trying to expand the snippet:
 #
-#                 post_jump "if snip.tabstop == 1: vim.eval('feedkeys(\"\<cmd>call UltiSnips#ExpandSnippet()\<cr>\", \"in\")')"
+#                 post_jump "if snip.tabstop == 1: vim.eval('feedkeys(\"\<Cmd>call UltiSnips#ExpandSnippet()\<CR>\", \"in\")')"
 #                            ├──────────────────┘
 #                            └ check we're on the first tabstop,
 #                              because we've positioned the tab_trigger
@@ -36,8 +36,8 @@ snip.rv = "{}:{}: {}".format(
 `$1 >&2
 endsnippet
 
-# post_jump "if snip.tabstop == 2: vim.eval('feedkeys(\"\<cmd>call UltiSnips#ExpandSnippet()\<cr>\", \"in\")')"
-post_expand "vim.eval('feedkeys(\"\<cmd>call UltiSnips#ExpandSnippet()\<cr>\", \"in\")')"
+# post_jump "if snip.tabstop == 2: vim.eval('feedkeys(\"\<Cmd>call UltiSnips#ExpandSnippet()\<CR>\", \"in\")')"
+post_expand "vim.eval('feedkeys(\"\<Cmd>call UltiSnips#ExpandSnippet()\<CR>\", \"in\")')"
 snippet pd "Description" b
 pr$1 >${2:/tmp/debug}
 endsnippet

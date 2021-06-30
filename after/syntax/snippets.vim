@@ -2,7 +2,7 @@ vim9script
 
 # How to hide leading spaces which are highlighted (in blue by default)?{{{
 #
-#     hi! link snipLeadingSpaces Normal
+#     highlight! link snipLeadingSpaces Normal
 #}}}
 # Why should I *not* do it?{{{
 #

@@ -46,8 +46,9 @@ def snippets#removeTabsInGlobalBlocks() #{{{1
     # Don't replace `4` with `&l:shiftwidth`.
     # Python expects you indent your code with exactly 4 spaces.
     Rep = (m: list<string>): string => repeat(' ', m[0]->strcharlen() * 4)
-    var substitution: string = 's/^\t\+/\=Rep()/'
-    exe 'sil! keepj keepp ' .. start .. ';' .. end .. 'g/^/' .. substitution
+    var substitution: string = 'substitute/^\t\+/\=Rep()/'
+    execute 'silent! keepjumps keeppatterns '
+        .. start .. ';' .. end .. 'global/^/' .. substitution
     setpos('.', pos)
 enddef
 
@@ -55,7 +56,7 @@ var Rep: func
 
 def snippets#undoFtplugin() #{{{1
     set expandtab< iskeyword< shiftwidth< tabstop<
-    au! FormatSnippets * <buffer>
+    autocmd! FormatSnippets * <buffer>
     nunmap <buffer> q
 enddef
 

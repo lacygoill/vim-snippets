@@ -21,8 +21,8 @@ endglobal
 # Because, for some reason, Vim often fails to expand it.
 # Besides, the abbreviation – as printed in the mappings table – is weird:
 #
-#     :inorea ndh – –<left><left>
-#     :inorea ndh
+#     :inoreabbrev ndh – –<Left><Left>
+#     :inoreabbrev ndh
 #     i  ndh         *  <Left><Left>˜
 #                       ├──────────┘
 #                       └ where are the en dashes?
@@ -58,8 +58,8 @@ endsnippet
 #}}}
 snippet macro "" bm
 	call setreg('q', {})
-	nno <buffer> <cr> @q
-	nunmap <buffer> <cr>
+	nnoremap <buffer> <CR> @q
+	nunmap <buffer> <CR>
 $0
 endsnippet
 
