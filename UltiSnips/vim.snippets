@@ -353,7 +353,7 @@ endsnippet
 #    - in the replacement part, $123 matches the 123th capturing group
 
 snippet map_plug "plug mapping" bm
-nmap <unique> ${1:lhs} <Plug>(${2:plugin_function})
+nmap <unique> ${1:lhs} <Plug>(${2:plugin-function})
 nnoremap <Plug>($2) <Cmd>call ${2/(.*?)_(.*)/$1#$2/}()<CR>
 $0
 endsnippet
@@ -361,7 +361,7 @@ endsnippet
 # user mapping {{{1
 
 snippet map_user "Install user-respectful mappings" bm
-if mapcheck('${1:key}', '${3:mode}')->empty() && !hasmapto('<Plug>(${2:plugin_some_func})', '$3')
+if mapcheck('${1:key}', '${3:mode}')->empty() && !hasmapto('<Plug>(${2:plugin-some-func})', '$3')
 	$3map <unique> $1 <Plug>($2)
 endif
 $3no <Plug>($2) <Cmd>call ${2/_/#/}()<CR>
@@ -489,7 +489,7 @@ snippet scratch "" bm
 tempfile: string = tempname() .. '/${1:buffer name}'
 execute '$2`!p
 snip.rv = complete(t[2], ['leftabove', 'topleft'])
-` ' .. (&columns/3) .. 'vnew ' .. tempfile
+` :' .. (&columns/3) .. ' vnew ' .. tempfile
 &l:bufhidden = 'delete'
 &l:buftype = 'nofile'
 &l:buflisted = false

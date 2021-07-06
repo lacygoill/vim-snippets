@@ -1,8 +1,5 @@
 vim9script noclear
 
-if exists('loaded') | finish | endif
-var loaded = true
-
 def snippets#getAutoloadFuncname(): string #{{{1
     return expand('%:p') =~ 'autoload\|plugin'
         ?     expand('%:p')
@@ -55,7 +52,10 @@ enddef
 var Rep: func
 
 def snippets#undoFtplugin() #{{{1
-    set expandtab< iskeyword< shiftwidth< tabstop<
+    set expandtab<
+    set iskeyword<
+    set shiftwidth<
+    set tabstop<
     autocmd! FormatSnippets * <buffer>
     nunmap <buffer> q
 enddef

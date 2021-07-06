@@ -33,7 +33,7 @@ augroup END
 
 # Mappings {{{1
 
-nmap <buffer><nowait> q <Plug>(my_quit)
+nmap <buffer><nowait> q <Plug>(my-quit)
 
 # Options {{{1
 
